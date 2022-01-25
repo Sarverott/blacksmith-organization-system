@@ -4,9 +4,10 @@
   Sett Sarverott 2019
 */
 const {BOS, extras}=require("./main.js");
-class BlacksmithForge extends BOS{
-  setup(){
+class BlacksmithProject extends BOS.Subject{
+  afterConstruct(){
 
   }
-}
-module.exports=BlacksmithForge;
+
+};
+module.exports=BlacksmithProject;

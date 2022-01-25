@@ -5,10 +5,9 @@
 */
 const {BOS, extras}=require("./main.js");
 class BlacksmithSarcophag extends BOS{
-  setup(name, path, key=null){
-    this.path=path;
+  setup(name, dirpath){
     this.name=name;
-    this.key=key;
+    this.dirpath=dirpath;
   }
 
 };

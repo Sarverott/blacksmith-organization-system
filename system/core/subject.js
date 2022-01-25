@@ -3,14 +3,45 @@
   part of Anubis System
   Sett Sarverott 2019
 */
-const {BOS, extras}=require("./main.js");
+const {BOS}=require("./main.js");
 class BlacksmithSubject extends BOS{
-  setup(parrent, name){
-    this.parrent=parrent;
+  setup(dirpath, name=path.basename(dirpath)){
+    this.safeCreateDir(dirpath);
+    //this.parrent=parrent;
+    this.status="forged";
     this.name=name;
-    this.history=[];
+    this.dirpath=dirpath;
+    this.extensions=[];
+    //this.history=[];
     this.files=[];
     this.watcher=null;
+  }
+  open(){
+    this.emitter.emit('open');
+  }
+  create(){
+    this.emitter.emit('create');
+  }
+  save(){
+    this.emitter.emit('save');
+  }
+  close(){
+    this.emitter.emit('close');
+  }
+  delete(){
+    this.emitter.emit('delete');
+  }
+  move(){
+    this.emitter.emit('move');
+  }
+  list(){
+    this.emitter.emit('list');
+  }
+  upload(){
+    this.emitter.emit('upload');
+  }
+  change(){
+    this.emitter.emit('change');
   }
   /*loadStorybook(data){
     var tmp=[];
@@ -40,15 +71,13 @@ class BlacksmithSubject extends BOS{
     }
     return tmpFiles;
   }*/
-
   open(){
-    this.reactToEvent("open");
-    if(this.isOpened()){
+    //if(this.isOpened()){
 
-      return false;
-    }else{
+    //  return false;
+    //}else{
 
-    }
+    //}
     //if(this.watcher==null){
     //  var tmpThis=this;
     //  this.watcher=addChangeListener(this.getPath(), function(eventType, filename){
@@ -57,7 +86,7 @@ class BlacksmithSubject extends BOS{
     //}
     //this.onOpen();
   }
-  onOpen(success){
+  save(){
 
   }
   onChange(){

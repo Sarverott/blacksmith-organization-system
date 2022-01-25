@@ -31,6 +31,7 @@
     "googleapis": "^92.0.0",
     "instagram-node": "^0.5.8",
     "node-soundcloud": "^0.0.6",
+    "soundcloud": "^3.3.2",
     "tumblr": "^0.4.1"
   }
 }
