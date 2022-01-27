@@ -25,6 +25,7 @@ class BlacksmithArchive extends BOS{
         );
       }
     }
+    this.workshop.emitter.emit('archive-created');
   }
 
   //.isDirectory()

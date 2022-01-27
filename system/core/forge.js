@@ -13,6 +13,29 @@ class BlacksmithForge extends BOS{
     this.dirpath=dirpath;
     this.name=name;
     this.subjects=[];
+    this.workshop.emitter.emit('create-forge');
+  }
+  loadDirContentAsForge(){
+    var listDirs=fs.readdirSync(this.dirpath, {withFileTypes:true});
+    for(var i in listDirs){
+      if(listDirs[i].isDirectory()){
+        //var tmpGroup=this.createSuperproject(listDirs[i].name);
+        this.createSuperproject(listDirs[i].name);
+        var listSubDirs=fs.readdirSync(
+          path.join(
+            this.dirpath,
+            listDirs[i].name
+          ), {withFileTypes:true});
+        for(var j in listSubDirs){
+          if(listSubDirs[j].isDirectory()){
+            this.createProject(
+              listSubDirs[j].name,
+              listDirs[i].name
+            );
+          }
+        }
+      }
+    }
   }
   getSuperprojectByName(name){
     for(var i in this.subjects){
@@ -27,6 +50,7 @@ class BlacksmithForge extends BOS{
     );
     this.workshop.addNewSuperproject(superprojectHook);
     this.subjects.push(superprojectHook);
+    //return superprojectHook;
   }
   createProject(name, groupName, dirpath=path.join(this.dirpath, groupName, name)){
     var projectHook=new BOS.Project(

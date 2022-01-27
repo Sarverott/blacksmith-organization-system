@@ -30,7 +30,7 @@
     "github-api": "^3.4.0",
     "googleapis": "^92.0.0",
     "instagram-node": "^0.5.8",
-    "node-soundcloud": "^0.0.6",
+    "nodegit": "^0.27.0",
     "soundcloud": "^3.3.2",
     "tumblr": "^0.4.1"
   }

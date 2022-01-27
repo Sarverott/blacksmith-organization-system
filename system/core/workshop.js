@@ -20,6 +20,9 @@ class BlacksmithWorkshop extends BOS{
     this.extensions=[];
     this.configuration={};
   }
+  saveConfiguration(){
+    
+  }
   loadConfiguration(dirpath){
     var configList=fs.readdirSync(
       dirpath,
@@ -42,10 +45,15 @@ class BlacksmithWorkshop extends BOS{
     }
   }
   getByName(type, name){
+    var output=[];
     for(var i in this[type]){
-      if(this[type][i].name==name)return this[type][i];
+      if(this[type][i].name==name)output.push(this[type][i]);
     }
-    return null;
+    if(output.length()==1){
+      return output[0];
+    }else if(output.length()>1){
+      return output;
+    }else return null;
   }
   archivesSetup(...archiveConfig){
     for(var i in archiveConfig){
