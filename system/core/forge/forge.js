@@ -5,11 +5,11 @@
 */
 const path=require("path");
 const fs=require("fs");
-const {BOS}=require("./main.js");
+const {BOS, SE}=require("./../main.js");
 class BlacksmithForge extends BOS{
   setup(workshopHook, dirpath, name=path.basename(dirpath)){
     this.workshop=workshopHook;
-    BOS.SAFE_CREATE_DIR(dirpath);
+    SE.SAFE_CREATE_DIR(dirpath);
     this.dirpath=dirpath;
     this.name=name;
     this.subjects=[];
@@ -35,6 +35,12 @@ class BlacksmithForge extends BOS{
           }
         }
       }
+    }
+  }
+  addSubject(...subjectHook){
+    for(var i in subjectHook){
+      this.subjects.push(subjectHook[i]);
+      subjectHook[i].forge=this;
     }
   }
   getSuperprojectByName(name){
@@ -72,4 +78,8 @@ class BlacksmithForge extends BOS{
     this.workshop.addNewSheme(shemeHook);
   }
 }
+BOS.SET_RAPORT(
+  BlacksmithForge,
+  require("./raport-forge.js")
+);
 module.exports=BlacksmithForge;

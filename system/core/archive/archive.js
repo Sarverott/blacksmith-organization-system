@@ -5,11 +5,11 @@
 */
 const fs=require("fs");
 const path=require("path");
-const {BOS}=require("./main.js");
+const {BOS,SE}=require("./../main.js");
 class BlacksmithArchive extends BOS{
   setup(workshopHook, dirpath, name=path.basename(dirpath)){
     this.workshop=workshopHook;
-    BOS.SAFE_CREATE_DIR(dirpath);
+    SE.SAFE_CREATE_DIR(dirpath);
     this.name=name;
     this.dirpath=dirpath;
     this.dirlist=fs.readdirSync(dirpath,{withFileTypes:true});
@@ -32,4 +32,8 @@ class BlacksmithArchive extends BOS{
   //.isFile()
   //.name
 };
+BOS.SET_RAPORT(
+  BlacksmithArchive,
+  require("./raport-archive.js")
+);
 module.exports=BlacksmithArchive;

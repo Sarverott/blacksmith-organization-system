@@ -3,12 +3,12 @@
   part of Anubis System
   Sett Sarverott 2019
 */
-const {BOS}=require("./main.js");
+const {BOS, SE}=require("./main.js");
 const fs=require("fs");
 const path=require("path");
 class BlacksmithSubject extends BOS{
   setup(dirpath, name=path.basename(dirpath)){
-    BOS.SAFE_CREATE_DIR(dirpath);
+    SE.SAFE_CREATE_DIR(dirpath);
     //this.parrent=parrent;
     this.status="forged";
     this.name=name;

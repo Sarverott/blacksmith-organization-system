@@ -5,7 +5,7 @@
 */
 const fs=require("fs");
 const path=require("path");
-const {BOS, HOSTNAME}=require("./main.js");
+const {BOS, SE}=require("./../main.js");
 class BlacksmithWorkshop extends BOS{
   //static counter=0;
   setup(label){
@@ -124,6 +124,21 @@ class BlacksmithWorkshop extends BOS{
     for(var i in forgeHook){
       forgeHook[i].workshop=this;
       this.items.forges.push(forgeHook[i]);
+      for(var j in forgeHook[i].subjects){
+        this.addNewSuperproject(forgeHook[i].subjects[j]);
+        for(var k in forgeHook[i].subjects[j].subjects){
+          var tmpSub=forgeHook[i].subjects[j].subjects[k];
+          if(tmpSub instanceof BOS.Sheme)this.addNewSheme(tmpSub);
+          if(tmpSub instanceof BOS.Project)this.addNewProject(tmpSub);
+        }
+        /*
+        for(var k in forgeHook[i].subjects[j].throwboxes){
+          var tmpSub=forgeHook[i].subjects[j].throwboxes[k];
+          if(tmpSub instanceof BOS.Sheme)this.addNewSheme(tmpSub);
+          if(tmpSub instanceof BOS.Project)this.addNewProject(tmpSub);
+        }
+        */
+      }
       this.emitter.emit('add-forge', this, forgeHook[i]);
     }
   }
@@ -181,4 +196,8 @@ class BlacksmithWorkshop extends BOS{
   }*/
           //czy znasz gościa w cmentarnych szatach z misiem pod pachą
 };
+BOS.SET_RAPORT(
+  BlacksmithWorkshop,
+  require("./raport-workshop.js")
+);
 module.exports=BlacksmithWorkshop;
