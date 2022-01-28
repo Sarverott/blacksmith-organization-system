@@ -8,19 +8,22 @@ const path=require("path");
 const {BOS, HOSTNAME}=require("./main.js");
 class BlacksmithWorkshop extends BOS{
   //static counter=0;
-  setup(){
-    this.archives=[];
-    this.forges=[];
-
-    this.projects=[];
-    this.superprojects=[];
-    this.shemes=[];
-    this.throwboxes=[];
-
+  setup(label){
+    this.items={
+      archives:[],
+      forges:[],
+      projects:[],
+      superprojects:[],
+      shemes:[],
+      throwboxes:[],
+      sarcophags:[]
+    };
+    this.label=label;
     this.extensions=[];
     this.configuration={};
-    this.configurationPath=""
+    //this.configurationPath=""
   }
+
   saveConfiguration(filepath, readable=false){
     var configuration={
       "archives":[],
@@ -76,10 +79,11 @@ class BlacksmithWorkshop extends BOS{
       }
     }
   }
+
   getByName(type, name){
     var output=[];
-    for(var i in this[type]){
-      if(this[type][i].name==name)output.push(this[type][i]);
+    for(var i in this.items[type]){
+      if(this.items[type][i].name==name)output.push(this.items[type][i]);
     }
     if(output.length()==1){
       return output[0];
@@ -89,7 +93,7 @@ class BlacksmithWorkshop extends BOS{
   }
   archivesSetup(...archiveConfig){
     for(var i in archiveConfig){
-      this.archives.push(
+      this.items.archives.push(
         new BOS.Archive(
           this,
           archiveConfig[i].path,
@@ -100,7 +104,7 @@ class BlacksmithWorkshop extends BOS{
   }
   forgesSetup(...forgeConfig){
     for(var i in forgeConfig){
-      this.forges.push(
+      this.items.forges.push(
         new BOS.Forge(
           this,
           forgeConfig[i].path,
@@ -109,20 +113,40 @@ class BlacksmithWorkshop extends BOS{
       );
     }
   }
-  addNewSuperproject(superprojectHook){
-    superprojectHook.workshop=this;
-    this.superprojects.push(superprojectHook);
-    this.emitter.emit('add-superproject');
+  addArchive(...archiveHook){
+    for(var i in archiveHook){
+      archiveHook[i].workshop=this;
+      this.items.archives.push(archiveHook[i]);
+      this.emitter.emit('add-archive', this, archiveHook[i]);
+    }
   }
-  addNewSheme(shemeHook){
-    shemeHook.workshop=this;
-    this.shemes.push(shemeHook);
-    this.emitter.emit('add-sheme');
+  addForge(...forgeHook){
+    for(var i in forgeHook){
+      forgeHook[i].workshop=this;
+      this.items.forges.push(forgeHook[i]);
+      this.emitter.emit('add-forge', this, forgeHook[i]);
+    }
   }
-  addNewProject(projectHook){
-    projectHook.workshop=this;
-    this.projects.push(projectHook);
-    this.emitter.emit('add-project');
+  addNewSuperproject(...superprojectHook){
+    for(var i in superprojectHook){
+      superprojectHook[i].workshop=this;
+      this.items.superprojects.push(superprojectHook[i]);
+      this.emitter.emit('add-superproject', this, superprojectHook[i]);
+    }
+  }
+  addNewSheme(...shemeHook){
+    for(var i in shemeHook){
+      shemeHook[i].workshop=this;
+      this.items.shemes.push(shemeHook[i]);
+      this.emitter.emit('add-sheme', this, shemeHook[i]);
+    }
+  }
+  addNewProject(...projectHook){
+    for(var i in projectHook){
+      projectHook[i].workshop=this;
+      this.items.projects.push(projectHook[i]);
+      this.emitter.emit('add-project', this, projectHook[i]);
+    }
   }
   /*
   uploadSuperprojectDir(source, destination){

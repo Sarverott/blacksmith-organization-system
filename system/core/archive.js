@@ -9,7 +9,7 @@ const {BOS}=require("./main.js");
 class BlacksmithArchive extends BOS{
   setup(workshopHook, dirpath, name=path.basename(dirpath)){
     this.workshop=workshopHook;
-    this.safeCreateDir(dirpath);
+    BOS.SAFE_CREATE_DIR(dirpath);
     this.name=name;
     this.dirpath=dirpath;
     this.dirlist=fs.readdirSync(dirpath,{withFileTypes:true});
@@ -24,16 +24,6 @@ class BlacksmithArchive extends BOS{
           new BOS.Sarcophag(this.dirlist[i].name, this.dirpath)
         );
       }
-    }
-    getRaport(){
-      return {
-        id:this.id,
-        path:this.dirpath,
-        name:this.name
-        //contains:this.subjects.map(function(subject){
-        //  return subject.id
-        //})
-      };
     }
     //this.workshop.emitter.emit('archive-created');
   }

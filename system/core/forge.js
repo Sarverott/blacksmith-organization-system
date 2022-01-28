@@ -9,21 +9,11 @@ const {BOS}=require("./main.js");
 class BlacksmithForge extends BOS{
   setup(workshopHook, dirpath, name=path.basename(dirpath)){
     this.workshop=workshopHook;
-    this.safeCreateDir(dirpath);
+    BOS.SAFE_CREATE_DIR(dirpath);
     this.dirpath=dirpath;
     this.name=name;
     this.subjects=[];
     //this.workshop.emitter.emit('create-forge');
-  }
-  getRaport(){
-    return {
-      id:this.id,
-      path:this.dirpath,
-      name:this.name,
-      contains:this.subjects.map(function(subject){
-        return subject.id
-      })
-    };
   }
   loadDirContentAsForge(){
     var listDirs=fs.readdirSync(this.dirpath, {withFileTypes:true});

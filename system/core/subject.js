@@ -8,7 +8,7 @@ const fs=require("fs");
 const path=require("path");
 class BlacksmithSubject extends BOS{
   setup(dirpath, name=path.basename(dirpath)){
-    this.safeCreateDir(dirpath);
+    BOS.SAFE_CREATE_DIR(dirpath);
     //this.parrent=parrent;
     this.status="forged";
     this.name=name;
@@ -24,7 +24,22 @@ class BlacksmithSubject extends BOS{
   }
   refreshContent(){
     var content={};
-    //content.files=fs.readdirSync(this.dirpath, {withFileTypes:true});
+    content.files=fs.readdirSync(
+      this.dirpath,
+      {withFileTypes:true}
+    ).map(function(file){
+      return {
+        name:file.name,
+        type:
+          (file.isFile())
+          ?
+          "flie"
+          :
+          (
+            (file.isDirectory())?"dir":"else"
+          )
+      }
+    });
     content.status=fs.statSync(this.dirpath);
     return content;
   }
@@ -76,7 +91,6 @@ class BlacksmithSubject extends BOS{
   }
   */
   //GITIGNORE READING NEEDED
-
   open(){
     this.emitter.emit('open');
   }
@@ -103,9 +117,6 @@ class BlacksmithSubject extends BOS{
   }
   change(){
     this.emitter.emit('change');
-  }
-  setFileWatch(){
-
   }
   /*loadStorybook(data){
     var tmp=[];
