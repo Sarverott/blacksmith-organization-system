@@ -6,7 +6,7 @@
 const {BOS}=require("./main.js");
 class BlacksmithThrowbox extends BOS.Subject{
   afterConstruct(){
-
+    //this.readContent();
   }
 }
 module.exports=BlacksmithThrowbox;

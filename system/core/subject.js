@@ -4,6 +4,8 @@
   Sett Sarverott 2019
 */
 const {BOS}=require("./main.js");
+const fs=require("fs");
+const path=require("path");
 class BlacksmithSubject extends BOS{
   setup(dirpath, name=path.basename(dirpath)){
     this.safeCreateDir(dirpath);
@@ -11,11 +13,70 @@ class BlacksmithSubject extends BOS{
     this.status="forged";
     this.name=name;
     this.dirpath=dirpath;
-    this.extensions=[];
+    //this.extensions=[];
     //this.history=[];
-    this.files=[];
-    this.watcher=null;
+    this.mainWatchHook=null;
+    this.content=this.refreshContent();
+    //GITIGNORE READING NEEDED
+    //this.files=[];
+    this.watcher=function(){};
+    //GITIGNORE READING NEEDED
   }
+  refreshContent(){
+    var content={};
+    //content.files=fs.readdirSync(this.dirpath, {withFileTypes:true});
+    content.status=fs.statSync(this.dirpath);
+    return content;
+  }
+  mainWatch(command){
+    switch(command){
+      case "start":
+        var tmpThis=this;
+        this.mainWatchHook=fs.watch(this.dirpath,function(...args){
+          args.push(tmpThis.refreshContent);
+          tmpThis.watcher(...args);
+        });
+      break;
+      case "stop":
+        if(this.mainWatchHook)this.mainWatchHook.close();
+      break;
+    }
+  }
+
+  //GITIGNORE READING NEEDED
+  /*
+  readContent(dirpath=this.dirpath){
+    var filelistTmp=fs.readdirSync(dirpath, {withFileTypes:true});
+    var output=[];
+    for(var i in filelistTmp){
+      var tmpFile={
+        "name":filelistTmp[i].name,
+        "path":path.join(dirpath,filelistTmp[i].name)
+      };
+      fs.stat(tmpFile.path,function(err, data){
+        tmpFile.status=data;
+      });
+      if(filelistTmp[i].isDirectory()){
+        tmpFile.type="dir";
+        tmpFile.content=this.readContent(tmpFile.path);
+      }else if(filelistTmp[i].isFile()){
+        tmpFile.type="file";
+        var tmpThis=this;
+        tmpFile.listener=fs.watchFile(tmpFile.path, function(...args){
+          tmpThis.watcher(...args);
+        });
+      }else{
+        tmpFile.type="else";
+      }
+      output.push(tmpFile);
+    }
+    if(dirpath===this.dirpath)this.files=output;
+    return output;
+    //fs.watch(path, action);
+  }
+  */
+  //GITIGNORE READING NEEDED
+
   open(){
     this.emitter.emit('open');
   }
@@ -42,6 +103,9 @@ class BlacksmithSubject extends BOS{
   }
   change(){
     this.emitter.emit('change');
+  }
+  setFileWatch(){
+
   }
   /*loadStorybook(data){
     var tmp=[];
@@ -71,7 +135,7 @@ class BlacksmithSubject extends BOS{
     }
     return tmpFiles;
   }*/
-  open(){
+  //open(){
     //if(this.isOpened()){
 
     //  return false;
@@ -85,37 +149,8 @@ class BlacksmithSubject extends BOS{
     //  });
     //}
     //this.onOpen();
-  }
-  save(){
-
-  }
-  onChange(){
-
-  }
-  close(){
-    this.reactToEvent("close");
-    if(this.watcher!=null){
-      this.watcher.close();
-      this.watcher=null;
-    }
-  }
-  createItemDir(){
-    fs.mkdirSync(this.getPath(), {recursive:true});
-  }
-  getPath(){
-    if(this.parrent instanceof BOS.Workshop){
-      return extras.joinPath(
-        this.getWorkshop().path,
-        this.name
-      );
-    }else{
-      return path.join(
-        this.getWorkshop().path,
-        this.getSuperproject().name,
-        this.name
-      );
-    }
-  }
+  //}
+  /*
   getWorkshop(){
     if(this.parrent instanceof BOS.Workshop){
       return this.parrent;
@@ -130,5 +165,6 @@ class BlacksmithSubject extends BOS{
       return this.parrent;
     }
   }
+  */
 }
 module.exports=BlacksmithSubject;

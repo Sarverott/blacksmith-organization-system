@@ -20,5 +20,19 @@ class BlacksmithSuperproject extends BOS.Subject{
   fillThrowbox(){
     this.throwbox[0].fill();
   }
+  getRaport(){
+    return {
+      id:this.id,
+      path:this.dirpath,
+      name:this.name,
+      status:this.content.status,
+      includes:this.subjects.map(function(subject){
+        return subject.id
+      }),
+      throwboxes:this.throwbox.map(function(subject){
+        return subject.id
+      })
+    };
+  }
 }
 module.exports=BlacksmithSuperproject;

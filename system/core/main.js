@@ -8,11 +8,11 @@ const HOSTNAME="setternet-C1";
 
 const EventEmitter = require('events');
 const fs=require("fs");
+
+var BOS=null;//just another shorter alias
+
 class BlacksmithOrganizationSystem{
   constructor(...args){
-  //constructor(...args){
-    //this.id=id;
-    //console.log();
     this.id=BlacksmithOrganizationSystem.idList("register", this);
     this.emitter=new EventEmitter();
     this.beforeConstruct(...args);
@@ -25,10 +25,40 @@ class BlacksmithOrganizationSystem{
   safeCreateDir(path){
     fs.mkdirSync(path,{recursive:true})
   }
-  static idList(action, item){
-    var BOS=BlacksmithOrganizationSystem;
+  getRaport(){
+    return {
+      id:this.id
+    };
+  }
+
+  static get Workshop(){return require("./workshop.js");}
+  static get Throwbox(){return require("./throwbox.js");}
+  static get Forge(){return require("./forge.js");}
+  static get Project(){return require("./project.js");}
+  static get Sacrophag(){return require("./sacrophag.js");}
+  static get Sheme(){return require("./sheme.js");}
+  static get Archive(){return require("./archive.js");}
+  static get Subject(){return require("./subject.js");}
+  static get Superproject(){return require("./superproject.js");}
+
+
+
+  static safeInitIDs(){
     if(typeof BOS.allIDs==='undefined')BOS.allIDs={};
     if(typeof BOS.counters==='undefined')BOS.counters={};
+  }
+  static getByID(id){
+    //var BOS=BlacksmithOrganizationSystem;
+    return BOS.idList("get-id", id);
+  }
+  static listIDs(){
+    //var BOS=BlacksmithOrganizationSystem;
+    BOS.safeInitIDs();
+    return Object.keys(BOS.allIDs);
+  }
+  static idList(action, item){
+    //var BOS=BlacksmithOrganizationSystem;
+    BOS.safeInitIDs();
     switch(action){
       case "register":
           var objectType=item.constructor.name.substring(10).toLowerCase();
@@ -42,17 +72,12 @@ class BlacksmithOrganizationSystem{
           return BOS.allIDs[item];
         break;
     }
-  };
-  static get Workshop(){return require("./workshop.js");}
-  static get Throwbox(){return require("./throwbox.js");}
-  static get Forge(){return require("./forge.js");}
-  static get Project(){return require("./project.js");}
-  static get Sacrophag(){return require("./sacrophag.js");}
-  static get Sheme(){return require("./sheme.js");}
-  static get Archive(){return require("./archive.js");}
-  static get Subject(){return require("./subject.js");}
-  static get Superproject(){return require("./superproject.js");}
+  }
 };
+
+BOS=BlacksmithOrganizationSystem;
+
 module.exports={
-  BOS:BlacksmithOrganizationSystem
+  BOS,
+  HOSTNAME
 };

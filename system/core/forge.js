@@ -13,7 +13,17 @@ class BlacksmithForge extends BOS{
     this.dirpath=dirpath;
     this.name=name;
     this.subjects=[];
-    this.workshop.emitter.emit('create-forge');
+    //this.workshop.emitter.emit('create-forge');
+  }
+  getRaport(){
+    return {
+      id:this.id,
+      path:this.dirpath,
+      name:this.name,
+      contains:this.subjects.map(function(subject){
+        return subject.id
+      })
+    };
   }
   loadDirContentAsForge(){
     var listDirs=fs.readdirSync(this.dirpath, {withFileTypes:true});
@@ -48,6 +58,7 @@ class BlacksmithForge extends BOS{
       dirpath,
       name
     );
+    superprojectHook.forge=this;
     this.workshop.addNewSuperproject(superprojectHook);
     this.subjects.push(superprojectHook);
     //return superprojectHook;
@@ -57,6 +68,7 @@ class BlacksmithForge extends BOS{
       dirpath,
       name
     );
+    projectHook.forge=this;
     this.getSuperprojectByName(groupName).addSubject(projectHook);
     this.workshop.addNewProject(projectHook);
   }
@@ -65,6 +77,7 @@ class BlacksmithForge extends BOS{
       dirpath,
       name
     );
+    shemeHook.forge=this;
     this.getSuperprojectByName(groupName).addSubject(shemeHook);
     this.workshop.addNewSheme(shemeHook);
   }

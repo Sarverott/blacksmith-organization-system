@@ -5,7 +5,7 @@
 */
 const fs=require("fs");
 const path=require("path");
-const {BOS}=require("./main.js");
+const {BOS, HOSTNAME}=require("./main.js");
 class BlacksmithWorkshop extends BOS{
   //static counter=0;
   setup(){
@@ -19,11 +19,43 @@ class BlacksmithWorkshop extends BOS{
 
     this.extensions=[];
     this.configuration={};
+    this.configurationPath=""
   }
-  saveConfiguration(){
-    
+  saveConfiguration(filepath, readable=false){
+    var configuration={
+      "archives":[],
+      "forges":[],
+      //"sarcophags":[],
+      "superprojects":[],
+      "projects":[],
+      "shemes":[],
+      "throwboxes":[]
+    };
+    for(var i in configuration){
+      for(var j in this[i]){
+        configuration[i].push(
+          this[i][j].getRaport()
+        );
+      }
+    }
+    //this.configuration.enviroment
+    configuration.hostname=HOSTNAME;
+    this.configuration[path.basename(filepath, ".json")]=configuration;
+    fs.writeFileSync(
+      filepath,
+      JSON.stringify(
+        ...(
+          (readable)
+          ?
+          [configuration, null, '\t']
+          :
+          [configuration]
+        )
+      )
+    );
   }
   loadConfiguration(dirpath){
+    var configuration={};
     var configList=fs.readdirSync(
       dirpath,
       {withFileTypes:true}
@@ -78,13 +110,19 @@ class BlacksmithWorkshop extends BOS{
     }
   }
   addNewSuperproject(superprojectHook){
+    superprojectHook.workshop=this;
     this.superprojects.push(superprojectHook);
+    this.emitter.emit('add-superproject');
   }
   addNewSheme(shemeHook){
+    shemeHook.workshop=this;
     this.shemes.push(shemeHook);
+    this.emitter.emit('add-sheme');
   }
   addNewProject(projectHook){
+    projectHook.workshop=this;
     this.projects.push(projectHook);
+    this.emitter.emit('add-project');
   }
   /*
   uploadSuperprojectDir(source, destination){
