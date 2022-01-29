@@ -55,10 +55,6 @@ class BlacksmithOrganizationSystem{
   static SAFE_INIT(){
     if(typeof BOS.allIDs==='undefined')BOS.allIDs={};
     if(typeof BOS.counters==='undefined')BOS.counters={};
-    if(typeof BOS.raporting=='undefined')BOS.raporting={
-      read:[],
-      write:[]
-    };
   }
   static get ALL(){
     BOS.SAFE_INIT();
@@ -114,14 +110,14 @@ class BlacksmithOrganizationSystem{
     for(var i in output.items){
       SE.SAFE_CREATE_DIR(path.join(dirpath, i));
       SE.WRITE_OUTPUT_FILE(
-        path.join(dirpath, i, "_bos-item-data.json"),
+        path.join(dirpath, i, "_item-data.bos.json"),
         output.items[i],
         readable
       );
     }
     output.items=Object.keys(output.items);
     SE.WRITE_OUTPUT_FILE(
-      path.join(dirpath, "_bos-general-record.json"),
+      path.join(dirpath, "_general-record.bos.json"),
       output,
       readable
     );
@@ -132,14 +128,14 @@ class BlacksmithOrganizationSystem{
     SE.SAFE_CREATE_DIR(dirpath);
     for(var i in output.items){
       SE.WRITE_OUTPUT_FILE(
-        path.join(dirpath, i+".json"),
+        path.join(dirpath, i+".bos.json"),
         output.items[i],
         readable
       );
     }
     output.items=Object.keys(output.items);
     SE.WRITE_OUTPUT_FILE(
-      path.join(dirpath, "_bos-general-record.json"),
+      path.join(dirpath, "_general-record.bos.json"),
       output,
       readable
     );
@@ -158,6 +154,7 @@ class BlacksmithOrganizationSystem{
     var output={
       savemode:"none",
       items:{},
+      counters:BOS.counters,
       hostname:HOSTNAME,
       enviroment:null
     };
@@ -168,6 +165,17 @@ class BlacksmithOrganizationSystem{
   }
   static LOAD_FILE(filepath){
     return BOS.LOAD(SE.READ_INPUT_FILE(filepath));
+  }
+  static LOAD_DIR(dirpath){
+    return BOS.LOAD(
+      SE.READ_INPUT_FILE(
+        path.join(
+          dirpath,
+          "_general-record.bos.json"
+        )
+      ),
+      dirpath
+    );
   }
   static get TYPE_HIERARHY(){
     return {
@@ -181,7 +189,7 @@ class BlacksmithOrganizationSystem{
       workshop:BOS.Workshop
     }
   }
-  static LOAD(input){
+  static LOAD(input, dirpath=null){
     HOSTNAME=input.hostname;
     BOS.SET_INSERT_MODE();
     var outWorkshop=[];
@@ -192,6 +200,34 @@ class BlacksmithOrganizationSystem{
             var tmpWorkshop=null;
             if(j.includes(i)){
               tmpWorkshop=BOS.TYPE_HIERARHY[i].READ(j, input.items[j]);
+            }
+            if(tmpWorkshop)outWorkshop.push(tmpWorkshop);
+          }
+        }
+      break;
+      case "onedir":
+        for(var i in BOS.TYPE_HIERARHY){
+          for(var j in input.items){
+            var tmpWorkshop=null;
+            if(j.includes(i)){
+              tmpWorkshop=BOS.TYPE_HIERARHY[i].READ(
+                j,
+                SE.READ_INPUT_FILE(path.join(dirpath, j+".bos.json"))
+              );
+            }
+            if(tmpWorkshop)outWorkshop.push(tmpWorkshop);
+          }
+        }
+      break;
+      case "dirtree":
+        for(var i in BOS.TYPE_HIERARHY){
+          for(var j in input.items){
+            var tmpWorkshop=null;
+            if(j.includes(i)){
+              tmpWorkshop=BOS.TYPE_HIERARHY[i].READ(
+                j,
+                SE.READ_INPUT_FILE(path.join(dirpath, j, "_item-data.bos.json"))
+              );
             }
             if(tmpWorkshop)outWorkshop.push(tmpWorkshop);
           }
