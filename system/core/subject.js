@@ -3,6 +3,25 @@
   part of Anubis System
   Sett Sarverott 2019
 */
+module.exports=function(BOS){
+  return class BlacksmithSubject extends BOS{
+    //static counter=0;
+    initializationOfObject(initOpts){
+      
+    }
+    loadConfiguration(){
+
+    }
+    eventListenersSetup(){
+
+    }
+
+  };
+
+
+}
+
+/*
 const {BOS, SE}=require("./main.js");
 const fs=require("fs");
 const path=require("path");
@@ -91,6 +110,7 @@ class BlacksmithSubject extends BOS{
   }
   */
   //GITIGNORE READING NEEDED
+/*
   open(){
     this.emitter.emit('open');
   }
@@ -177,5 +197,7 @@ class BlacksmithSubject extends BOS{
     }
   }
   */
+  /*
 }
 module.exports=BlacksmithSubject;
+*/

@@ -4,271 +4,125 @@
   Sett Sarverott 2019
 */
 
-var HOSTNAME="setternet-C1";
+var hostname="setternet-C1";
 
 const SE=require("./static-extender.js");
 
-const EventEmitter = require('events');
-const fs=require("fs");
-const path=require("path");
-var BOS=null;//just another shorter alias
-
-
-
 class BlacksmithOrganizationSystem{
-  constructor(...args){
-    this.id=BOS.REGIST(...(
-      (BOS.MODE=="insert")
-      ?
-      [this, args.shift()]
-      :
-      [this]
-    ));
-    this.emitter=new EventEmitter();
-    this.beforeConstruct(...args);
-    this.setup(...args);
-    this.afterConstruct(...args);
-  }
-  setup(){}
-  beforeConstruct(){}
-  afterConstruct(){}
+  constructor(name, path, initOpts={}, configOpts={}, eventOpts={}){
+    this.name=name;
+    this.path=path;
+    if(initOpts.hasOwnProperty("presetID")){
+      this.id=BOS.REGIST_ID(this, initOpts.presetID);
+    }else{
+      this.id=BOS.REGIST_ID(this);
+    }
 
-  /*
-  getRaport(){
-    return {
-      id:this.id
+    this.initializationOfObject(initOpts);
+    this.loadConfiguration(configOpts);
+    this.eventListenersSetup(eventOpts);
+  }
+  initializationOfObject(){}
+  loadConfiguration(){}
+  eventListenersSetup(){}
+
+  static INIT_INTERNALS(){
+    if(typeof BOS.TypeList == "undefined") BOS.TypeList={};
+    if(typeof BOS.IdRegistList == "undefined") BOS.IdRegistList={};
+  }
+  static INIT_BASE(){
+    BOS.INIT_INTERNALS();
+    var LibraryList={
+      os:require("os"),
+      tls:require("tls"),
+      crypto:require("crypto"),
+      http:require("http"),
+      https:require("https"),
+      net:require("net"),
+      child_process:require("child_process"),
+      fs:require("fs"),
+      path:require('path'),
+      events:require('events'),
+      carntools:require('../carnival-toolbox/main.js'),
     };
-  }
-  */
-
-  static get Workshop(){return require("./workshop/workshop.js");}
-  static get Throwbox(){return require("./throwbox/throwbox.js");}
-  static get Forge(){return require("./forge/forge.js");}
-  static get Project(){return require("./project/project.js");}
-  static get Sarcophag(){return require("./sarcophag/sarcophag.js");}
-  static get Sheme(){return require("./sheme/sheme.js");}
-  static get Archive(){return require("./archive/archive.js");}
-  static get Subject(){return require("./subject.js");}
-  static get Superproject(){return require("./superproject/superproject.js");}
-
-
-  static SAFE_INIT(){
-    if(typeof BOS.allIDs==='undefined')BOS.allIDs={};
-    if(typeof BOS.counters==='undefined')BOS.counters={};
-  }
-  static get ALL(){
-    BOS.SAFE_INIT();
-    return BOS.allIDs;
-  }
-  static GET_ID(id){
-    return BOS.ALL[id];
-  }
-  static GET_IDS(...id){
-    var output=[];
-    for(var i in id){
-      output.push(BOS.GET_ID(id[i]));
+    BOS.HOSTNAME=hostname;
+    Object.assign(BOS, LibraryList);
+    var ElementClassList=[
+      "workshop",
+      "throwbox",
+      "forge",
+      "project",
+      "sarcophag",
+      "sheme",
+      "archive",
+      "superproject",
+    ];
+    for(var i in ElementClassList){
+      BOS.INCLUDE_CLASS(ElementClassList[i]);
     }
-    return output;
   }
-  static LIST_ID(){
-    return Object.keys(BOS.ALL);
+  static EXEC_PROCEDURE(procedureName, ...args){
+    console.log(__dirname);
+    /*
+    BOS.child_process.execFileSync(
+      BOS.path.join(__dirname, "..", "..", procedureName)
+    );
+    */
   }
-  static SET_APPEND_MODE(){
-    BOS.idAddressingMode="append";
+  static FROM_ROOTDIR(...args){
+    return BOS.path.join(BOS.os.homedir(), ...args);
   }
-  static SET_INSERT_MODE(){
-    BOS.idAddressingMode="insert";
-  }
-  static get MODE(){
-    if(typeof BOS.idAddressingMode==='undefined')BOS.SET_APPEND_MODE();
-    return BOS.idAddressingMode;
-  }
-  static REGIST(item, id=null){
-    BOS.SAFE_INIT();
-    var objectType=item.constructor.name.substring(10).toLowerCase();
-    var tmpId=id;
-    if(BOS.MODE=="append"){
-      if(BOS.counters.hasOwnProperty(objectType))++BOS.counters[objectType];
-      else BOS.counters[objectType]=0;
-      tmpId=`${HOSTNAME}-${objectType}-${BOS.counters[objectType]}`;
-    }else if(BOS.MODE=="insert"){
-      var idData=id.split("-");
-      if(BOS.counters.hasOwnProperty(idData[2])){
-        if(parseInt(idData[3])>BOS.counters[idData[2]])
-          BOS.counters[idData[2]]=parseInt(idData[3]);
-      }else{
-        BOS.counters[objectType]=parseInt(idData[3]);
-      }
+  static REGIST_ID(item, id=null){
+    //BOS.INIT_INTERNALS();
+    if(id===null){
+      id="";
+      id+=BOS.HOSTNAME;
+      id+=".";
+      id+=item.constructor.name;
+      id+=".";
+      id+=item.constructor.INFO_STATS.count;
+      item.constructor.INFO_STATS.idRecord[id]=item;
+      BOS.IdRegistList[id]=item;
     }
-    BOS.allIDs[tmpId]=item;
-    return tmpId;
+    return id;
   }
-  static SAVE_DIRTREE(dirpath, readable=false){
-    var output=BOS.SAVE();
-    output.savemode="dirtree";
-    SE.SAFE_CREATE_DIR(dirpath);
-    for(var i in output.items){
-      SE.SAFE_CREATE_DIR(path.join(dirpath, i));
-      SE.WRITE_OUTPUT_FILE(
-        path.join(dirpath, i, "_item-data.bos.json"),
-        output.items[i],
-        readable
+  static get Subject(){
+    return require(`./subject.js`)(BOS);
+  }
+  static INCLUDE_CLASS(className){
+    if(!BOS.TypeList.hasOwnProperty(className)){
+      BOS.TypeList[className]=require(`./${className}/class.js`)(BOS);
+      BOS.TypeList[className].INFO_STATS={
+        idRecord:{},
+        get count(){
+          return Object.keys(this.idRecord).length;
+        }
+      };
+      BOS.TypeList[className].LISTENERS=require(`./${className}/listeners.js`);
+      BOS.TypeList[className].LOAD_EVENT=require(`./${className}/events/load.js`);
+      BOS.TypeList[className].SAVE_EVENT=require(`./${className}/events/save.js`);
+      BOS.TypeList[className].RECEIVE_EVENT=require(`./${className}/events/receive.js`);
+      BOS.TypeList[className].TRANSMIT_EVENT=require(`./${className}/events/transmit.js`);
+      Object.defineProperty(BOS.TypeList[className], "HELP_NOTE", {
+        get(){
+          return fs.readFileSync(`./${className}/README.md`);
+        }
+      });
+      var tmpType=BOS.TypeList[className];
+      var elementname=BOS.carntools.transform(className).from("camelcase").to("pascalcase").GO;
+      Object.defineProperty(
+        BOS,
+        elementname,
+        {get(){return tmpType;}}
       );
     }
-    output.items=Object.keys(output.items);
-    SE.WRITE_OUTPUT_FILE(
-      path.join(dirpath, "_general-record.bos.json"),
-      output,
-      readable
-    );
-  }
-  static SAVE_DIR(dirpath, readable=false){
-    var output=BOS.SAVE();
-    output.savemode="onedir";
-    SE.SAFE_CREATE_DIR(dirpath);
-    for(var i in output.items){
-      SE.WRITE_OUTPUT_FILE(
-        path.join(dirpath, i+".bos.json"),
-        output.items[i],
-        readable
-      );
-    }
-    output.items=Object.keys(output.items);
-    SE.WRITE_OUTPUT_FILE(
-      path.join(dirpath, "_general-record.bos.json"),
-      output,
-      readable
-    );
-  }
-  static SAVE_FILE(filepath, readable=false){
-    var output=BOS.SAVE();
-    output.savemode="onefile";
-    SE.WRITE_OUTPUT_FILE(
-      path.join(filepath),
-      output,
-      readable
-    );
-  }
-  static SAVE(){
-    BOS.SAFE_INIT();
-    var output={
-      savemode:"none",
-      items:{},
-      counters:BOS.counters,
-      hostname:HOSTNAME,
-      enviroment:null
-    };
-    for(var i in BOS.allIDs){
-      output.items[i]=BOS.writeRaport(BOS.allIDs[i]);
-    }
-    return output;
-  }
-  static LOAD_FILE(filepath){
-    return BOS.LOAD(SE.READ_INPUT_FILE(filepath));
-  }
-  static LOAD_DIR(dirpath){
-    return BOS.LOAD(
-      SE.READ_INPUT_FILE(
-        path.join(
-          dirpath,
-          "_general-record.bos.json"
-        )
-      ),
-      dirpath
-    );
-  }
-  static get TYPE_HIERARHY(){
-    return {
-      project:BOS.Project,
-      sheme:BOS.Sheme,
-      throwbox:BOS.Throwbox,
-      sarcophag:BOS.Sarcophag,
-      superproject:BOS.Superproject,
-      archive:BOS.Archive,
-      forge:BOS.Forge,
-      workshop:BOS.Workshop
-    }
-  }
-  static LOAD(input, dirpath=null){
-    HOSTNAME=input.hostname;
-    BOS.SET_INSERT_MODE();
-    var outWorkshop=[];
-    switch(input.savemode){
-      case "onefile":
-        for(var i in BOS.TYPE_HIERARHY){
-          for(var j in input.items){
-            var tmpWorkshop=null;
-            if(j.includes(i)){
-              tmpWorkshop=BOS.TYPE_HIERARHY[i].READ(j, input.items[j]);
-            }
-            if(tmpWorkshop)outWorkshop.push(tmpWorkshop);
-          }
-        }
-      break;
-      case "onedir":
-        for(var i in BOS.TYPE_HIERARHY){
-          for(var j in input.items){
-            var tmpWorkshop=null;
-            if(j.includes(i)){
-              tmpWorkshop=BOS.TYPE_HIERARHY[i].READ(
-                j,
-                SE.READ_INPUT_FILE(path.join(dirpath, j+".bos.json"))
-              );
-            }
-            if(tmpWorkshop)outWorkshop.push(tmpWorkshop);
-          }
-        }
-      break;
-      case "dirtree":
-        for(var i in BOS.TYPE_HIERARHY){
-          for(var j in input.items){
-            var tmpWorkshop=null;
-            if(j.includes(i)){
-              tmpWorkshop=BOS.TYPE_HIERARHY[i].READ(
-                j,
-                SE.READ_INPUT_FILE(path.join(dirpath, j, "_item-data.bos.json"))
-              );
-            }
-            if(tmpWorkshop)outWorkshop.push(tmpWorkshop);
-          }
-        }
-      break;
-    }
-    BOS.SET_APPEND_MODE();
-    return outWorkshop;
-  }
-  static SET_RAPORT(itemClass,raportingObject){
-    for(var i in raportingObject){
-      itemClass[i]=raportingObject[i];
-    }
-  }
-  //static readRaport(id, data){
-  //  var type=id.split("-");
-  //  var type
-  //}
-  static writeRaport(bosItem){
-    var x=[
-      BOS.Project,
-      BOS.Sheme,
-      BOS.Throwbox,
-      BOS.Sarcophag,
-      BOS.Superproject,
-      BOS.Archive,
-      BOS.Forge,
-      BOS.Workshop
-    ]
-    for(var i in x){
-      //console.log(typeof bosItem, "  ", typeof x[i]);
-      if(bosItem instanceof x[i]){
-        return x[i].WRITE(bosItem);
-      }
-    }
-    console.error(bosItem);
-    return null;
+    return BOS.TypeList[className];
   }
 };
 
 BOS=BlacksmithOrganizationSystem;
+
+BOS.INIT_BASE();
 
 module.exports={
   BOS,
