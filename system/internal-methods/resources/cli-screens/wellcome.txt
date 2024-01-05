@@ -1,0 +1,19 @@
+********************************
+   Blacksmith Organization System
+     ______    _____    _____
+     | ___ \  |  _  |  /  ___|
+     | |_/ /  | | | |  \ `--.
+     | ___ \  | | | |   `--. \
+     | |_/ /  \ \_/ /  /\__/ /
+     \____(_)  \___(_) \____(_)
+
+    By Sett Sarverott @ 2019-2023
+
+### COMMANDS:
+
+HELP - read manuals
+STATUS - show status of workshop
+DEPLOY - deploy workshop on machine
+BACKUP - backup current system
+SYNC - synchronize workshop
+EXIT

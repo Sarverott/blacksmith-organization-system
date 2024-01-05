@@ -6,7 +6,7 @@
 module.exports=function(BOS){
   return class BlacksmithForge extends BOS{
     initializationOfObject(){
-
+      this.opened=[];
     }
     loadConfiguration(){
 

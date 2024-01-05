@@ -8,10 +8,10 @@ module.exports=function(BOS){
   return class BlacksmithSuperproject extends BOS.Subject{
     initializationOfObject(){
       this.children=[];
-      this.description={};
+      this.info={};
     }
     loadConfiguration(){
-
+      //this.info.
     }
     eventListenersSetup(){
 

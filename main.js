@@ -3,15 +3,23 @@ const {BOS}=require("./system/core/main.js");
 if(require.main===module){
 
   //console.log(BOS);
-  BOS.EXEC_PROCEDURE("fsdafdsad");
+  //BOS.EXEC_PROCEDURE("purge-workshop");
+  if(!BOS.WORKSHOP_DEPLOYED){
+    console.log("deploying workshop at: "+BOS.FROM_ROOTDIR());
+    BOS.EXEC_PROCEDURE("deploy-new-workshop");
+  }else{
+    console.log("workshop found at: "+BOS.FROM_ROOTDIR());
+  }
 
   var factory=new BOS.Workshop(
-    "workshop-name",
-    BOS.FROM_ROOTDIR("Workshop")
+    "sarverott-forest",
+    BOS.FROM_ROOTDIR()
   );
 
   console.log(factory);
+  BOS.SAVE_CONFIG();
   console.log(BOS.TypeList);
+  BOS.START_CLI_INTERFACE();
   //factory.loadConfiguration("./tmp-enviroment/config");
   //factory.archivesSetup(...factory.configuration.main.archives);
   //factory.forgesSetup(...factory.configuration.main.forges);

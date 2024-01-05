@@ -4,8 +4,6 @@
   Sett Sarverott 2019
 */
 
-var hostname="setternet-C1";
-
 const SE=require("./static-extender.js");
 
 class BlacksmithOrganizationSystem{
@@ -30,23 +28,7 @@ class BlacksmithOrganizationSystem{
     if(typeof BOS.TypeList == "undefined") BOS.TypeList={};
     if(typeof BOS.IdRegistList == "undefined") BOS.IdRegistList={};
   }
-  static INIT_BASE(){
-    BOS.INIT_INTERNALS();
-    var LibraryList={
-      os:require("os"),
-      tls:require("tls"),
-      crypto:require("crypto"),
-      http:require("http"),
-      https:require("https"),
-      net:require("net"),
-      child_process:require("child_process"),
-      fs:require("fs"),
-      path:require('path'),
-      events:require('events'),
-      carntools:require('../carnival-toolbox/main.js'),
-    };
-    BOS.HOSTNAME=hostname;
-    Object.assign(BOS, LibraryList);
+  static INIT_CLASSES(){
     var ElementClassList=[
       "workshop",
       "throwbox",
@@ -61,16 +43,36 @@ class BlacksmithOrganizationSystem{
       BOS.INCLUDE_CLASS(ElementClassList[i]);
     }
   }
+  static EXTENDPACK(functPack){
+    //console.log(require(`../internal-methods/${functPack}.js`));
+    Object.assign(BOS, require(`../internal-methods/${functPack}.js`)(BOS));
+  }
+  static INIT_BASE(){
+    BOS.EXTENDPACK("libraries");
+    BOS.INIT_INTERNALS();
+    BOS.HOSTNAME=BOS.os.hostname();
+    BOS.INIT_CLASSES();
+    BOS.EXTENDPACK("cli-interface");
+  }
   static EXEC_PROCEDURE(procedureName, ...args){
-    console.log(__dirname);
-    /*
+    //console.log(__dirname);
     BOS.child_process.execFileSync(
-      BOS.path.join(__dirname, "..", "..", procedureName)
+      BOS.path.join(__dirname, "..", "..", "shell-procedures", procedureName+".sh"),
+      args
     );
-    */
+  }
+  static SAVE_CONFIG(){
+    for(var i in BOS.IdRegistList){
+      console.log(BOS.FROM_ROOTDIR("config", `${i}.json`));
+      console.log(JSON.stringify(BOS.IdRegistList[i]));
+      console.log("_");
+    }
+  }
+  static get WORKSHOP_DEPLOYED(){
+    return BOS.fs.existsSync(BOS.FROM_ROOTDIR());
   }
   static FROM_ROOTDIR(...args){
-    return BOS.path.join(BOS.os.homedir(), ...args);
+    return BOS.path.join(BOS.os.homedir(), "Workshop", ...args);
   }
   static REGIST_ID(item, id=null){
     //BOS.INIT_INTERNALS();

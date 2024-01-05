@@ -7,10 +7,15 @@
 
 module.exports=function(BOS){
   return class BlacksmithWorkshop extends BOS{
-    //static counter=0;
     initializationOfObject(initOpts){
-      //this.archive=//new BOS.Archive(`${this.name}-archive`);
-      //this.forge=//new BOS.Forge(`${this.name}-forge`);
+      this.archive=new BOS.Archive(
+        `${this.name}-archive`,
+        BOS.FROM_ROOTDIR("archive")
+      );
+      this.forge=new BOS.Forge(
+        `${this.name}-forge`,
+        BOS.FROM_ROOTDIR("forge")
+      );
     }
     loadConfiguration(){
 
