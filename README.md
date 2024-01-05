@@ -1,1 +1,5 @@
-# blacksmith-organization-system
+
+# Blacksmith Organization System
+### automation of management in personal forest of projects  
+###### Sett Sarverott @ 2019-2024
+---
