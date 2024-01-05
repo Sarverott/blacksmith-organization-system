@@ -9,6 +9,6 @@ module.exports=function(){
     child_process:require("child_process"),
     fs:require("fs"),
     path:require('path'),
-    carntools:require('../carnival-toolbox/main.js'),
+    carntools:require('carnival-toolbox'),
   }
 }

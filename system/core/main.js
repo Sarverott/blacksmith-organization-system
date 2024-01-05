@@ -111,7 +111,7 @@ class BlacksmithOrganizationSystem{
         }
       });
       var tmpType=BOS.TypeList[className];
-      var elementname=BOS.carntools.transform(className).from("camelcase").to("pascalcase").GO;
+      var elementname=BOS.carntools.caseChange.transform(className).from("camelcase").to("pascalcase").GO;
       Object.defineProperty(
         BOS,
         elementname,
