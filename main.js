@@ -1,8 +1,8 @@
 const {BOS}=require("./system/core/main.js");
-const os=require("os");
 
 if(require.main===module){
-
+  const os=require("os");
+  
   var factory=new BOS.Workshop("workshop-name");
 
   //factory.loadConfiguration("./tmp-enviroment/config");
