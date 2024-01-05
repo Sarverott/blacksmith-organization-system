@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-rm -r ~/Workshop
+rm -r ~/.__WORKSHOP
 exit
