@@ -6,6 +6,12 @@
 
 const SE=require("./static-extender.js");
 
+const {caseX}=require('carnival-toolbox');
+const child_process = require('child_process');
+const os = require('os');
+const TYPES_LIST = {}
+const ID_REJESTR = {}
+
 class BlacksmithOrganizationSystem{
   constructor(name, path, initOpts={}, configOpts={}, eventOpts={}){
     this.name=name;
@@ -24,10 +30,6 @@ class BlacksmithOrganizationSystem{
   loadConfiguration(){}
   eventListenersSetup(){}
 
-  static INIT_INTERNALS(){
-    if(typeof BOS.TypeList == "undefined") BOS.TypeList={};
-    if(typeof BOS.IdRegistList == "undefined") BOS.IdRegistList={};
-  }
   static INIT_CLASSES(){
     var ElementClassList=[
       "workshop",
@@ -49,22 +51,21 @@ class BlacksmithOrganizationSystem{
   }
   static INIT_BASE(){
     BOS.EXTENDPACK("libraries");
-    BOS.INIT_INTERNALS();
-    BOS.HOSTNAME=BOS.os.hostname();
+    BOS.HOSTNAME=os.hostname();
     BOS.INIT_CLASSES();
     BOS.EXTENDPACK("cli-interface");
   }
   static EXEC_PROCEDURE(procedureName, ...args){
     //console.log(__dirname);
-    BOS.child_process.execFileSync(
+    child_process.execFileSync(
       BOS.path.join(__dirname, "..", "..", "shell-procedures", procedureName+".sh"),
       args
     );
   }
   static SAVE_CONFIG(){
-    for(var i in BOS.IdRegistList){
+    for(var i in ID_REJESTR){
       console.log(BOS.FROM_ROOTDIR("config", `${i}.json`));
-      console.log(JSON.stringify(BOS.IdRegistList[i]));
+      console.log(JSON.stringify(ID_REJESTR[i]));
       console.log("_");
     }
   }
@@ -72,7 +73,7 @@ class BlacksmithOrganizationSystem{
     return BOS.fs.existsSync(BOS.FROM_ROOTDIR());
   }
   static FROM_ROOTDIR(...args){
-    return BOS.path.join(BOS.os.homedir(), "Workshop", ...args);
+    return BOS.path.join(os.homedir(), ".__WORKSHOP", ...args);
   }
   static REGIST_ID(item, id=null){
     //BOS.INIT_INTERNALS();
@@ -84,7 +85,7 @@ class BlacksmithOrganizationSystem{
       id+=".";
       id+=item.constructor.INFO_STATS.count;
       item.constructor.INFO_STATS.idRecord[id]=item;
-      BOS.IdRegistList[id]=item;
+      ID_REJESTR[id]=item;
     }
     return id;
   }
@@ -92,39 +93,41 @@ class BlacksmithOrganizationSystem{
     return require(`./subject.js`)(BOS);
   }
   static INCLUDE_CLASS(className){
-    if(!BOS.TypeList.hasOwnProperty(className)){
-      BOS.TypeList[className]=require(`./${className}/class.js`)(BOS);
-      BOS.TypeList[className].INFO_STATS={
+    if(!TYPES_LIST.hasOwnProperty(className)){
+      TYPES_LIST[className]=require(`./${className}/class.js`)(BOS);
+      TYPES_LIST[className].INFO_STATS={
         idRecord:{},
         get count(){
           return Object.keys(this.idRecord).length;
         }
       };
-      BOS.TypeList[className].LISTENERS=require(`./${className}/listeners.js`);
-      BOS.TypeList[className].LOAD_EVENT=require(`./${className}/events/load.js`);
-      BOS.TypeList[className].SAVE_EVENT=require(`./${className}/events/save.js`);
-      BOS.TypeList[className].RECEIVE_EVENT=require(`./${className}/events/receive.js`);
-      BOS.TypeList[className].TRANSMIT_EVENT=require(`./${className}/events/transmit.js`);
-      Object.defineProperty(BOS.TypeList[className], "HELP_NOTE", {
+      TYPES_LIST[className].LISTENERS=require(`./${className}/listeners.js`);
+      TYPES_LIST[className].LOAD_EVENT=require(`./${className}/events/load.js`);
+      TYPES_LIST[className].SAVE_EVENT=require(`./${className}/events/save.js`);
+      TYPES_LIST[className].RECEIVE_EVENT=require(`./${className}/events/receive.js`);
+      TYPES_LIST[className].TRANSMIT_EVENT=require(`./${className}/events/transmit.js`);
+      Object.defineProperty(TYPES_LIST[className], "HELP_NOTE", {
         get(){
           return fs.readFileSync(`./${className}/README.md`);
         }
       });
-      var tmpType=BOS.TypeList[className];
-      var elementname=BOS.carntools.caseChange.transform(className).from("camelcase").to("pascalcase").GO;
+      var tmpType=TYPES_LIST[className];
+      var elementname=caseX.transform(className).from("camelcase").to("pascalcase").GO;
       Object.defineProperty(
         BOS,
         elementname,
         {get(){return tmpType;}}
       );
     }
-    return BOS.TypeList[className];
+    return TYPES_LIST[className];
   }
 };
 
-BOS=BlacksmithOrganizationSystem;
 
+BOS=BlacksmithOrganizationSystem;
 BOS.INIT_BASE();
+BOS.TypeList=TYPES_LIST;
+BOS.IdRegistList=ID_REJESTR
 
 module.exports={
   BOS,
