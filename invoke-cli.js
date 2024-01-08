@@ -1,20 +1,38 @@
+
+
 const {BOS}=require("./system/core/main.js")
 
+function mainProcedure(invokeChain){
+
+}
+
+
 if(!BOS.WORKSHOP_DEPLOYED){
+
   console.log("deploying workshop at: "+BOS.FROM_ROOTDIR());
-  BOS.EXEC_PROCEDURE("deploy-new-workshop");
+
+  BOS.EXEC_PROCEDURE("deploy-new-workshop"); // do shell script from shell-procedures
+
 }else{
+
   console.log("workshop found at: "+BOS.FROM_ROOTDIR());
+
 }
 
 var factory=new BOS.Workshop(
+
   "sarverott-forest",
+
   BOS.FROM_ROOTDIR()
+
 );
 
 console.log(factory);
+
 BOS.SAVE_CONFIG();
+
 console.log(BOS.TypeList);
+
 BOS.START_CLI_INTERFACE();
 
 
