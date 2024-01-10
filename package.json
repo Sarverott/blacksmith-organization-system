@@ -1,6 +1,6 @@
 {
   "name": "blacksmith-organization-system",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Blacksmith Organization System - manage projects folders and files in your multiple workplaces, on servers and in publication repositories",
   "main": "main.js",
   "scripts": {
