@@ -29,5 +29,5 @@ if(require.main===module){
   //console.log(invokingChain);
   //
 }else{
-  module.exports=require("./system/core/main.js").BOS;
+  module.exports=require("./system/core/main.js").BOS.INITIALIZE;
 }

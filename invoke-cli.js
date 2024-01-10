@@ -1,39 +1,51 @@
 
+const readline = require('readline');
+const repl = require('repl');
+const fs = require('fs');
+const path = require('path');
+const {BOS}=require("./system/core/main.js");
 
-const {BOS}=require("./system/core/main.js")
+const {INTERFACE} = BOS.loadInterface("cli");
 
 function mainProcedure(invokeChain){
+  INTERFACE.INIT();
+  INTERFACE.interface.context={BOS};
+  //BOS
+  //CLI.textart("logo-header");
+  //CLI.print="hello world!";
+  //INTERFACE.prompt=".exit";
+  //if(!BOS.SYSTEM_DEPLOYED){
 
+    //console.log("deploying workshop at: "+BOS.FROM_ROOTDIR());
+
+    //BOS.EXEC_PROCEDURE("deploy-new-workshop"); // do shell script from shell-procedures
+
+  //}else{
+
+    //console.log("workshop found at: "+BOS.FROM_ROOTDIR());
+
+  //}
+
+  //var factory=new BOS.Workshop(
+
+    //"sarverott-forest",
+
+    //BOS.FROM_ROOTDIR()
+
+  //);
+
+  //console.log(factory);
+
+  //BOS.SAVE_CONFIG();
+
+  //console.log(BOS.TypeList);
+
+  //BOS.START_CLI_INTERFACE();
 }
 
+module.exports=mainProcedure;
 
-if(!BOS.WORKSHOP_DEPLOYED){
 
-  console.log("deploying workshop at: "+BOS.FROM_ROOTDIR());
-
-  BOS.EXEC_PROCEDURE("deploy-new-workshop"); // do shell script from shell-procedures
-
-}else{
-
-  console.log("workshop found at: "+BOS.FROM_ROOTDIR());
-
-}
-
-var factory=new BOS.Workshop(
-
-  "sarverott-forest",
-
-  BOS.FROM_ROOTDIR()
-
-);
-
-console.log(factory);
-
-BOS.SAVE_CONFIG();
-
-console.log(BOS.TypeList);
-
-BOS.START_CLI_INTERFACE();
 
 
 
