@@ -7,13 +7,12 @@ this is huge mess, i had overartistic phase about code, because of lack of reaso
 
 # entry 2:
 model is autodeclaring own internals
-|model-dir:
- - class.js - declaration of model
- - fundation.json - data structure of model
- - README.md - about that type
-  |action:
-    commands and available acts
-  |listeners:
-    all watchers and other stuff
-  |events:
-    basic behaviour
+> model directory:
+ - **class.js** - declaration of model
+ - ~fundation.json~ **index.json** - data structure of model
+ - **README.md** - about that type
+ - _**actions**_ - _DIR_ commands and available acts
+ - _**listeners**_ - _DIR_ all watchers and other stuff
+ - _**events**_ - _DIR_ basic behaviour
+ - _**extenders**_ - _DIR_ flat extension for every new object, produced by class.js
+ - _**methods**_ - _DIR_ synchronous static functions, resulting with return values

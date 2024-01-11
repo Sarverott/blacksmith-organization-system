@@ -13,7 +13,6 @@ extends BOS
   {
     constructor(){
       super(this.constructor.name, __dirname);
-
     }
   }
 
