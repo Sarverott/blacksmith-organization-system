@@ -16,3 +16,5 @@ model is autodeclaring own internals
  - _**events**_ - _DIR_ basic behaviour
  - _**extenders**_ - _DIR_ flat extension for every new object, produced by class.js
  - _**methods**_ - _DIR_ synchronous static functions, resulting with return values
+
+# entry 3:
