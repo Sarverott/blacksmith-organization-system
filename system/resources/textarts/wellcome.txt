@@ -1,0 +1,10 @@
+
+
+### COMMANDS:
+
+HELP - read manuals
+STATUS - show status of workshop
+DEPLOY - deploy workshop on machine
+BACKUP - backup current system
+SYNC - synchronize workshop
+EXIT

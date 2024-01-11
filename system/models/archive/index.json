@@ -1,0 +1,18 @@
+{
+  "description":"",
+  "main":"class.js",
+  "manuals":[],
+  "inclusions":{
+    "listeners":{
+      "on-change":""
+    },
+    "actions":{
+      "open":""
+    },
+    "events":{
+      "save"
+    }
+  },
+  "public":{},
+  "private":{}
+}
