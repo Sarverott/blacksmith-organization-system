@@ -6,19 +6,16 @@
 module.exports=function(BOS){
   return class BlacksmithSubject extends BOS{
     //static counter=0;
-    initializationOfObject(initOpts){
-      
-    }
-    loadConfiguration(){
+    //initializationOfObject(initOpts){
 
-    }
-    eventListenersSetup(){
+    //}
+    //loadConfiguration(){
 
-    }
+    //}
+    //eventListenersSetup(){
 
+    //}
   };
-
-
 }
 
 /*

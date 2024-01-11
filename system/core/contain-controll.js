@@ -7,7 +7,7 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const {loadJSON, changeCase} = require('carnival-toolbox');
+const {loadJSON, changeCase, capitalFirst} = require('carnival-toolbox');
 
 const CONTAIN_CONTROLL={
 
@@ -17,30 +17,6 @@ const CONTAIN_CONTROLL={
         os.homedir(),
         ".__WORKSHOP"
       )
-    );
-  },
-  mountGetterModule(classHook, modelname){
-    Object.defineProperty(
-      this,
-      modelname,
-      {
-        get(){
-          return classHook;
-        }
-      }
-    );
-  },
-  LoadModel(name){
-    //console.log(name);
-    this.TypeList[name]=require(
-      this.PathTo( "system", "models", name, "class.js")
-    );
-    var modelname = changeCase(name).from("camelcase").to("pascalcase").GO;
-    this.mountGetterModule(this.TypeList[name], modelname);
-  },
-  ListModelsDir(){
-    return fs.readdirSync(
-      this.PathTo("system", "models")
     );
   }
 }

@@ -13,8 +13,14 @@ const fs = require('fs');
 const path = require('path');
 const EventEmitter = require('events');
 
-const TYPES_LIST = {}
+const CONTROLLERS = {}
+const MODELS = {}
 const ID_REJESTR = {}
+const FACTORS = {}
+const INTERFACES = {}
+const COMMANDS = {}
+
+
 
 class BlacksmithOrganizationSystem extends EventEmitter{
   constructor(classname, modelDir){
@@ -92,6 +98,9 @@ class BlacksmithOrganizationSystem extends EventEmitter{
       );
     }
   }
+  static get Subject(){
+    return require("./basic-subject-model.js")(BOS);
+  }
   static PathTo(...locationChain){
     return path.join(__dirname, "..", "..", ...locationChain);
   }
@@ -102,39 +111,71 @@ class BlacksmithOrganizationSystem extends EventEmitter{
     return BOS;
   }
   static get INITIALIZE(){
-    if(TYPES_LIST.keys().length==0)this.LOAD_ALL_MODELS();
+    return BOS.LOAD();
+  }
+  static BOX_EMPTY(boxHook){
+    return Object.keys(boxHook).length==0;
+  }
+  static LOAD(...limiter){
+    if(this.BOX_EMPTY(CONTROLLERS))this.LoadAllControllers();
+    if(this.BOX_EMPTY(MODELS))this.LoadAllModels();
+    if(this.BOX_EMPTY(FACTORS))this.LoadAllFactors();
+    if(this.BOX_EMPTY(COMMANDS))this.LoadAllCommands();
+    /*}
+    for(var i in loadList){
+      if(
+        (
+          limiter.length==0
+          ||
+          limiter.includes(i)
+        )
+        &&
+        loadList[i][0])
+      ){
+        this[
+          loadList[i][1]
+        ]();
+      }
+    }*/
     return this;
   }
-  static LOAD_ALL_MODELS(){
-    const models=this.ListModelsDir();
-    for(var model of models){
-      this.LoadModel(model);
-    }
-  }
+  //static debugLog(...args){
+  //  if(BOS.DEBUGGING)console.log(...args);
+  //}
 };
+
+//BOS.DEBUGGING=false;
 
 BOS=BlacksmithOrganizationSystem;
 //BOS.INIT_BASE();
-BOS.TypeList=TYPES_LIST;
-BOS.IdRegistList=ID_REJESTR
+//BOS.TypeList=TYPES_LIST;
+//BOS.IdRegistList=ID_REJESTR
 
 const FORM=require('./extending-mod.js')(BOS);
-
-const autolistControllers=fs.readdirSync(__dirname).filter(
-  (filename)=>filename.endsWith("-controll.js")
-).map(
-  (name)=>path.basename(name, ".js")
-);
-for(var item of autolistControllers){
-  BOS.loadController(item);
-  console.log(item)
-}
-
+BOS.Update({
+  CONTROLLERS,
+  MODELS,
+  ID_REJESTR,
+  FACTORS,
+  INTERFACES,
+  COMMANDS
+});
+//BOS.LOAD();
 //BOS.loadInterface()
+
+//
 
 module.exports={
   BOS,
-  TYPES_LIST
+  get INITIALIZE(){
+    return BOS.INITIALIZE;
+  }
+  //CONTROLLERS,
+  //MODELS,
+  //ID_REJESTR,
+  //FACTORS,
+  //INTERFACES,
+  //COMMANDS
   //ID_REJESTR
   //FORM
 
