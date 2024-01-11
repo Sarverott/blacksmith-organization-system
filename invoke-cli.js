@@ -3,13 +3,16 @@ const readline = require('readline');
 const repl = require('repl');
 const fs = require('fs');
 const path = require('path');
-const {BOS}=require("./system/core/main.js");
+const BOS=require("./system/core/main.js").INITIALIZE;
 
-const {INTERFACE} = BOS.loadInterface("cli");
+//BOS.LOAD();
+
+const {INTERFACE, CLI} = BOS.LoadInterface("cli");
 
 function mainProcedure(invokeChain){
-  INTERFACE.INIT();
-  INTERFACE.interface.context={BOS};
+
+  INTERFACE.INIT({BOS, INTERFACE, CLI, require});
+  //INTERFACE.interface.context=;
   //BOS
   //CLI.textart("logo-header");
   //CLI.print="hello world!";
