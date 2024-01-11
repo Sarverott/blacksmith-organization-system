@@ -39,12 +39,6 @@ const EXTENDER={
     debug.log("CONTROLER-LOAD:", [name]);
     this.CONTROLLERS[name]=this.LoadExt("system", "core", name);
   },
-  LoadAllFactors(){
-    const models=this.ListModelsDir();
-    for(var model of models){
-      this.LoadModel(model);
-    }
-  },
   LoadInterface(name){
     debug.log("INTERFACE-LOAD:", [name]);
     //this.loadExt("system", "interfaces", name)
@@ -135,7 +129,12 @@ const EXTENDER={
   },
   ListModelsDir(){
     return fs.readdirSync(
-      this.PathTo("system", "models")
+      this.PathTo("system", "models"),
+      {withFileTypes:true}
+    ).filter(
+      (model)=>model.isDirectory()
+    ).map(
+      (model)=>model.name
     );
   }
 }
