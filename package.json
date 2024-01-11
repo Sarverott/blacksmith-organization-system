@@ -1,6 +1,6 @@
 {
   "name": "blacksmith-organization-system",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Blacksmith Organization System - manage projects folders and files in your multiple workplaces, on servers and in publication repositories",
   "main": "main.js",
   "scripts": {
@@ -27,5 +27,8 @@
   "homepage": "https://github.com/Sarverott/blacksmith-organization-system#readme",
   "dependencies": {
     "carnival-toolbox": "^1.2.4"
+  },
+  "publishConfig": {
+    "@sarverott:registry": "https://registry.npmjs.org/"
   }
 }
