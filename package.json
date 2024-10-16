@@ -8,7 +8,8 @@
     "build": "sh ./dev/builder.sh",
     "deploy": "sh ./dev/deployer.sh",
     "test": "node main.js cli --debug",
-    "start": "node main.js cli"
+    "start": "node main.js cli",
+    "gui": "electron ."
   },
   "repository": {
     "type": "git",

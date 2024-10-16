@@ -1,0 +1,20 @@
+[project]
+name = "BOS_pyAPI"
+version = "0.0.1"
+authors = [
+  { name="Sett Sarverott", email="sarverott@gmail.com" },
+]
+description = "blacksmith organization system"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.8"
+keywords = ["egg", "bacon", "sausage", "tomatoes", "Lobster Thermidor"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Linux",
+]
+
+[project.urls]
+Homepage = "https://github.com/sarverott/blacksmith-organization-system"
+Issues = "https://github.com/sarverott/blacksmith-organization-system/issues"

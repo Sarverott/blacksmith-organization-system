@@ -1,2 +1,9 @@
 python3 -m venv .venv
-npm install
+
+source env/bin/activate
+
+#pip freeze > requirements.txt
+
+pip install -r requirements.txt
+
+deactivate
