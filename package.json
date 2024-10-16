@@ -2,8 +2,11 @@
   "name": "blacksmith-organization-system",
   "version": "0.4.2",
   "description": "Blacksmith Organization System - manage projects folders and files in your multiple workplaces, on servers and in publication repositories",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
+    "init-python": "sh ./dev/env-init.sh",
+    "build": "sh ./dev/builder.sh",
+    "deploy": "sh ./dev/deployer.sh",
     "test": "node main.js cli --debug",
     "start": "node main.js cli"
   },
@@ -26,7 +29,10 @@
   },
   "homepage": "https://github.com/Sarverott/blacksmith-organization-system#readme",
   "dependencies": {
-    "carnival-toolbox": "^1.2.4"
+    "carnival-toolbox": "^1.2.4",
+    "express": "^4.21.1",
+    "socket.io": "^4.8.0",
+    "vue": "^3.5.12"
   },
   "publishConfig": {
     "@sarverott:registry": "https://registry.npmjs.org/"
@@ -34,5 +40,9 @@
   "directories": {
     "doc": "docs"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "eslint": "^9.12.0",
+    "eslint-plugin-vue": "^9.29.0"
+  }
 }
