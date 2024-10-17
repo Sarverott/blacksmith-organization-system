@@ -1,6 +1,4 @@
 
-# Blacksmith Organization System
-
 ```
       █▄▄ █░░ ▄▀█ █▀▀ █▄▀ █▀ █▀▄▀█ █ ▀█▀ █░█
       █▄█ █▄▄ █▀█ █▄▄ █░█ ▄█ █░▀░█ █ ░█░ █▀█
@@ -11,14 +9,24 @@
              █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█
              ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█
 ```
+> ###### [Sett Sarverott](https://github.com/Sarverott) @ 2019-2024
+---
 
+# The core of Blacksmith Organization System
 ### automation of management in personal forest of projects  
-> ###### Sett Sarverott @ 2019-2024
-> Part of R tier project "ANUBIS",
+> Part of _R tier_ superproject "ANUBIS",
 
 ---
 
-### about:
+## Projects related with BOS:
+- [Desktop manager](https://github.com/Sarverott/bos-desktop)
+- [Mobile app](https://github.com/Sarverott/bos-mobile)
+- [Standalone Webserver](https://github.com/Sarverott/bos-server)
+- [Special GUI optimised for implementations](https://github.com/Sarverott/bos-gui)
+
+---
+
+### some information about:
 
 - basic and effective metodology of catalogization of project types, gouping parts of project and families of related projects and maintenance working condition
 
@@ -67,6 +75,7 @@ The basic idea was to automate repository controll and make order in project fol
 - [DEV-LOG](./docs/devlog.md) - some scrap notes
 
 ---
+
 
 ### References:
 
