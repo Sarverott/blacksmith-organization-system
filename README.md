@@ -89,4 +89,4 @@ The basic idea was to automate repository controll and make order in project fol
  ---
 
 ### LICENSE:
-> Copyright (c) 2019 Sett Sarverott, released on terms of MIT license
+> Copyright (c) 2019 Sett Sarverott, released on terms of [MIT license](https://github.com/Sarverott/blacksmith-organization-system/LICENSE)
