@@ -148,3 +148,4 @@ CMakeUserPresets.json
 *.tmp
 typings/
 .env.test
+package-lock.json
