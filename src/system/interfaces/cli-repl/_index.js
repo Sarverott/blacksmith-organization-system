@@ -6,6 +6,7 @@ const path = require("path");
 const BOS = require("../../core/main.js");
 
 function INIT() {
+  this.active=true;
   this.config = Object.assign(
     { input: process.stdin, output: process.stdout },
     this.context.CONFIG.main.interfaces.cli
@@ -15,7 +16,7 @@ function INIT() {
   for (var command in this.context.COMMANDS) {
     addCommand(this.hook, command, this.context.COMMANDS[command], this.context);
   }
-  return cliHook;
+  return this.hook;
 }
 function HISTORY() {}
 
