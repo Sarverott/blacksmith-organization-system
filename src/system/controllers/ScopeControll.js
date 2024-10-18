@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const Controller = require("../core/controller.js");
-const BOS =  require("../core/main.js");
+const BOS = require("../core/main.js");
 
 /*
 Workshop
@@ -22,8 +22,10 @@ _Setup
 
 */
 
-function SAFE_CREATE_DIR(dirpath){
-  fs.mkdirSync(path.normalize(dirpath),{recursive:true})
+
+
+function prepareWorkshop() {
+  BOS.Workshop(BOS.CONFIG.main.workshop.path)
 }
 
 class ScopeControll extends Controller {

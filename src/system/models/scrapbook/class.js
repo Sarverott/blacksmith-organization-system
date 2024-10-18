@@ -8,7 +8,7 @@ const BOS = require('../../core/main.js');
 
 //const MODEL=(BOS)=>(
 
-class BlacksmithSuperproject
+class BlacksmithScrapbook
 extends BOS
   {
     constructor(){
@@ -20,4 +20,4 @@ extends BOS
 
 
 
-module.exports=BlacksmithSuperproject
+module.exports=BlacksmithScrapbook
