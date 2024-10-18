@@ -1,4 +1,3 @@
-
 ```
       █▄▄ █░░ ▄▀█ █▀▀ █▄▀ █▀ █▀▄▀█ █ ▀█▀ █░█
       █▄█ █▄▄ █▀█ █▄▄ █░█ ▄█ █░▀░█ █ ░█░ █▀█
@@ -21,7 +20,7 @@
 ## Projects related with BOS:
 - [Desktop manager](https://github.com/Sarverott/bos-desktop)
 - [Mobile app](https://github.com/Sarverott/bos-mobile)
-- [Standalone Webserver](https://github.com/Sarverott/bos-server)
+- [Standalone webserver](https://github.com/Sarverott/bos-server)
 - [Special GUI optimised for implementations](https://github.com/Sarverott/bos-gui)
 
 ---

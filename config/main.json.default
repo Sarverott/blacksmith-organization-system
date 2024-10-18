@@ -1,0 +1,25 @@
+{
+    "workshop":{
+        "path":"~/__WORKSHOP"
+    },
+    "bridges":{
+        "http":{},
+        "socket":{},
+        "ssh":{}
+    },
+    "interfaces":{
+        "cli":{},
+        "http-api":{},
+        "socket-server":{}
+    },
+    "integrations":{
+        "bos-desktop":{},
+        "bos-mobile":{},
+        "bos-server":{},
+        "bos-vscode-extension":{},
+        "bos-firefox-extension":{},
+        "bos-chrome-extension":{},
+        "frontend-http-api":{},
+        "frontend-socket-api":{}
+    }
+}

@@ -1,0 +1,5 @@
+bos-desktop,GIT=https://github.com/Sarverott/bos-desktop," desktop manager application "
+bos-mobile,GIT=https://github.com/Sarverott/bos-mobile," mobile app "
+bos-server,GIT=https://github.com/Sarverott/bos-server," standalone webserwer "
+bos-gui,GIT=https://github.com/Sarverott/bos-gui," special optimalized interface "
+bos-vscode-extension,GIT=https://github.com/Sarverott/bos-vscode-extension," extension for visual studio code editor "
