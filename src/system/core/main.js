@@ -127,6 +127,9 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     return BlacksmithOrganizationSystem;
   }
   static get INITIALIZE() {
+
+    this.EVENTS = new EventEmitter();
+
     this.CONTROLLERS = Controller.IncludeAll(this.PathTo("."), this);
     this.CONTROLLERS.ConfigControll.LOAD();
     this.CONTROLLERS.ModelsControll.LOAD();
@@ -134,14 +137,16 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     this.CONTROLLERS.InterfacesControll.LOAD();
     this.CONTROLLERS.BridgesControll.LOAD();
     //this.MODELS = LoadAllModels(this.PathTo("."));
-
-    this.EVENTS = new EventEmitter();
+    //console.log(BOS.CONFIG);
+    
     return this;
   }
   static BOX_EMPTY(boxHook) {
     return Object.keys(boxHook).length == 0;
   }
-  static LOAD() {
+  static get LOAD() {
+
+    BOS.EVENTS.emit("run-startup-script", BOS.CONFIG.main.startup, BOS);
     //if(this.BOX_EMPTY(CONTROLLERS))this.LoadAllControllers();
     //if(this.BOX_EMPTY(MODELS))this.LoadAllModels();
     //if(this.BOX_EMPTY(FACTORS))this.LoadAllFactors();
@@ -162,6 +167,7 @@ class BlacksmithOrganizationSystem extends EventEmitter {
         ]();
       }
     }*/
+   
     return this;
   }
   //static debugLog(...args){
@@ -189,6 +195,7 @@ class BlacksmithOrganizationSystem extends EventEmitter {
 //BOS.loadInterface()
 const BOS = BlacksmithOrganizationSystem;
 
+BOS.CONFIG = {};
 BOS.CONTROLLERS = {};
 BOS.MODELS = {};
 BOS.FACTORS = {};

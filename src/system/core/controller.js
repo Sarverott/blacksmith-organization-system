@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const EventEmitter = require("events");
 
 function LoadAllControllers(projectDir) {
   var controllers = {};
@@ -23,6 +24,7 @@ function LoadAllControllers(projectDir) {
 
 class BOS_Controller extends EventEmitter{
   constructor(projectDir, context) {
+    super()
     this.projectDir = projectDir;
     this.context = context;
     this.INIT_SETUP();
