@@ -149,3 +149,4 @@ CMakeUserPresets.json
 typings/
 .env.test
 package-lock.json
+apps/*/
