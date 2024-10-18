@@ -6,7 +6,7 @@
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
-const {BOS} = require('../../core/main.js');
+const BOS = require('../../core/main.js');
 //const {} = require('carnival-toolbox');
 
 //const MODEL=(BOS)=>(
@@ -17,12 +17,9 @@ extends BOS
     constructor(){
       super(this.constructor.name, __dirname);
     }
-    IsWorkshopDeployed(){
+    static isDeployed(){
       return fs.existsSync(
-        path.join(
-          os.homedir(),
-          ".__WORKSHOP"
-        )
+        BOS.CONFIG.main.workshop.path
       );
     }
   }
