@@ -4,9 +4,17 @@ const BOS = require('../../core/main.js');
 
 function command(...args){
   if(BOS.INTERFACES.hasOwnProperty(args[0])){
-    BOS.INTERFACES[args[0]].INIT()
+    if(args[1]=="open"){
+      BOS.INTERFACES[args[0]].INIT()
+    }else if(args[1]=="close"){
+
+    }else if(args[1]=="reload"){
+
+    }else if(args[1]=="status"){
+
+    }
   }else{
-    
+    console.error("ERROR: interface not recognised!");
   }
   
 }
