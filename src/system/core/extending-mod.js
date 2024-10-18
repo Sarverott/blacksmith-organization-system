@@ -112,31 +112,7 @@ const EXTENDER={
       );
     }
   },
-  LoadAllModels(){
-    const models=this.ListModelsDir();
-    for(var model of models){
-      this.LoadModel(model);
-    }
-  },
-  LoadModel(name){
-    debug.log("MODEL-LOAD:", [name]);
-    //console.log(name);
-    this.MODELS[name]=require(
-      this.PathTo( "system", "models", name, "class.js")
-    );
-    var modelname = changeCase(name).from("camelcase").to("pascalcase").GO;
-    this.HookRef(this.MODELS[name], modelname);
-  },
-  ListModelsDir(){
-    return fs.readdirSync(
-      this.PathTo("system", "models"),
-      {withFileTypes:true}
-    ).filter(
-      (model)=>model.isDirectory()
-    ).map(
-      (model)=>model.name
-    );
-  }
+  
 }
 
 module.exports=function(BOS){

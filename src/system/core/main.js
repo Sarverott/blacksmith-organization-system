@@ -6,42 +6,51 @@
 
 //const SE=require("./static-extender.js");
 
-const {caseX}=require('carnival-toolbox');
+//const {caseX}=require('carnival-toolbox');
 const child_process = require('child_process');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const EventEmitter = require('events');
 
-const CONTROLLERS = {}
-const MODELS = {}
-const ID_REJESTR = {}
-const FACTORS = {}
-const INTERFACES = {}
-const COMMANDS = {}
-
-
+const Controller = require("./controller.js");
+const helpers = require("./helperFunctions.js");
 
 class BlacksmithOrganizationSystem extends EventEmitter{
   constructor(classname, modelDir){
+    super();  
     this.type=classname.replace("Blacksmith","");
+    for(var eventname in this.constructor.events){
+      this.on(eventname, this.constructor.events[eventname]);
+    }
+    for(var methodname in this.constructor.methods){
+      this[methodname] = this.constructor.methods
+    }
+    for(var listenername in this.constructor.listeners){
+      this.constructor.listeners[listenername](this, listenername, this.constructor);
+    }
 
     //this.readIndex();
     //this.openManuals();
     //this.eventEmitter=new eventEmitter();
 
-    this.loadMethods(modelDir);
-    this.loadExtenders(modelDir);
-    this.loadEvents(modelDir);
-    this.loadActions(modelDir);
-    this.loadListeners(modelDir);
+    //this.loadMethods(modelDir);
+    //this.loadExtenders(modelDir);
+    //this.loadEvents(modelDir);
+    //this.loadActions(modelDir);
+    //this.loadListeners(modelDir);
   }
+  //includeComponents(modelDir){
+
+  //  this.constructor.actions=fs.readdirSync(path.join(modelDir, "actions"));
+  //}
   //readIndex(){
 
   //}
   //openManuals(){
 
   //}
+  /*
   static GetModelScripts(section, modelDir){
     return fs.readdirSync(
       path.join(
@@ -98,6 +107,7 @@ class BlacksmithOrganizationSystem extends EventEmitter{
       );
     }
   }
+    */
   static get Subject(){
     return require("./basic-subject-model.js")(BOS);
   }
@@ -105,22 +115,35 @@ class BlacksmithOrganizationSystem extends EventEmitter{
     return path.join(__dirname, "..", "..", ...locationChain);
   }
   static get BOS(){
-    return this;
+    return BlacksmithOrganizationSystem;
   }
   get BOS(){
-    return BOS;
+    return BlacksmithOrganizationSystem;
   }
   static get INITIALIZE(){
-    return BOS.LOAD();
+    this.CONTROLLERS=Controller.IncludeAll(
+      this.PathTo("."),
+      this
+    );
+    this.CONTROLLERS.ModelsControll.LOAD();
+    this.CONTROLLERS.CommandsControll.LOAD();
+    this.CONTROLLERS.ConfigControll.LOAD();
+    this.CONTROLLERS.InterfacesControll.LOAD();
+    this.CONTROLLERS.BridgesControll.LOAD();
+    //this.MODELS = LoadAllModels(this.PathTo("."));
+    
+    this.EVENTS = new EventEmitter();
+    return this;
   }
   static BOX_EMPTY(boxHook){
     return Object.keys(boxHook).length==0;
   }
-  static LOAD(...limiter){
-    if(this.BOX_EMPTY(CONTROLLERS))this.LoadAllControllers();
-    if(this.BOX_EMPTY(MODELS))this.LoadAllModels();
-    if(this.BOX_EMPTY(FACTORS))this.LoadAllFactors();
-    if(this.BOX_EMPTY(COMMANDS))this.LoadAllCommands();
+  static LOAD(){
+    
+    //if(this.BOX_EMPTY(CONTROLLERS))this.LoadAllControllers();
+    //if(this.BOX_EMPTY(MODELS))this.LoadAllModels();
+    //if(this.BOX_EMPTY(FACTORS))this.LoadAllFactors();
+    //if(this.BOX_EMPTY(COMMANDS))this.LoadAllCommands();
     /*}
     for(var i in loadList){
       if(
@@ -146,24 +169,33 @@ class BlacksmithOrganizationSystem extends EventEmitter{
 
 //BOS.DEBUGGING=false;
 
-BOS=BlacksmithOrganizationSystem;
+//BOS=BlacksmithOrganizationSystem;
 //BOS.INIT_BASE();
 //BOS.TypeList=TYPES_LIST;
 //BOS.IdRegistList=ID_REJESTR
 
-const FORM=require('./extending-mod.js')(BOS);
-BOS.Update({
-  CONTROLLERS,
-  MODELS,
-  ID_REJESTR,
-  FACTORS,
-  INTERFACES,
-  COMMANDS
-});
+//const FORM=require('./extending-mod.js')(BOS);
+//BOS.Update({
+ // CONTROLLERS,
+ // MODELS,
+//  ID_REJESTR,
+//  FACTORS,
+ /// INTERFACES,
+//  COMMANDS
+//});
 //BOS.LOAD();
 //BOS.loadInterface()
+const BOS=BlacksmithOrganizationSystem;
+
+BOS.CONTROLLERS = {};
+BOS.MODELS = {};
+BOS.FACTORS = {};
+BOS.INTERFACES = {};
+BOS.COMMANDS = {};
 
 //
+module.exports=BlacksmithOrganizationSystem;
+/*
 
 module.exports={
   BOS,
@@ -182,3 +214,4 @@ module.exports={
   //SE
   //HOSTNAME
 };
+*/
