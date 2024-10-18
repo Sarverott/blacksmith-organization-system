@@ -1,4 +1,5 @@
 {
+    "startup":"./config/startup.bos",
     "workshop":{
         "path":"~/__WORKSHOP"
     },
@@ -8,9 +9,20 @@
         "ssh":{}
     },
     "interfaces":{
-        "cli":{},
-        "http-api":{},
-        "socket-server":{}
+        "cli":{
+            "historyPath":"~/__WORKSHOP/setup/cli-history.txt",
+            "prompt":"BOS-cli-repl > ",
+            "useColors":true,
+            "useGlobal":false
+        },
+        "http-api":{
+            "historyPath":"~/__WORKSHOP/setup/http-api-history.txt",
+            "port":8000
+        },
+        "socket-server":{
+            "historyPath":"~/__WORKSHOP/setup/socket-server-history.txt",
+            "port":3000
+        }
     },
     "integrations":{
         "bos-desktop":{},
