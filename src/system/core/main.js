@@ -7,27 +7,32 @@
 //const SE=require("./static-extender.js");
 
 //const {caseX}=require('carnival-toolbox');
-const child_process = require('child_process');
-const os = require('os');
-const fs = require('fs');
-const path = require('path');
-const EventEmitter = require('events');
+const child_process = require("child_process");
+const os = require("os");
+const fs = require("fs");
+const path = require("path");
+const EventEmitter = require("events");
 
 const Controller = require("./controller.js");
 const helpers = require("./helperFunctions.js");
 
-class BlacksmithOrganizationSystem extends EventEmitter{
-  constructor(classname, modelDir){
-    super();  
-    this.type=classname.replace("Blacksmith","");
-    for(var eventname in this.constructor.events){
+class BlacksmithOrganizationSystem extends EventEmitter {
+  constructor(classname, modelDir) {
+    super();
+    Object.assign(this, this.constructor.defaultData);
+    this.type = classname.replace("Blacksmith", "");
+    for (var eventname in this.constructor.events) {
       this.on(eventname, this.constructor.events[eventname]);
     }
-    for(var methodname in this.constructor.methods){
-      this[methodname] = this.constructor.methods
+    for (var methodname in this.constructor.methods) {
+      this[methodname] = this.constructor.methods;
     }
-    for(var listenername in this.constructor.listeners){
-      this.constructor.listeners[listenername](this, listenername, this.constructor);
+    for (var listenername in this.constructor.listeners) {
+      this.constructor.listeners[listenername](
+        this,
+        listenername,
+        this.constructor
+      );
     }
 
     //this.readIndex();
@@ -40,6 +45,7 @@ class BlacksmithOrganizationSystem extends EventEmitter{
     //this.loadActions(modelDir);
     //this.loadListeners(modelDir);
   }
+
   //includeComponents(modelDir){
 
   //  this.constructor.actions=fs.readdirSync(path.join(modelDir, "actions"));
@@ -108,38 +114,34 @@ class BlacksmithOrganizationSystem extends EventEmitter{
     }
   }
     */
-  static get Subject(){
+  static get Subject() {
     return require("./basic-subject-model.js")(BOS);
   }
-  static PathTo(...locationChain){
+  static PathTo(...locationChain) {
     return path.join(__dirname, "..", "..", ...locationChain);
   }
-  static get BOS(){
+  static get BOS() {
     return BlacksmithOrganizationSystem;
   }
-  get BOS(){
+  get BOS() {
     return BlacksmithOrganizationSystem;
   }
-  static get INITIALIZE(){
-    this.CONTROLLERS=Controller.IncludeAll(
-      this.PathTo("."),
-      this
-    );
+  static get INITIALIZE() {
+    this.CONTROLLERS = Controller.IncludeAll(this.PathTo("."), this);
+    this.CONTROLLERS.ConfigControll.LOAD();
     this.CONTROLLERS.ModelsControll.LOAD();
     this.CONTROLLERS.CommandsControll.LOAD();
-    this.CONTROLLERS.ConfigControll.LOAD();
     this.CONTROLLERS.InterfacesControll.LOAD();
     this.CONTROLLERS.BridgesControll.LOAD();
     //this.MODELS = LoadAllModels(this.PathTo("."));
-    
+
     this.EVENTS = new EventEmitter();
     return this;
   }
-  static BOX_EMPTY(boxHook){
-    return Object.keys(boxHook).length==0;
+  static BOX_EMPTY(boxHook) {
+    return Object.keys(boxHook).length == 0;
   }
-  static LOAD(){
-    
+  static LOAD() {
     //if(this.BOX_EMPTY(CONTROLLERS))this.LoadAllControllers();
     //if(this.BOX_EMPTY(MODELS))this.LoadAllModels();
     //if(this.BOX_EMPTY(FACTORS))this.LoadAllFactors();
@@ -165,7 +167,7 @@ class BlacksmithOrganizationSystem extends EventEmitter{
   //static debugLog(...args){
   //  if(BOS.DEBUGGING)console.log(...args);
   //}
-};
+}
 
 //BOS.DEBUGGING=false;
 
@@ -176,16 +178,16 @@ class BlacksmithOrganizationSystem extends EventEmitter{
 
 //const FORM=require('./extending-mod.js')(BOS);
 //BOS.Update({
- // CONTROLLERS,
- // MODELS,
+// CONTROLLERS,
+// MODELS,
 //  ID_REJESTR,
 //  FACTORS,
- /// INTERFACES,
+/// INTERFACES,
 //  COMMANDS
 //});
 //BOS.LOAD();
 //BOS.loadInterface()
-const BOS=BlacksmithOrganizationSystem;
+const BOS = BlacksmithOrganizationSystem;
 
 BOS.CONTROLLERS = {};
 BOS.MODELS = {};
@@ -194,7 +196,7 @@ BOS.INTERFACES = {};
 BOS.COMMANDS = {};
 
 //
-module.exports=BlacksmithOrganizationSystem;
+module.exports = BlacksmithOrganizationSystem;
 /*
 
 module.exports={

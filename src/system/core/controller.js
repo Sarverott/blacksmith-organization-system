@@ -21,7 +21,7 @@ function LoadAllControllers(projectDir) {
   return controllers;
 }
 
-class BOS_Controller {
+class BOS_Controller extends EventEmitter{
   constructor(projectDir, context) {
     this.projectDir = projectDir;
     this.context = context;
