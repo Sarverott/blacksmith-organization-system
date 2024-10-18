@@ -9,5 +9,10 @@
   "events":{},
   "actions":{},
   "listeners":{},
-  "methods":{}
+  "methods":{},
+  "childTypes":[
+    "Project",
+    "Sheme",
+    "Throwbox"
+  ]
 }

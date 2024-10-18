@@ -10,5 +10,9 @@
   "events":{},
   "actions":{},
   "listeners":{},
-  "methods":{}
+  "methods":{},
+  "childTypes":[
+    "Sarcophag",
+    "Exhibit"
+  ]
 }

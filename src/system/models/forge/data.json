@@ -9,5 +9,9 @@
   "events":{},
   "actions":{},
   "listeners":{},
-  "methods":{}
+  "methods":{},
+  "childTypes":[
+    "Superproject",
+    "Throwbox"
+  ]
 }

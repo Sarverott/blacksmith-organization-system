@@ -9,5 +9,11 @@
   "events":{},
   "actions":{},
   "listeners":{},
-  "methods":{}
+  "methods":{},
+  "childTypes":[
+    "Archive",
+    "Forge",
+    "Scrapbook",
+    "Setup"
+  ]
 }
