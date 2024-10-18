@@ -1,4 +1,9 @@
 if(require.main===module){
+  const RUNNER = require("./system/_run.js");
+
+  RUNNER(process.argv);
+
+  /*
   const path = require('path');
   const fs = require('fs');
 
@@ -26,10 +31,11 @@ if(require.main===module){
     console.log("full command argumenting chain: ", invokingChain);
     console.log("full command: ", process.argv);
   }
+    */
   //console.log(invokingChain);
   //
 }else{
-  module.exports=require("./system/core/main.js").BOS.INITIALIZE;
+  module.exports=require("./system/_load.js");
 }
 /*
 const {BOS}=require("./system/core/main.js");

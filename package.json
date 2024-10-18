@@ -8,8 +8,7 @@
     "build": "sh ./dev/builder.sh",
     "deploy": "sh ./dev/deployer.sh",
     "test": "node main.js cli --debug",
-    "start": "node main.js cli",
-    "gui": "electron ."
+    "start": "node src/main.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +29,7 @@
   },
   "homepage": "https://github.com/Sarverott/blacksmith-organization-system#readme",
   "dependencies": {
+    "babel": "^6.23.0",
     "carnival-toolbox": "^1.2.4",
     "express": "^4.21.1",
     "socket.io": "^4.8.0",
@@ -42,7 +42,12 @@
     "doc": "docs"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.5.0",
+    "@quick-start/create-electron": "^1.0.24",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "create-vue": "^3.11.1",
     "electron": "^33.0.0",
+    "electron-vite": "^2.3.0",
     "eslint": "^9.12.0",
     "eslint-plugin-vue": "^9.29.0"
   }
