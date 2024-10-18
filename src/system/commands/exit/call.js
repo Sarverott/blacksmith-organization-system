@@ -1,7 +1,7 @@
 const BOS = require('../../core/main.js');
 
 function command(){
-
+  
 }
 module.exports=command;
 //const COMMAND=new BOS.FACTORS.Command("exit");
