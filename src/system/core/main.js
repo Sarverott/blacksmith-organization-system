@@ -19,6 +19,7 @@ const helpers = require("./helperFunctions.js");
 class BlacksmithOrganizationSystem extends EventEmitter {
   constructor(classname, modelDir) {
     super();
+    
     Object.assign(this, this.constructor.defaultData);
     this.type = classname.replace("Blacksmith", "");
     for (var eventname in this.constructor.events) {
@@ -135,7 +136,7 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     this.CONTROLLERS.ModelsControll.LOAD();
     this.CONTROLLERS.CommandsControll.LOAD();
     this.CONTROLLERS.InterfacesControll.LOAD();
-    this.CONTROLLERS.BridgesControll.LOAD();
+    
     //this.MODELS = LoadAllModels(this.PathTo("."));
     //console.log(BOS.CONFIG);
     
@@ -146,6 +147,15 @@ class BlacksmithOrganizationSystem extends EventEmitter {
   }
   static get LOAD() {
 
+    this.CONTROLLERS.ScopesControll.LOAD();
+    this.CONTROLLERS.ScrapbookControll.LOAD();
+    this.CONTROLLERS.ProjectsControll.LOAD();
+    this.CONTROLLERS.BridgesControll.LOAD();
+    this.CONTROLLERS.FactorsControll.LOAD();
+    this.CONTROLLERS.SandboxControll.LOAD();
+    this.CONTROLLERS.PublicationControll.LOAD();
+    this.CONTROLLERS.DeploymentControll.LOAD();
+    
     BOS.EVENTS.emit("run-startup-script", BOS.CONFIG.main.startup, BOS);
     //if(this.BOX_EMPTY(CONTROLLERS))this.LoadAllControllers();
     //if(this.BOX_EMPTY(MODELS))this.LoadAllModels();
