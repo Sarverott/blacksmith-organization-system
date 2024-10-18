@@ -71,13 +71,15 @@ class CommandsControll extends Controller {
       .map(
         (line) => line.split(" ").filter((line) => line)
       );
+      console.log(context.COMMANDS)
     for(var line of scriptCode){
-      context.COMMANDS[line[0]](line.slice(1), this, hook)
+      console.log(line)
+      context.COMMANDS[line[0]].CALL(line.slice(1), this, hook);
     }
   }
   LOAD() {
     this.context.COMMANDS = LoadAllCommands(this.projectDir, this.context);
-    this.context.on("run-startup-script", (startupScript, context) => {
+    this.context.EVENTS.on("run-startup-script", (startupScript, context) => {
       CommandsControll.RUN_BOS_SCRIPT(startupScript, context, this);
     });
     CommandsControll.COMMANDS = this.context.COMMANDS;

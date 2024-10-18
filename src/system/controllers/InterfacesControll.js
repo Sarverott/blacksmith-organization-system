@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const EventEmitter = require("events");
 
 const Controller = require("../core/controller.js");
 
@@ -26,8 +27,9 @@ function loadAllInterfaces(controllerHook) {
   return interfaces;
 }
 
-class BOS_Interface {
+class BOS_Interface  {
   constructor(initAction, context) {
+    this.active=false;
     this.INIT = initAction;
     this.context = context;
   }

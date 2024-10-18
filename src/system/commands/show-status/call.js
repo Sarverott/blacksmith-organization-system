@@ -2,8 +2,16 @@
 
 const BOS = require('../../core/main.js');
 
-function command(){
+function command(...args){
+  if(args[0]=="workshop"){
 
+  }else if(args[0]=="forge"){
+
+  }else if(args[0]=="archive"){
+
+  }else if(args[0]=="interfaces"){
+    console.log(BOS.INTERFACES);
+  }
 }
 module.exports=command;
 

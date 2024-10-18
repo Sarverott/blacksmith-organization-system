@@ -3,7 +3,12 @@
 const BOS = require('../../core/main.js');
 
 function command(...args){
-
+  if(BOS.INTERFACES.hasOwnProperty(args[0])){
+    BOS.INTERFACES[args[0]].INIT()
+  }else{
+    
+  }
+  
 }
 module.exports=command;
 
