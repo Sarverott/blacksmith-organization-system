@@ -1,8 +1,6 @@
 {
     "startup":"./config/startup.bos",
-    "workshop":{
-        "path":"~/__WORKSHOP"
-    },
+    "workshop-path":"~/__WORKSHOP",
     "bridges":{
         "http":{},
         "socket":{},
