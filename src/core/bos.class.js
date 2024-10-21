@@ -63,7 +63,7 @@ class BlacksmithOrganizationSystem extends EventEmitter {
   get BOS() {
     return BlacksmithOrganizationSystem;
   }
-  static get INITIALIZE() {
+  static INITIALIZE(bosRootPath) {
     if (!BOS.hasOwnProperty("IS_INITIALIZED")) {
       BOS.IS_INITIALIZED = true;
       this.EVENTS = new EventEmitter();

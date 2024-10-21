@@ -4,7 +4,6 @@
   "description": "Blacksmith Organization System - manage projects folders and files in your multiple workplaces, on servers and in publication repositories",
   "main": "src/_index.js",
   "scripts": {
-    "init-python": "sh ./dev/env-init.sh",
     "build": "sh ./dev/builder.sh",
     "deploy": "sh ./dev/deployer.sh",
     "test": "node _index.js cli --debug",
@@ -40,15 +39,20 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.5.0",
-    "@eslint/js": "^9.12.0",
+    "@eslint/js": "^9.13.0",
     "@quick-start/create-electron": "^1.0.24",
     "@vitejs/plugin-vue": "^5.1.4",
     "create-vue": "^3.11.1",
     "electron": "^33.0.0",
     "electron-vite": "^2.3.0",
-    "eslint": "^9.12.0",
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.8.3",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-vue": "^9.29.0",
+    "globals": "^15.11.0",
     "jest": "^29.7.0"
   }
 }

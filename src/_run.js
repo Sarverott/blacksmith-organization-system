@@ -5,6 +5,7 @@ const BOS = require("./core/bos.class.js");
 
 module.exports=function(...args){
 
-    BOS.INITIALIZE;
-    BOS.LOAD;
+    BOS.INITIALIZE(path.dirname(__dirname));
+    BOS.SETUP();
+    BOS.EXECUTE();
 }
