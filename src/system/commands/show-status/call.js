@@ -4,7 +4,7 @@ const BOS = require('../../core/main.js');
 
 function command(...args){
   if(args[0]=="workshop"){
-
+    console.log(BOS.SCOPE_ROOT);
   }else if(args[0]=="forge"){
 
   }else if(args[0]=="archive"){

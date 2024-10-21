@@ -17,16 +17,17 @@ const Controller = require("./controller.js");
 const helpers = require("./helperFunctions.js");
 
 class BlacksmithOrganizationSystem extends EventEmitter {
-  constructor(classname, modelDir) {
+  constructor(itemPath, parrent) {
     super();
-    
+    BlacksmithOrganizationSystem.SCOPE_ITEMS.push(this);
     Object.assign(this, this.constructor.defaultData);
-    this.type = classname.replace("Blacksmith", "");
+    helpers.SAFE_CREATE_DIR(itemPath);
+    this.type = this.constructor.name.replace("Blacksmith", "");
     for (var eventname in this.constructor.events) {
       this.on(eventname, this.constructor.events[eventname]);
     }
     for (var methodname in this.constructor.methods) {
-      this[methodname] = this.constructor.methods;
+      this[methodname] = this.constructor.methods[methodname];
     }
     for (var listenername in this.constructor.listeners) {
       this.constructor.listeners[listenername](
@@ -35,7 +36,10 @@ class BlacksmithOrganizationSystem extends EventEmitter {
         this.constructor
       );
     }
-
+    this.path = itemPath;
+    this.parrentItem = parrent;
+    this.childrenItems = [];
+    BlacksmithOrganizationSystem.SET_WATCH(this, itemPath);
     //this.readIndex();
     //this.openManuals();
     //this.eventEmitter=new eventEmitter();
@@ -46,7 +50,17 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     //this.loadActions(modelDir);
     //this.loadListeners(modelDir);
   }
-
+  static SET_WATCH(itemHook, watchedPath) {
+    fs.watch(watchedPath, { recursive: true }, function (eventType, filename) {
+      itemHook.emit(
+        "alert-fs-change",
+        itemHook,
+        eventType,
+        filename,
+        watchedPath
+      );
+    });
+  }
   //includeComponents(modelDir){
 
   //  this.constructor.actions=fs.readdirSync(path.join(modelDir, "actions"));
@@ -128,7 +142,6 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     return BlacksmithOrganizationSystem;
   }
   static get INITIALIZE() {
-
     this.EVENTS = new EventEmitter();
 
     this.CONTROLLERS = Controller.IncludeAll(this.PathTo("."), this);
@@ -136,18 +149,17 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     this.CONTROLLERS.ModelsControll.LOAD();
     this.CONTROLLERS.CommandsControll.LOAD();
     this.CONTROLLERS.InterfacesControll.LOAD();
-    
+
     //this.MODELS = LoadAllModels(this.PathTo("."));
     //console.log(BOS.CONFIG);
-    
+
     return this;
   }
   static BOX_EMPTY(boxHook) {
     return Object.keys(boxHook).length == 0;
   }
   static get LOAD() {
-
-    this.CONTROLLERS.ScopesControll.LOAD();
+    this.CONTROLLERS.ScopeControll.LOAD();
     this.CONTROLLERS.ScrapbookControll.LOAD();
     this.CONTROLLERS.ProjectsControll.LOAD();
     this.CONTROLLERS.BridgesControll.LOAD();
@@ -155,8 +167,33 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     this.CONTROLLERS.SandboxControll.LOAD();
     this.CONTROLLERS.PublicationControll.LOAD();
     this.CONTROLLERS.DeploymentControll.LOAD();
-    
-    BOS.EVENTS.emit("run-startup-script", BOS.CONFIG.main.startup, BOS);
+    if (
+      !fs.existsSync(
+        path.join(
+          os.homedir(),
+          BOS.CONFIG.main["context-path"],
+          BOS.CONFIG.main.startup
+        )
+      )
+    ) {
+      fs.copyFileSync(
+        path.join(this.PathTo("."), "..", "config", "startup.bos.default"),
+        path.join(
+          os.homedir(),
+          BOS.CONFIG.main["context-path"],
+          BOS.CONFIG.main.startup
+        )
+      );
+    }
+    BOS.EVENTS.emit(
+      "run-startup-script",
+      path.join(
+        os.homedir(),
+        BOS.CONFIG.main["context-path"],
+        BOS.CONFIG.main.startup
+      ),
+      BOS
+    );
     //if(this.BOX_EMPTY(CONTROLLERS))this.LoadAllControllers();
     //if(this.BOX_EMPTY(MODELS))this.LoadAllModels();
     //if(this.BOX_EMPTY(FACTORS))this.LoadAllFactors();
@@ -177,7 +214,7 @@ class BlacksmithOrganizationSystem extends EventEmitter {
         ]();
       }
     }*/
-   
+
     return this;
   }
   //static debugLog(...args){
@@ -204,6 +241,10 @@ class BlacksmithOrganizationSystem extends EventEmitter {
 //BOS.LOAD();
 //BOS.loadInterface()
 const BOS = BlacksmithOrganizationSystem;
+
+BOS.SCOPE_ROOT = null;
+
+BOS.SCOPE_ITEMS = [];
 
 BOS.CONFIG = {};
 BOS.CONTROLLERS = {};
