@@ -1,6 +1,6 @@
 {
-    "startup":"./config/startup.bos",
-    "workshop-path":"~/__WORKSHOP",
+    "startup":"./setup/startup.bos",
+    "context-path":"./__WORKSHOP",
     "bridges":{
         "http":{},
         "socket":{},
@@ -8,17 +8,17 @@
     },
     "interfaces":{
         "cli":{
-            "historyPath":"~/__WORKSHOP/setup/cli-history.txt",
+            "historyPath":"./setup/cli-history.txt",
             "prompt":"BOS-cli-repl > ",
             "useColors":true,
             "useGlobal":false
         },
         "http-api":{
-            "historyPath":"~/__WORKSHOP/setup/http-api-history.txt",
+            "historyPath":"./setup/http-api-history.txt",
             "port":8000
         },
         "socket-server":{
-            "historyPath":"~/__WORKSHOP/setup/socket-server-history.txt",
+            "historyPath":"./setup/socket-server-history.txt",
             "port":3000
         }
     },
