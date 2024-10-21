@@ -71,9 +71,9 @@ class CommandsControll extends Controller {
       .map(
         (line) => line.split(" ").filter((line) => line)
       );
-      console.log(context.COMMANDS)
+      //console.log(context.COMMANDS)
     for(var line of scriptCode){
-      console.log(line)
+      //console.log(line)
       context.COMMANDS[line[0]].CALL(line.slice(1), this, hook);
     }
   }
