@@ -10,10 +10,7 @@
     "test": "node _index.js cli --debug",
     "start": "node src/_index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Sarverott/blacksmith-organization-system.git"
-  },
+  "repository": "git+https://github.com/Sarverott/blacksmith-organization-system.git",
   "keywords": [
     "bos",
     "blacksmith",
