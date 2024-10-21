@@ -25,4 +25,4 @@ DIRTREE={
 
 ```
 
-[go to main README.md](../../README.md)
+[go to main README.md](../README.md)
