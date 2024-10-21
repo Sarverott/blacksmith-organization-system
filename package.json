@@ -2,13 +2,13 @@
   "name": "blacksmith-organization-system",
   "version": "0.5.0",
   "description": "Blacksmith Organization System - manage projects folders and files in your multiple workplaces, on servers and in publication repositories",
-  "main": "src/main.js",
+  "main": "src/_index.js",
   "scripts": {
     "init-python": "sh ./dev/env-init.sh",
     "build": "sh ./dev/builder.sh",
     "deploy": "sh ./dev/deployer.sh",
-    "test": "node main.js cli --debug",
-    "start": "node src/main.js"
+    "test": "node _index.js cli --debug",
+    "start": "node src/_index.js"
   },
   "repository": {
     "type": "git",

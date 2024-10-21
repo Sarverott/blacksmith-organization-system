@@ -6,7 +6,7 @@
 const os = require("os");
 const fs = require("fs");
 const path = require("path");
-const BOS = require("../../core/main.js");
+const BOS = require("../../core/bos.class.js");
 const helpers = require("../../core/helperFunctions.js");
 //const {} = require('carnival-toolbox');
 

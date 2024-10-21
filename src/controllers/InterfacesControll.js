@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const EventEmitter = require("events");
 
-const Controller = require("../core/controller.js");
+const Controller = require("../core/bos.controller.js");
 
 function loadAllInterfaces(controllerHook) {
   var interfaces = {};

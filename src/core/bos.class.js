@@ -10,7 +10,7 @@ const fs = require("fs");
 const path = require("path");
 const EventEmitter = require("events");
 
-const Controller = require("./controller.js");
+const Controller = require("./bos.controller.js");
 const helpers = require("./helperFunctions.js");
 
 class BlacksmithOrganizationSystem extends EventEmitter {

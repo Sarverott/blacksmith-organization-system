@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm")
 
-const BOS = require("../../core/main.js");
+const BOS = require("../../core/bos.class.js");
 
 function INIT() {
   this.active=true;

@@ -3,7 +3,7 @@ const path = require("path");
 const vm = require("vm");
 const EventEmitter = require("events");
 
-const Controller = require("../core/controller.js");
+const Controller = require("../core/bos.controller.js");
 
 //var currentContextPath = null;
 

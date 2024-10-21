@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
-const Controller = require("../core/controller.js");
-const BOS = require("../core/main.js");
+const Controller = require("../core/bos.controller.js");
+const BOS = require("../core/bos.class.js");
 const helpers = require("../core/helperFunctions.js");
 
 /*

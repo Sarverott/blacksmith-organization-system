@@ -1,4 +1,4 @@
-const Controller = require("../core/controller.js");
+const Controller = require("../core/bos.controller.js");
 
 class PublicationControll extends Controller {
     LOAD() {}

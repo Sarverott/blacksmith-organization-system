@@ -1,6 +1,6 @@
 const os = require("os");
 
-const Controller = require("../core/controller.js");
+const Controller = require("../core/bos.controller.js");
 
 //os.hostname()
 class ProjectsControll extends Controller {

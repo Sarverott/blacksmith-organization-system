@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const {changeCase} = require('carnival-toolbox');
 
-const BOS=require("../core/main.js").INITIALIZE;
+const BOS=require("../core/bos.class.js").INITIALIZE;
 
 //console.log("HERE",BOS.COMMANDS)
 

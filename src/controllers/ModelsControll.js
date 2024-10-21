@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const Controller = require("../core/controller.js");
+const Controller = require("../core/bos.controller.js");
 const helpers = require("../core/helperFunctions.js");
 //const { changeCase, capitalFirst, debug } = require("carnival-toolbox");
 

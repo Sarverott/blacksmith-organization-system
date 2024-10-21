@@ -1,3 +1,3 @@
-const BOS=require("./core/main.js");
+const BOS=require("./core/bos.class.js");
 
 module.exports=BOS.INITIALIZE;
