@@ -1,12 +1,17 @@
 
 
-# for beginning developers of rattish implementations
+# part of
+
+
 
 git add *
+git status
+git commit -m "$1"
 
-read info
+npm version minor
 
-git commit -m "$info"
+git push
 
-npm version patch
+gh release create v1.3.2 --title "v1.3.2 (beta)" --notes "this is a beta release" --prerelease
 
+npm publish
