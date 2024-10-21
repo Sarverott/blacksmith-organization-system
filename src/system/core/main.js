@@ -4,9 +4,6 @@
   Sett Sarverott 2019
 */
 
-//const SE=require("./static-extender.js");
-
-//const {caseX}=require('carnival-toolbox');
 const child_process = require("child_process");
 const os = require("os");
 const fs = require("fs");
@@ -40,18 +37,10 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     this.parrentItem = parrent;
     this.childrenItems = [];
     BlacksmithOrganizationSystem.SET_WATCH(this, itemPath);
-    //this.readIndex();
-    //this.openManuals();
-    //this.eventEmitter=new eventEmitter();
-
-    //this.loadMethods(modelDir);
-    //this.loadExtenders(modelDir);
-    //this.loadEvents(modelDir);
-    //this.loadActions(modelDir);
-    //this.loadListeners(modelDir);
+    
   }
   static SET_WATCH(itemHook, watchedPath) {
-    fs.watch(watchedPath, { recursive: true }, function (eventType, filename) {
+    fs.watch(watchedPath, { recursive: false }, function (eventType, filename) {
       itemHook.emit(
         "alert-fs-change",
         itemHook,
@@ -61,74 +50,7 @@ class BlacksmithOrganizationSystem extends EventEmitter {
       );
     });
   }
-  //includeComponents(modelDir){
-
-  //  this.constructor.actions=fs.readdirSync(path.join(modelDir, "actions"));
-  //}
-  //readIndex(){
-
-  //}
-  //openManuals(){
-
-  //}
-  /*
-  static GetModelScripts(section, modelDir){
-    return fs.readdirSync(
-      path.join(
-        modelDir,
-        section
-      ),
-      {withFileTypes:true}
-    ).filter(
-      (script)=>script.isFile()&&script.name.endsWith(".js")
-    ).map(
-      (direntItem)=>direntItem.name
-    );
-  }
-  loadEvents(modelDir){ // direct listeners and emitters of model
-    const modelScripts=BOS.GetModelScripts(
-      "events",
-      modelDir
-    );
-
-  }
-  loadActions(modelDir){// acts like deamons or child precesses
-    const modelScripts=BOS.GetModelScripts(
-      "actions",
-      modelDir
-    );
-  }
-  loadListeners(modelDir){// everything what that model listens
-    const modelScripts=BOS.GetModelScripts(
-      "listeners",
-      modelDir
-    );
-  }
-  loadMethods(modelDir){// synchronous, returns data
-    const modelScripts=BOS.GetModelScripts(
-      "methods",
-      modelDir
-    );
-  }
-  loadExtenders(modelDir){// extensionpacks for model
-    const modelScripts=BOS.GetModelScripts(
-      "extenders",
-      modelDir
-    );
-    for(var scriptName of modelScripts){
-      Object.assign(
-        this,
-        require(
-          path.join(
-            modelDir,
-            "extenders",
-            scriptName
-          )
-        )
-      );
-    }
-  }
-    */
+  
   static get Subject() {
     return require("./basic-subject-model.js")(BOS);
   }
@@ -142,104 +64,65 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     return BlacksmithOrganizationSystem;
   }
   static get INITIALIZE() {
-    this.EVENTS = new EventEmitter();
+    if (!BOS.hasOwnProperty("IS_INITIALIZED")) {
+      BOS.IS_INITIALIZED = true;
+      this.EVENTS = new EventEmitter();
 
-    this.CONTROLLERS = Controller.IncludeAll(this.PathTo("."), this);
-    this.CONTROLLERS.ConfigControll.LOAD();
-    this.CONTROLLERS.ModelsControll.LOAD();
-    this.CONTROLLERS.CommandsControll.LOAD();
-    this.CONTROLLERS.InterfacesControll.LOAD();
-
-    //this.MODELS = LoadAllModels(this.PathTo("."));
-    //console.log(BOS.CONFIG);
-
+      this.CONTROLLERS = Controller.IncludeAll(this.PathTo("."), this);
+      this.CONTROLLERS.ConfigControll.LOAD();
+      this.CONTROLLERS.ModelsControll.LOAD();
+      this.CONTROLLERS.CommandsControll.LOAD();
+      this.CONTROLLERS.InterfacesControll.LOAD();
+    }
     return this;
   }
   static BOX_EMPTY(boxHook) {
     return Object.keys(boxHook).length == 0;
   }
   static get LOAD() {
-    this.CONTROLLERS.ScopeControll.LOAD();
-    this.CONTROLLERS.ScrapbookControll.LOAD();
-    this.CONTROLLERS.ProjectsControll.LOAD();
-    this.CONTROLLERS.BridgesControll.LOAD();
-    this.CONTROLLERS.FactorsControll.LOAD();
-    this.CONTROLLERS.SandboxControll.LOAD();
-    this.CONTROLLERS.PublicationControll.LOAD();
-    this.CONTROLLERS.DeploymentControll.LOAD();
-    if (
-      !fs.existsSync(
-        path.join(
-          os.homedir(),
-          BOS.CONFIG.main["context-path"],
-          BOS.CONFIG.main.startup
+    if (!BOS.hasOwnProperty("IS_LOADED")) {
+      BOS.IS_LOADED = true;
+      this.CONTROLLERS.ScopeControll.LOAD();
+      this.CONTROLLERS.ScrapbookControll.LOAD();
+      this.CONTROLLERS.ProjectsControll.LOAD();
+      this.CONTROLLERS.BridgesControll.LOAD();
+      this.CONTROLLERS.FactorsControll.LOAD();
+      this.CONTROLLERS.SandboxControll.LOAD();
+      this.CONTROLLERS.PublicationControll.LOAD();
+      this.CONTROLLERS.DeploymentControll.LOAD();
+      if (
+        !fs.existsSync(
+          path.join(
+            os.homedir(),
+            BOS.CONFIG.main["context-path"],
+            BOS.CONFIG.main.startup
+          )
         )
-      )
-    ) {
-      fs.copyFileSync(
-        path.join(this.PathTo("."), "..", "config", "startup.bos.default"),
-        path.join(
-          os.homedir(),
-          BOS.CONFIG.main["context-path"],
-          BOS.CONFIG.main.startup
-        )
-      );
-    }
-    BOS.EVENTS.emit(
-      "run-startup-script",
-      path.join(
-        os.homedir(),
-        BOS.CONFIG.main["context-path"],
-        BOS.CONFIG.main.startup
-      ),
-      BOS
-    );
-    //if(this.BOX_EMPTY(CONTROLLERS))this.LoadAllControllers();
-    //if(this.BOX_EMPTY(MODELS))this.LoadAllModels();
-    //if(this.BOX_EMPTY(FACTORS))this.LoadAllFactors();
-    //if(this.BOX_EMPTY(COMMANDS))this.LoadAllCommands();
-    /*}
-    for(var i in loadList){
-      if(
-        (
-          limiter.length==0
-          ||
-          limiter.includes(i)
-        )
-        &&
-        loadList[i][0])
-      ){
-        this[
-          loadList[i][1]
-        ]();
+      ) {
+        fs.copyFileSync(
+          path.join(this.PathTo("."), "..", "config", "startup.bos.default"),
+          path.join(
+            os.homedir(),
+            BOS.CONFIG.main["context-path"],
+            BOS.CONFIG.main.startup
+          )
+        );
       }
-    }*/
-
+      BOS.EVENTS.emit(
+        "run-startup-script",
+        path.join(
+          os.homedir(),
+          BOS.CONFIG.main["context-path"],
+          BOS.CONFIG.main.startup
+        ),
+        BOS
+      );
+      
+    }
     return this;
   }
-  //static debugLog(...args){
-  //  if(BOS.DEBUGGING)console.log(...args);
-  //}
 }
 
-//BOS.DEBUGGING=false;
-
-//BOS=BlacksmithOrganizationSystem;
-//BOS.INIT_BASE();
-//BOS.TypeList=TYPES_LIST;
-//BOS.IdRegistList=ID_REJESTR
-
-//const FORM=require('./extending-mod.js')(BOS);
-//BOS.Update({
-// CONTROLLERS,
-// MODELS,
-//  ID_REJESTR,
-//  FACTORS,
-/// INTERFACES,
-//  COMMANDS
-//});
-//BOS.LOAD();
-//BOS.loadInterface()
 const BOS = BlacksmithOrganizationSystem;
 
 BOS.SCOPE_ROOT = null;
@@ -255,23 +138,3 @@ BOS.COMMANDS = {};
 
 //
 module.exports = BlacksmithOrganizationSystem;
-/*
-
-module.exports={
-  BOS,
-  get INITIALIZE(){
-    return BOS.INITIALIZE;
-  }
-  //CONTROLLERS,
-  //MODELS,
-  //ID_REJESTR,
-  //FACTORS,
-  //INTERFACES,
-  //COMMANDS
-  //ID_REJESTR
-  //FORM
-
-  //SE
-  //HOSTNAME
-};
-*/
