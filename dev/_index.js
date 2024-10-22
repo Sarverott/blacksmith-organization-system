@@ -1,7 +1,7 @@
 const child_process=require("child_process");
 const readline=require("readline");
 
-const { stdin: input, stdout: output } = require('node:process');
+const { stdin: input, stdout: output, argv } = require('node:process');
 
 const rl = readline.createInterface({ input, output });
 
@@ -25,7 +25,7 @@ const scripts={
 };
 
 if(require.main===module){
-    scripts[process.argv[2]]()
+    scripts[argv[2]]()
 }
 
 

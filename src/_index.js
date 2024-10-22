@@ -1,13 +1,21 @@
 const process = require("process");
 
-if(require.main===module){
+if(process.connected){
+
+  const SUBPROCESS = require("./spawner.js");
   
-  const RUNNER = require("./system/_run.js");
+  SUBPROCESS
+
+}else if(require.main===module){
+  
+  const RUNNER = require("./runner.js");
 
   RUNNER(process.argv);
 
 }else{
 
-  module.exports=require("./system/_load.js");
+  const INCLUDER=require("./includer.js");
+
+  module.exports=INCLUDER(require.main);
 
 }
