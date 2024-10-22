@@ -4,7 +4,7 @@
   Sett Sarverott 2019
 */
 
-const child_process = require("child_process");
+//const child_process = require("child_process");
 const os = require("os");
 const fs = require("fs");
 const path = require("path");
@@ -36,11 +36,45 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     this.path = itemPath;
     this.parrentItem = parrent;
     this.childrenItems = [];
+    this.SETUP();
     BlacksmithOrganizationSystem.SET_WATCH(this, itemPath);
-    
+  }
+  SETUP(){}
+  emitBosEvent(emitName){
+    this.BOS.EVENTS.emit(`on-model-${emitName}`, this);
+  }
+  init(){
+    this.emitBosEvent('init');
+  }
+  open(){
+    this.emitBosEvent('open');
+  }
+  create(){
+    this.emitBosEvent('create');
+  }
+  change(){
+    this.emitBosEvent('change');
+  }
+  close(){
+    this.emitBosEvent('close');
+  }
+  delete(){
+    this.emitBosEvent('delete');
+  }
+  move(){
+    this.emitBosEvent('move');
+  }
+  remodel(){
+    this.emitBosEvent('remodel');
+  }
+  upload(){
+    this.emitBosEvent('upload');
+  }
+  download(){
+    this.emitBosEvent('download');
   }
   static SET_WATCH(itemHook, watchedPath) {
-    fs.watch(watchedPath, { recursive: false }, function (eventType, filename) {
+    fs.watch(watchedPath, { recursive: true }, function (eventType, filename) {
       itemHook.emit(
         "alert-fs-change",
         itemHook,
@@ -50,12 +84,12 @@ class BlacksmithOrganizationSystem extends EventEmitter {
       );
     });
   }
-  
+
   static get Subject() {
     return require("./basic-subject-model.js")(BOS);
   }
   static PathTo(...locationChain) {
-    return path.join(__dirname, "..", "..", ...locationChain);
+    return path.join(this.BOS_ROOT_PATH, ...locationChain);
   }
   static get BOS() {
     return BlacksmithOrganizationSystem;
@@ -64,32 +98,34 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     return BlacksmithOrganizationSystem;
   }
   static INITIALIZE(bosRootPath) {
-    if (!BOS.hasOwnProperty("IS_INITIALIZED")) {
-      BOS.IS_INITIALIZED = true;
+    if (!this.hasOwnProperty("IS_INITIALIZED")) {
+      this.IS_INITIALIZED = true;
+
+      Object.assign(this, {
+        SCOPE_ROOT: null,
+        SCOPE_ITEMS: [],
+        CONFIG: {},
+        CONTROLLERS: {},
+        MODELS: {},
+        FACTORS: {},
+        INTERFACES: {},
+        COMMANDS: {},
+      });
+
+      this.BOS_ROOT_PATH = bosRootPath;
+
       this.EVENTS = new EventEmitter();
 
       this.CONTROLLERS = Controller.IncludeAll(this.PathTo("."), this);
-      this.CONTROLLERS.ConfigControll.LOAD();
-      this.CONTROLLERS.ModelsControll.LOAD();
-      this.CONTROLLERS.CommandsControll.LOAD();
-      this.CONTROLLERS.InterfacesControll.LOAD();
+
+      this.CONTROLLERS.loadAll();
     }
     return this;
   }
-  static BOX_EMPTY(boxHook) {
-    return Object.keys(boxHook).length == 0;
-  }
-  static get LOAD() {
-    if (!BOS.hasOwnProperty("IS_LOADED")) {
-      BOS.IS_LOADED = true;
-      this.CONTROLLERS.ScopeControll.LOAD();
-      this.CONTROLLERS.ScrapbookControll.LOAD();
-      this.CONTROLLERS.ProjectsControll.LOAD();
-      this.CONTROLLERS.BridgesControll.LOAD();
-      this.CONTROLLERS.FactorsControll.LOAD();
-      this.CONTROLLERS.SandboxControll.LOAD();
-      this.CONTROLLERS.PublicationControll.LOAD();
-      this.CONTROLLERS.DeploymentControll.LOAD();
+  static SETUP(options) {
+
+    if (!BOS.hasOwnProperty("IS_SETUP")) {
+      BOS.IS_SETUP = true;
       if (
         !fs.existsSync(
           path.join(
@@ -100,7 +136,7 @@ class BlacksmithOrganizationSystem extends EventEmitter {
         )
       ) {
         fs.copyFileSync(
-          path.join(this.PathTo("."), "..", "config", "startup.bos.default"),
+          path.join(this.PathTo("."), "config", "startup.bos.default"),
           path.join(
             os.homedir(),
             BOS.CONFIG.main["context-path"],
@@ -117,24 +153,15 @@ class BlacksmithOrganizationSystem extends EventEmitter {
         ),
         BOS
       );
-      
     }
-    return this;
+  }
+
+  static EXECUTE() {
+    
   }
 }
 
 const BOS = BlacksmithOrganizationSystem;
-
-BOS.SCOPE_ROOT = null;
-
-BOS.SCOPE_ITEMS = [];
-
-BOS.CONFIG = {};
-BOS.CONTROLLERS = {};
-BOS.MODELS = {};
-BOS.FACTORS = {};
-BOS.INTERFACES = {};
-BOS.COMMANDS = {};
 
 //
 module.exports = BlacksmithOrganizationSystem;

@@ -5,7 +5,7 @@ const EventEmitter = require("events");
 function LoadAllControllers(projectDir) {
   var controllers = {};
   var controllerList = fs
-    .readdirSync(path.join(projectDir, "system", "controllers"), {
+    .readdirSync(path.join(projectDir, "src", "controllers"), {
       withFileTypes: true,
     })
     .filter((item) => item.isFile())
@@ -14,7 +14,7 @@ function LoadAllControllers(projectDir) {
   for (var controll of controllerList) {
     controllers[path.basename(controll, ".js")] = require(path.join(
       projectDir,
-      "system",
+      "src",
       "controllers",
       controll
     ));
@@ -22,9 +22,9 @@ function LoadAllControllers(projectDir) {
   return controllers;
 }
 
-class BOS_Controller extends EventEmitter{
+class BOS_Controller extends EventEmitter {
   constructor(projectDir, context) {
-    super()
+    super();
     this.projectDir = projectDir;
     this.context = context;
     this.INIT_SETUP();
@@ -33,6 +33,22 @@ class BOS_Controller extends EventEmitter{
   INIT_SETUP() {}
 
   LOAD() {}
+
+  static loadAll() {
+    this.ConfigControll.LOAD();
+    this.ModelsControll.LOAD();
+    this.CommandsControll.LOAD();
+    this.InterfacesControll.LOAD();
+
+    this.ScopeControll.LOAD();
+    this.ScrapbookControll.LOAD();
+    this.ProjectsControll.LOAD();
+    this.BridgesControll.LOAD();
+    this.FactorsControll.LOAD();
+    this.SandboxControll.LOAD();
+    this.PublicationControll.LOAD();
+    this.DeploymentControll.LOAD();
+  }
 
   static IncludeAll(projectDir, context) {
     this.CONTROLLER_CLASSES = LoadAllControllers(projectDir);
@@ -43,7 +59,7 @@ class BOS_Controller extends EventEmitter{
         context
       );
     }
-    return out;
+    return Object.assign(this, out);
   }
 }
 
