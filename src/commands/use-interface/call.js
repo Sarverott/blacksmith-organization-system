@@ -1,6 +1,6 @@
 //const {debug} = require('carnival-toolbox');
 
-const BOS = require('../../core/bos.class.js');
+const BOS = require('../../core/bos.js');
 
 function command(...args){
   if(BOS.INTERFACES.hasOwnProperty(args[0])){

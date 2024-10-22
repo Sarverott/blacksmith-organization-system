@@ -1,4 +1,4 @@
-const BOS = require('../../core/bos.class.js');
+const BOS = require('../../core/bos.js');
 
 function command(){
   
