@@ -9,7 +9,7 @@ function loadModelExtenders(extendersType, modelname, projectDir) {
   var extenders = {};
   var extenderList = fs
     .readdirSync(
-      path.join(projectDir, "system", "models", modelname, extendersType),
+      path.join(projectDir, "src", "models", modelname, extendersType),
       {
         withFileTypes: true,
       }
@@ -19,7 +19,7 @@ function loadModelExtenders(extendersType, modelname, projectDir) {
   for (var extenderName of extenderList) {
     extenders[path.basename(extenderName, ".js")] = require(path.join(
       projectDir,
-      "system",
+      "src",
       "models",
       modelname,
       extendersType,
@@ -42,14 +42,14 @@ function LoadModel(name, projectDir) {
   //console.log(name);
   var modelItem = require(path.join(
     projectDir,
-    "system",
+    "src",
     "models",
     name,
     "class.js"
   ));
   modelItem.defaultData = JSON.parse(
     fs.readFileSync(
-      path.join(projectDir, "system", "models", name, "data.json")
+      path.join(projectDir, "src", "models", name, "data.json")
     )
   );
   modelItem.actions = loadModelExtenders("actions", name, projectDir);
@@ -62,7 +62,7 @@ function LoadModel(name, projectDir) {
 }
 function ListModelsDir(projectDir) {
   return fs
-    .readdirSync(path.join(projectDir, "system", "models"), {
+    .readdirSync(path.join(projectDir, "src", "models"), {
       withFileTypes: true,
     })
     .filter((model) => model.isDirectory())

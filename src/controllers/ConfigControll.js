@@ -5,7 +5,7 @@ const Controller = require("../core/bos.controller.js");
 
 function loadDefaultsIfNeeded(context) {
   var defaultConfigList = fs
-    .readdirSync(path.join(context.projectDir, "..", "config"), {
+    .readdirSync(path.join(context.projectDir, "config"), {
       withFileTypes: true,
     })
     .filter((item) => item.isFile())
@@ -14,13 +14,11 @@ function loadDefaultsIfNeeded(context) {
   for (var defaultConfig of defaultConfigList) {
     var defaultsPath = path.join(
       context.projectDir,
-      "..",
       "config",
       defaultConfig
     );
     var configPath = path.join(
       context.projectDir,
-      "..",
       "config",
       path.basename(defaultConfig, ".default")
     );
@@ -35,7 +33,7 @@ function loadDefaultsIfNeeded(context) {
 function loadAllConfigs(context) {
   var configs = {};
   var configList = fs
-    .readdirSync(path.join(context.projectDir, "..", "config"), {
+    .readdirSync(path.join(context.projectDir, "config"), {
       withFileTypes: true,
     })
     .filter((item) => item.isFile())
@@ -46,11 +44,11 @@ function loadAllConfigs(context) {
       "CONFIG[",
       path.basename(configname, ".json"),
       "] from path ",
-      path.join(context.projectDir, "..", "config", configname)
+      path.join(context.projectDir, "config", configname)
     );
     configs[path.basename(configname, ".json")] = JSON.parse(
       fs.readFileSync(
-        path.join(context.projectDir, "..", "config", configname),
+        path.join(context.projectDir, "config", configname),
         {
           encoding: "utf-8",
         }

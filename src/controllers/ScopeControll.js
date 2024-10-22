@@ -1,9 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-const os = require("os");
+//const fs = require("fs");
+//const path = require("path");
+//const os = require("os");
 
 const Controller = require("../core/bos.controller.js");
-const BOS = require("../core/bos.class.js");
+const BOS = require("../core/bos.js");
 const helpers = require("../core/helperFunctions.js");
 
 /*
@@ -26,24 +26,24 @@ _Setup
 
 function prepareWorkshop() {
   var workshopHook = new BOS.Workshop(
-    path.join(os.homedir(), BOS.CONFIG.main["context-path"])
+    BOS.PathTo( BOS.CONFIG.main["context-path"])
   );
   BOS.SCOPE_ROOT = workshopHook;
   helpers.SAFE_CREATE_DIR(
-    path.join(os.homedir(),BOS.CONFIG.main["context-path"], "setup")
+    BOS.PathTo( BOS.CONFIG.main["context-path"], "setup")
   );
   var archiveHook = new BOS.Archive(
-    path.join(os.homedir(), BOS.CONFIG.main["context-path"], "archive"),
+    BOS.PathTo( BOS.CONFIG.main["context-path"], "archive"),
     workshopHook
   );
   workshopHook.childrenItems.push(archiveHook);
   var scrapbookHook = new BOS.Scrapbook(
-    path.join(os.homedir(), BOS.CONFIG.main["context-path"], "notes"),
+    BOS.PathTo( BOS.CONFIG.main["context-path"], "notes"),
     workshopHook
   );
   workshopHook.childrenItems.push(scrapbookHook);
   var forgeHook = new BOS.Forge(
-    path.join(os.homedir(), BOS.CONFIG.main["context-path"], "forge"),
+    BOS.PathTo( BOS.CONFIG.main["context-path"], "forge"),
     workshopHook
   );
   workshopHook.childrenItems.push(forgeHook);
