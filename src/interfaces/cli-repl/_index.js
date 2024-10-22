@@ -1,10 +1,11 @@
-const readline = require("readline");
+//const readline = require("readline");
 const repl = require("repl");
-const fs = require("fs");
-const path = require("path");
-const vm = require("vm")
+//const fs = require("fs");
+//const path = require("path");
+//const vm = require("vm")
+const process = require("process");
 
-const BOS = require("../../core/bos.class.js");
+const BOS = require("../../core/bos.js");
 
 function INIT() {
   this.active=true;
@@ -13,7 +14,7 @@ function INIT() {
     this.context.CONFIG.main.interfaces.cli
   );
   this.hook = repl.start(this.config);
-  this.hook.context.BOS = BOS.INITIALIZE;
+  this.hook.context.BOS = BOS;
   this.hook.setupHistory(this.config.historyPath, HISTORY);
   for (var command in this.context.COMMANDS) {
     addCommand(this.hook, command, this.context.COMMANDS[command], this.context);
