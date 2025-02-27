@@ -1,39 +1,42 @@
-[submodule "src/components/listeners"]
+[submodule "listeners"]
 	path = src/components/listeners
 	url = https://github.com/Sarverott/bos.listeners.git
-[submodule "src/components/models"]
+[submodule "models"]
 	path = src/components/models
 	url = https://github.com/sarverott/bos.models.git
-[submodule "src/components/events"]
+[submodule "events"]
 	path = src/components/events
 	url = https://github.com/sarverott/bos.events.git
-[submodule "src/components/controllers"]
+[submodule "controllers"]
 	path = src/components/controllers
 	url = https://github.com/sarverott/bos.controllers.git
-[submodule "src/components/methods"]
+[submodule "methods"]
 	path = src/components/methods
 	url = https://github.com/sarverott/bos.methods.git
-[submodule "src/components/resources"]
+[submodule "resources"]
 	path = src/components/resources
 	url = https://github.com/sarverott/bos.resources.git
-[submodule "src/components/factors"]
+[submodule "factors"]
 	path = src/components/factors
 	url = https://github.com/sarverott/bos.factors.git
-[submodule "src/components/bridges"]
+[submodule "bridges"]
 	path = src/components/bridges
 	url = https://github.com/sarverott/bos.bridges.git
-[submodule "src/components/actions"]
+[submodule "actions"]
 	path = src/components/actions
 	url = https://github.com/sarverott/bos.actions.git
-[submodule "src/components/operations"]
+[submodule "operations"]
 	path = src/components/operations
 	url = https://github.com/sarverott/bos.operations.git
-[submodule "src/components/toolsets"]
+[submodule "toolsets"]
 	path = src/components/toolsets
 	url = https://github.com/sarverott/bos.toolsets.git
-[submodule "src/components/services"]
+[submodule "services"]
 	path = src/components/services
 	url = https://github.com/sarverott/bos.services.git
-[submodule "src/components/interfaces"]
+[submodule "interfaces"]
 	path = src/components/interfaces
 	url = https://github.com/sarverott/bos.interfaces.git
+[submodule "commands"]
+	path = src/components/commands
+	url = https://github.com/Sarverott/bos.commands.git
