@@ -1,0 +1,21 @@
+{
+    "path":"~/.__WORKSHOP",
+    "content":{
+        ".DATA":["data",{}],
+        ".__BOS":["system",{}],
+        ".SETUP":["config",{}],
+        ".NESTRELM":["sandbox",{}],
+        ".STORYLINES":["history",{}],
+        ".VIEWS":["display",{}],
+        "archive":["archive",{}],
+        "forge":["forge",{}],
+        "craftbook":["craftbook",{}],
+        "devarmory":["devtools",{}]
+    },
+    "config":[
+        "~/.__WORKSHOP/.workshop.json",
+        "~/.workshop.json",
+        "~/.config/bos/workshop.json",
+        "~/.vscode/extensions/bos/workshop.json"
+    ]
+}
