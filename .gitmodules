@@ -1,0 +1,39 @@
+[submodule "src/components/listeners"]
+	path = src/components/listeners
+	url = https://github.com/Sarverott/bos.listeners.git
+[submodule "src/components/models"]
+	path = src/components/models
+	url = https://github.com/sarverott/bos.models.git
+[submodule "src/components/events"]
+	path = src/components/events
+	url = https://github.com/sarverott/bos.events.git
+[submodule "src/components/controllers"]
+	path = src/components/controllers
+	url = https://github.com/sarverott/bos.controllers.git
+[submodule "src/components/methods"]
+	path = src/components/methods
+	url = https://github.com/sarverott/bos.methods.git
+[submodule "src/components/resources"]
+	path = src/components/resources
+	url = https://github.com/sarverott/bos.resources.git
+[submodule "src/components/factors"]
+	path = src/components/factors
+	url = https://github.com/sarverott/bos.factors.git
+[submodule "src/components/bridges"]
+	path = src/components/bridges
+	url = https://github.com/sarverott/bos.bridges.git
+[submodule "src/components/actions"]
+	path = src/components/actions
+	url = https://github.com/sarverott/bos.actions.git
+[submodule "src/components/operations"]
+	path = src/components/operations
+	url = https://github.com/sarverott/bos.operations.git
+[submodule "src/components/toolsets"]
+	path = src/components/toolsets
+	url = https://github.com/sarverott/bos.toolsets.git
+[submodule "src/components/services"]
+	path = src/components/services
+	url = https://github.com/sarverott/bos.services.git
+[submodule "src/components/interfaces"]
+	path = src/components/interfaces
+	url = https://github.com/sarverott/bos.interfaces.git
