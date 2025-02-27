@@ -12,7 +12,7 @@
         "throwbox":""
     },
     "define":[
-        "index.json",
+        "model.json",
         {
             "model":"",
             "docs":"README.md",

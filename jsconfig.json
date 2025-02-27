@@ -9,6 +9,6 @@
     "dist", 
     ".venv", 
     ".github",
-    "dev"
+    "tools"
   ]
 }

@@ -13,8 +13,13 @@
 
 
 project + collection = superproject
-arvhive + throwbox = canonstack
+arvhive + throwbox = canonstack mirror
 workshop + throwbox = local history
-shiproad + workshop = repo server
-shiproad + project = project repo
-shiproad + scope = project release
+archive + workshop = internal repo server
+postroad + project = project repo
+postroad + scope = project release
+workshop + collection = setternet
+workshop + craftset = CI/CD server
+workshop + forge = remote workspace
+workshop + forge = remote workspace
+workshop + archive = remote workspace

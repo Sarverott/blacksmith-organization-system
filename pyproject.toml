@@ -1,5 +1,5 @@
 [project]
-name = "BOS_pyAPI"
+name = "BOS.py"
 version = "0.0.1"
 authors = [
   { name="Sett Sarverott", email="sarverott@gmail.com" },
