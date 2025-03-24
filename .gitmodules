@@ -40,3 +40,6 @@
 [submodule "commands"]
 	path = src/components/commands
 	url = https://github.com/Sarverott/bos.commands.git
+[submodule ".crovley"]
+	path = .crovley
+	url = https://gist.github.com/a1d6bb152f628c718cc36fbea6e99e91.git
