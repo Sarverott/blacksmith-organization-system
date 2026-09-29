@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const helpers = require("./helperFunctions.js");
+
 
 
 class BOS_Command {
@@ -9,21 +11,17 @@ class BOS_Command {
       this.name = command;
       this.indexData = JSON.parse(
         fs.readFileSync(
-          path.join(projectDir, "src", "commands", command, "index.json"),
+          helpers.componentPath(projectDir, "commands", command, "index.json"),
           { encoding: "utf-8" }
         )
       );
       this.manual = fs.readFileSync(
-        path.join(projectDir, "src", "commands", command, "manual.md"),
+        helpers.componentPath(projectDir, "commands", command, "manual.md"),
         { encoding: "utf-8" }
       );
-      this.action = require(path.join(
-        projectDir,
-        "src",
-        "commands",
-        command,
-        "call.js"
-      ));
+      this.action = require(
+        helpers.componentPath(projectDir, "commands", command, "call.js")
+      );
       //return {indexData, manual, action};
       //debug.log("COMMAND-LOAD:", [name, script]);
       //this.COMMANDS[name] = require(this.PathTo("system", "commands", script));

@@ -5,7 +5,6 @@
 */
 
 //const child_process = require("child_process");
-const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const EventEmitter = require("events");
@@ -74,7 +73,8 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     this.emitBosEvent('download');
   }
   static SET_WATCH(itemHook, watchedPath) {
-    fs.watch(watchedPath, { recursive: true }, function (eventType, filename) {
+    // not recursive: a recursive watch over a whole workshop exhausts inotify
+    itemHook.watcher = fs.watch(watchedPath, function (eventType, filename) {
       itemHook.emit(
         "alert-fs-change",
         itemHook,
@@ -83,6 +83,7 @@ class BlacksmithOrganizationSystem extends EventEmitter {
         watchedPath
       );
     });
+    itemHook.watcher.on("error", () => itemHook.watcher.close());
   }
 
   static get Subject() {
@@ -90,6 +91,17 @@ class BlacksmithOrganizationSystem extends EventEmitter {
   }
   static PathTo(...locationChain) {
     return path.join(this.BOS_ROOT_PATH, ...locationChain);
+  }
+  static get WORKSHOP_ROOT() {
+    if (!BOS._workshopRoot) {
+      BOS._workshopRoot = helpers.findWorkshopRoot(
+        BOS.CONFIG.workshop && BOS.CONFIG.workshop.path
+      );
+    }
+    return BOS._workshopRoot;
+  }
+  static WorkshopPath(...locationChain) {
+    return path.join(BOS.WORKSHOP_ROOT, ...locationChain);
   }
   static get BOS() {
     return BlacksmithOrganizationSystem;
@@ -123,36 +135,17 @@ class BlacksmithOrganizationSystem extends EventEmitter {
     return this;
   }
   static SETUP(options) {
-
     if (!BOS.hasOwnProperty("IS_SETUP")) {
       BOS.IS_SETUP = true;
-      if (
-        !fs.existsSync(
-          path.join(
-            os.homedir(),
-            BOS.CONFIG.main["context-path"],
-            BOS.CONFIG.main.startup
-          )
-        )
-      ) {
+      var startupScript = BOS.WorkshopPath(BOS.CONFIG.main.startup);
+      if (!fs.existsSync(startupScript)) {
+        helpers.SAFE_CREATE_DIR(path.dirname(startupScript));
         fs.copyFileSync(
           path.join(this.PathTo("."), "config", "startup.bos.default"),
-          path.join(
-            os.homedir(),
-            BOS.CONFIG.main["context-path"],
-            BOS.CONFIG.main.startup
-          )
+          startupScript
         );
       }
-      BOS.EVENTS.emit(
-        "run-startup-script",
-        path.join(
-          os.homedir(),
-          BOS.CONFIG.main["context-path"],
-          BOS.CONFIG.main.startup
-        ),
-        BOS
-      );
+      BOS.EVENTS.emit("run-startup-script", startupScript, BOS);
     }
   }
 

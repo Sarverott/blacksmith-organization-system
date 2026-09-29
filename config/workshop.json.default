@@ -1,5 +1,5 @@
 {
-    "path":"~/.__WORKSHOP",
+    "path":"~/__WORKSHOP",
     "content":{
         ".DATA":["data",{}],
         ".__BOS":["system",{}],
@@ -13,7 +13,7 @@
         "devarmory":["devtools",{}]
     },
     "config":[
-        "~/.__WORKSHOP/.workshop.json",
+        "~/__WORKSHOP/.workshop.json",
         "~/.workshop.json",
         "~/.config/bos/workshop.json",
         "~/.vscode/extensions/bos/workshop.json"

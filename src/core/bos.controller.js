@@ -2,22 +2,21 @@ const fs = require("fs");
 const path = require("path");
 const EventEmitter = require("events");
 
+const helpers = require("./helperFunctions.js");
+
 function LoadAllControllers(projectDir) {
   var controllers = {};
   var controllerList = fs
-    .readdirSync(path.join(projectDir, "src", "controllers"), {
+    .readdirSync(helpers.componentPath(projectDir, "controllers"), {
       withFileTypes: true,
     })
-    .filter((item) => item.isFile())
+    .filter((item) => item.isFile() && path.extname(item.name) == ".js")
     .map((item) => item.name);
 
   for (var controll of controllerList) {
-    controllers[path.basename(controll, ".js")] = require(path.join(
-      projectDir,
-      "src",
-      "controllers",
-      controll
-    ));
+    controllers[path.basename(controll, ".js")] = require(
+      helpers.componentPath(projectDir, "controllers", controll)
+    );
   }
   return controllers;
 }
