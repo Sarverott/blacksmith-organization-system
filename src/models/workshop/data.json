@@ -1,0 +1,19 @@
+{
+  "description":null,
+  "manualsLink":"https://github.com/Sarverott/blacksmith-organization-system/docs/about-workshop.md",
+  "name":null,
+  "path":null,
+  "state":null,
+  "lastModified":0,
+  "workshopName":null,
+  "events":{},
+  "actions":{},
+  "listeners":{},
+  "methods":{},
+  "childTypes":[
+    "Archive",
+    "Forge",
+    "Scrapbook",
+    "Setup"
+  ]
+}

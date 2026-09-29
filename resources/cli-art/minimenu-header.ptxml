@@ -1,0 +1,13 @@
+<pretty-terminal>
+&#9;<f-gray> ************************************ </f-gray>
+&#9;    <b-red>Blacksmith Organization System</b-red>    <bright><f-red>
+&#9;      ______    _____    _____
+&#9;      | ___ \  |  _  |  /  ___|
+&#9;      | |_/ /  | | | |  \ `--.
+&#9;      | ___ \  | | | |   `--. \
+&#9;      | |_/ /  \ \_/ /  /\__/ /
+&#9;      \____(_)  \___(_) \____(_)
+&#9;</f-red></bright>
+&#9;     <f-red>By <underline>Sett Sarverott</underline></f-red> <blink><gray>@</gray></blink> 2019-2024
+&#9;<f-gray> ************************************ </f-gray>
+</pretty-terminal>

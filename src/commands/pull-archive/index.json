@@ -1,0 +1,3 @@
+{
+    "help":"clone or fetch every repo listed in .DATA/*.gitlist into archive"
+}
