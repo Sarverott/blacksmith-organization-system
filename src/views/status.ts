@@ -78,3 +78,5 @@ export function bootstrapText(changes: string[], dryRun: boolean): string {
     ...changes.map((path) => `  + ${path}`),
   ].join("\n");
 }
+
+// NOTE: here also readability sucks but I know that it works so we want just to improove style here

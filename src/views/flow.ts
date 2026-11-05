@@ -38,3 +38,5 @@ export function outcomeText(outcome: FlowOutcome): string {
 export function bumpText(outcome: BumpOutcome): string {
   return outcome.reason || outcome.action;
 }
+
+// NOTE: huh... this one also should be reformed
