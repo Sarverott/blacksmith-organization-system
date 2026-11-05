@@ -37,25 +37,25 @@ jobs:
       USERNAME: ${{ vars.DOCKER_HUB_USERNAME || 'sarverott' }}
       REGISTRY: docker.io
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with: { ref: "${{ inputs.tag }}" }
-      - uses: go-task/setup-task@v1
+      - uses: go-task/setup-task@v2
       - name: Only a full release, with a token
         id: gate
         env:
           GH_TOKEN: ${{ github.token }}
         run: task workflows:image-gate -- "${{ inputs.tag }}"
       - if: steps.gate.outputs.go == 'true'
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
       - if: steps.gate.outputs.go == 'true'
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ env.USERNAME }}
           password: ${{ env.TOKEN }}
       - if: steps.gate.outputs.go == 'true'
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ env.REGISTRY }}/${{ steps.gate.outputs.namespace }}/blacksmith-organization-system
           tags: |
@@ -63,7 +63,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=${{ inputs.tag }}
             type=raw,value=latest
       - if: steps.gate.outputs.go == 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: true

@@ -77,6 +77,13 @@ history: [../changelog/](../changelog/phase-0.md).
 - [ ] Watching by the models: each element declares what of it is watched, instead of one tree watcher (review)
 - [ ] The release `stable`: what passed the tests of deployment and of dependent projects, on `releasing` (with the full loop)
 - [ ] An LTS line in `versioning` once two majors live side by side (Q12 b)
+- [x] Lint green again on what the version bump writes: `package.json` formatted as npm writes it (expand `always`); actions/checkout and setup-node v5, on Node 24 (found)
+- [x] The owner's map of bridges: `Bridge` (base.ts) → `Git` → `LocalGit` / `RemoteGit` → GitHub, Gitea, GitLab, Bitbucket, SourceHut; `bridges/index.ts` exports them all (owner)
+- [ ] One shape of every model through `Element` (Q13 c): structure on the class (`Project.anatomy`, `Loop.defaults` beside `children`), a file's default content and its JSON Schema in `<model>/descriptors/`; `bos workshop status` checks a descriptor against its schema (Q13)
+- [ ] Bridges applied to models (Q14)
+- [ ] The other kinds of bridges, from the owner's map: devops-integration, docs-publishers, apps-extensions, dedicated-implements, project-profiles, scoping-families (owner)
+- [ ] The homepage: `resources/web/public/` (webmanifest, robots.txt, sitemap.xml, llms.txt) generated from package.json, bos.json and the docs; built for GitHub Pages (owner)
+- [ ] Examples: `examples/01-getting-started/` and react, vue, astro, each a submodule with its own package.json, run by `examples/Taskfile.yml` (owner)
 - [ ] Mirrors: glossary page `archive/.repos-mirrors` (each mirror a sarcophag) (Q6)
 - [ ] Procedure `archiving`: `bos archive mirror <forge path>` → bare clone `archive/.repos-mirrors/<scope>___<project>.git`, dry run first, the forge copy removed only on confirmation (Q6)
 - [ ] Inspecting: a finding for clones in the forge that belong among the mirrors (Q6)
@@ -89,7 +96,7 @@ history: [../changelog/](../changelog/phase-0.md).
 - [ ] Containers: one per agent host CLI (Codex, Claude Code), one for the owner
 - [ ] Contexts that isolate: procedures run in `node:vm` contexts, WASI, child processes or a cluster (review: "this all can be used now")
 - [ ] Workmodes: sets of Taskfile tasks with file watchers and git hooks
-- [ ] The git bridge (`src/bridges/git.ts`, tags only so far) grows: status, add, commit
+- [ ] The git bridge (`LocalGit` in `src/bridges/git-integration/`, tags only so far) grows: status, add, commit
 - [ ] Scrapnote vaults: `craftbook/<scope>___<project>/scrapnotes/` as a git repository (Obsidian vault), `<project>/docs/.scrapnotes` its link, ignored by the project (Q8)
 - [ ] Workmode `scrapnotes`: commit every saved note after a quiet moment; `.obsidian/workspace*.json` ignored (Q8)
 

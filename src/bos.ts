@@ -2,8 +2,7 @@
 // the procedures on it. Every face of BOS (CLI, library, later MCP and HTTP) goes
 // through these methods.
 //   const bos = new BOS(new NodeHost());  const report = await bos.inspect();
-import { Git } from "./bridges/git.ts";
-import { GitHub } from "./bridges/github.ts";
+import { GitHub, LocalGit } from "./bridges/index.ts";
 import { createContext } from "./core/context.ts";
 import { Element } from "./core/element.ts";
 import type { Host } from "./core/host.ts";
@@ -134,7 +133,7 @@ export class BOS {
     { dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {},
   ): Promise<Procedures.BumpOutcome> {
     const { project, versioning } = this.settings(dir);
-    const git = new Git(this.host, project.path);
+    const git = new LocalGit(this.host, project.path);
     const context = {
       ...createContext(this.host, { dryRun }),
       projectPath: project.path,
@@ -171,7 +170,7 @@ export class BOS {
       station: branch,
       everyCommit: true,
       versioning,
-      git: new Git(this.host, project.path),
+      git: new LocalGit(this.host, project.path),
       outcome: Procedures.unbumped(),
     };
     return (await Procedures.bumping.run(context)).outcome;
@@ -188,7 +187,7 @@ export class BOS {
     const { project } = this.loop(dir);
     const context = {
       ...createContext(this.host),
-      git: new Git(this.host, project.path),
+      git: new LocalGit(this.host, project.path),
       files: { base, ours, theirs },
       texts: { base: "", ours: "", theirs: "" },
       outcome: Procedures.unreconciled(),
@@ -209,7 +208,7 @@ export class BOS {
     const context = {
       ...createContext(this.host, { dryRun }),
       file,
-      git: new Git(this.host, project.path),
+      git: new LocalGit(this.host, project.path),
       lines: [],
       identities: [],
       outcome: Procedures.uncredited(file),

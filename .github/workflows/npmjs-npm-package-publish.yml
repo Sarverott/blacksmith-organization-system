@@ -39,12 +39,12 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       HUSKY: "0"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with: { ref: "${{ inputs.tag || github.event.release.tag_name }}" }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
-      - uses: go-task/setup-task@v1
+      - uses: go-task/setup-task@v2
       - run: npm ci
       - run: task workflows:publish -- npmjs ${{ (inputs.prerelease || github.event.release.prerelease) && 'next' || 'latest' }}

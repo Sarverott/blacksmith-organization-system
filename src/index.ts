@@ -11,8 +11,7 @@ export { BOS, type BOSOptions, type WatchOptions } from "./bos.ts";
 // the machine: the one door to it (Host, NodeHost) and the outside systems through it
 export type { Change, Entry, Host, RunResult } from "./core/host.ts";
 export { NodeHost, WATCH_LIMIT } from "./hosts/node.ts";
-export { Git } from "./bridges/git.ts";
-export { type Comparison, GitHub, type PullRequest } from "./bridges/github.ts";
+export * from "./bridges/index.ts";
 
 // the parts everything is made of (src/core/)
 export * from "./core/context.ts";
