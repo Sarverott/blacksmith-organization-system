@@ -1,6 +1,6 @@
 import type { Git } from "../../bridges/git.ts";
 import type { Context } from "../../core/context.ts";
-import type { Bump, VersioningData } from "../../models/_index.ts";
+import type { Bump, VersioningData } from "../../models/index.ts";
 
 export type BumpOutcome = {
   action: "none" | "kept" | "would-bump" | "bumped";

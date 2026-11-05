@@ -2,7 +2,7 @@
 
 Models make the base of the logic tree of BOS: each element of the
 [glossary](../glossary/README.md) that BOS handles is one class in
-`src/models/<model>/class.ts`, collected by `src/models/_index.ts`.
+`src/models/<model>/class.ts`, collected by `src/models/index.ts`.
 
 ## The tree
 

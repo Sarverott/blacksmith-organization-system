@@ -1,7 +1,7 @@
 // A raw change below the workshop root → a workshop event, or null when it is noise.
 import type { Change } from "../../core/host.ts";
 import { dirname, inside, join } from "../../core/paths.ts";
-import type { Workshop } from "../../models/_index.ts";
+import type { Workshop } from "../../models/index.ts";
 import { isRepository } from "../../models/project/git.ts";
 import { placeOf } from "../../models/workshop/locate.ts";
 import type { WorkshopEvent } from "./context.ts";

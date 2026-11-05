@@ -1,7 +1,7 @@
 // One tool format for every face of BOS. A tool is the CLI command `bos <model> <name>`,
 // its line in `bos help`, and (next) an MCP tool or an OpenAPI operation. Nothing is
 // described twice.
-import type { BOS } from "../main.ts";
+import type { BOS } from "../bos.ts";
 
 export type Arg = {
   name: string;

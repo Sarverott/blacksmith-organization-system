@@ -50,5 +50,3 @@ export {
   WORKSHOP_DIRNAME,
   workshopName,
 } from "./workshop/locate.ts";
-
-// NOTE: if it is only this file here then rename "_index.ts" to just "index.ts" - this looks better, previously method with "_" helps to mark important files for me to find it

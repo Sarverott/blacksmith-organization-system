@@ -1,7 +1,7 @@
 # Interfaces
 
 The standard ways to interact with BOS. Every interface stands on the same
-`BOS` class (`src/main.ts`) and the same tool entries (`src/tools/`), so a
+`BOS` class (`src/bos.ts`) and the same tool entries (`src/tools/`), so a
 command behaves the same however it is reached.
 
 | Interface | State | Where |

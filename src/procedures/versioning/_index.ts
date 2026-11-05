@@ -1,7 +1,7 @@
 import type { Context } from "../../core/context.ts";
 import { Procedure } from "../../core/procedure.ts";
 import type { LoopEvent } from "../../core/version.ts";
-import type { Scope, Workshop } from "../../models/_index.ts";
+import type { Scope, Workshop } from "../../models/index.ts";
 
 export type VersionContext = Context & {
   workshop: Workshop;

@@ -9,7 +9,7 @@ the [glossary](../glossary/README.md); this part says how the code holds it.
              └───────────────────┬────────────────────┘
                               tools/                       one entry per command: args, run, render
                                  │
-                              main.ts  class BOS           the spine: bootstrap, inspect, watch, bumpScope
+                              bos.ts   class BOS           the spine: bootstrap, inspect, watch, bumpScope
                                  │
                  ┌───────────────┴───────────────┐
             procedures/                       models/       how (named steps)  ·  what (the glossary as classes)

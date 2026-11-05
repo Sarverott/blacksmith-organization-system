@@ -49,7 +49,7 @@ of falling back on `~/__WORKSHOP`.
 
 ```
 src/
-├── main.ts        spine: class BOS(host, options) - workshop, bootstrap(), inspect(), watch(), bumpScope()
+├── bos.ts         spine: class BOS(host, options) - workshop, bootstrap(), inspect(), watch(), bumpScope()
 ├── core/          host.ts (the one door to the machine), element.ts (anatomy: dirname, children,
 │                  descriptors → ensure + inspect), procedure.ts (named steps, trace), context.ts
 │                  (createIfMissing), tool.ts (one tool format), version.ts (semver + GRIH), paths.ts
@@ -225,7 +225,9 @@ top, dated). People answer in `docs/devlog/`, not here.
    `DESCRIPTION.md` (why), one file per step (how), `_index.ts` (the order).
    A new finding of `bos workshop status` is one function in
    `procedures/inspecting/rules.ts`.
-5. **Small files, one concern each**, collected by the nearest `_index.ts`.
+5. **Small files, one concern each**, collected by the nearest index: `index.ts` when it
+   stands alone in its directory (`models/`, `procedures/`), `_index.ts` among sibling
+   files (a procedure's steps, `tools/`), so it sorts first.
 6. **BOS creates only what is missing.** Every write goes through
    `createIfMissing` or an explicit, dry-run-aware step; a dry run plans
    exactly what the real run does.

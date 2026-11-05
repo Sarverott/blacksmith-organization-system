@@ -1,6 +1,6 @@
 import type { Git } from "../../bridges/git.ts";
 import type { Context } from "../../core/context.ts";
-import type { AuthorsLine, Identity } from "../../models/_index.ts";
+import type { AuthorsLine, Identity } from "../../models/index.ts";
 
 export type CreditOutcome = {
   action: "none" | "would-write" | "written";
