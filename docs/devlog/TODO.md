@@ -48,7 +48,7 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] `bos flow bump <station>`: the project's version bumped per `versioning`, only when already released (tagged) (chat 2)
 - [ ] Checks split: one reusable `checks.yml` (types, lint, tests, build, docs, commits, package); `check.yml` runs only what a push changed; `pr-checks.yml` runs all (chat 3)
 - [ ] Workflows of the routine: `revision.yml` (minor bump), `release.yml` (tag, GitHub release, npm, wiki, webhooks, back into development), `flow.yml` (full loop, `workflow_dispatch` only); all with `workflow_dispatch` (Q10, Q11)
-- [ ] GitHub wiki: `docs/.gh-wiki` (ignored), `scripts/gh-wiki.py` + `resources/docs-templates/`, `task docs:wiki` (inquiry)
+- [x] GitHub wiki: `docs/.gh-wiki` (ignored), `scripts/gh-wiki.py` + `resources/docs-templates/`, `task docs:wiki` (inquiry)
 - [x] AGENTS.md: the routine, and what an agent pushes without asking (chat 1)
 - [ ] First run of the routine: `development` pushed, PR `development → master`, `development` pushed to `revision`
 - [ ] `scripts/` inventory: what is required, what moves into the core (inquiry)
