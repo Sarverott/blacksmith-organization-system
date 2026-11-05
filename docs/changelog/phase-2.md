@@ -279,3 +279,79 @@ Also: `src/models/devarmory/descriptors/shema.manifest.json` and
   that exits 0 when a task fails. Husky puts that directory first, so every
   hook passed, checks failing or not. `.husky/task` now runs the real binary;
   a test keeps it so.
+
+## UNIXUSAT=1793918638589 · commit 893fc79
+
+v1.4.0 was merged (PR #8), and its checks failed on `checks / lint`, on the
+pull request and on `master`, so the release stopped there. The owner's
+batch: the answer to Q13, `src/bridges/` reorganized into a map of bridges
+(the git and GitHub bridges moved into it), `examples/` and
+`resources/web/` planned, all in `dev/Sarverott` one commit each.
+
+### Orders
+
+````text
+## Q13
+
+i think option C
+for sure we need to define unified shape of all models by shared base in Element 
+````
+
+The question, as it was asked:
+
+````text
+## Q13. One way to declare what a model is made of
+
+What a model declares is written in three ways today: `static children` and
+`static descriptors` on the class (`descriptors` are functions giving a
+file's default content), `ANATOMY` and `ALIASES` as tables in
+`models/project/anatomy.ts`, and the loop's defaults as data in
+`models/loop/data.ts`. The owner (a review note in `anatomy.ts`): "it looks
+fine but we need to unify way we declare things like that". The owner also
+made an empty `src/models/devarmory/descriptors/shema.manifest.json`, which
+reads as declarations kept as files beside the model.
+
+- a) Everything static on the class, as `children` / `descriptors` are: the
+  anatomy becomes `Project.anatomy`, and the loop's defaults `Loop.defaults`.
+- b) Everything as files in `<model>/descriptors/`: each descriptor's default
+  content and its JSON Schema (`<name>.json`, `schema.<name>.json`). The class
+  only names them.
+- c) b) for files with content (manifests, settings), a) for structure
+  (children, anatomy).
+
+*Lean:* c). Structure is code and is checked by `tsc`. A file's content and
+its schema are data that a person, the docs and other tools read without
+TypeScript. And `bos workshop status` could then check a file against its
+schema.
+````
+
+- **Decision (Q13):** c), and one shape for every model through `Element`:
+  what any model declares (children, descriptors, anatomy, defaults) is
+  declared the same way, defined once in `Element`. Structure stays on the
+  class; a file's default content and its schema are files in
+  `<model>/descriptors/`. To be coded (TODO, phase 2).
+
+### Found and fixed
+
+- **The lint of v1.4.0:** the revision workflow bumps the version outside any
+  hook, and `JSON.stringify(…, 2)` puts each array item on its own line,
+  which biome (`expand: "auto"`) collapses. `package.json` now formats with
+  `expand: "always"`, the shape npm writes; a test pipes such output through
+  biome. `resources/web/public/` is generated, so biome leaves it out.
+- **Node 20 warnings:** actions/checkout and actions/setup-node v5, both on
+  Node 24. The Gitea mirror's workflow stays on v4.
+
+### The owner's code
+
+- **Decision (bridges):** the owner's folders stay as they are. The owner's
+  commit only had its import paths corrected, so it compiles. Then, as the
+  files' own comments say: `Bridge` (base.ts) runs a system's command in a
+  directory through `Host.run`, the code `Git` and `GitHub` repeated;
+  `Git` (git-base) is git's command; `LocalGit` is a clone here (tags,
+  `merge-file`, identities: what `Git` did); `RemoteGit` is a place the
+  repository is pushed to, the source or a mirror (`role`); `GitHub`,
+  `Gitea`, `GitLab`, `Bitbucket`, `SourceHut` extend it, each with its
+  public `domain`. `bridges/index.ts` exports them all, and the library
+  exports `bridges/index.ts`. The empty files of the other kinds stay empty.
+  How a bridge is applied to a model: BRAINSTORM Q14.
+
