@@ -58,7 +58,7 @@ jobs:
         with: { ref: revision, fetch-depth: 0 }
       - uses: actions/setup-node@v5
         with: { node-version: 24, cache: npm }
-      - uses: go-task/setup-task@v1
+      - uses: go-task/setup-task@v2
       - name: Every entity of the commits in .github/AUTHORS
         id: authors
         run: task workflows:authors -- revision

@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with: { fetch-depth: 0 }
-      - uses: go-task/setup-task@v1
+      - uses: go-task/setup-task@v2
       - name: What the push changed
         id: what
         run: task workflows:changes -- "${{ github.event.before }}"
