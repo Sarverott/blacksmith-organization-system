@@ -1,4 +1,6 @@
 # Blacksmith Organization System
+
+
 ```
 ************************************
   Project in R tier scope "ANUBIS"
@@ -12,6 +14,8 @@
     By Sett Sarverott @ 2019-2024
 ************************************
 ```
+
+
 ---
 
 # DEVNOTE: currently big refactor is comming. Based on ideas while writting https://github.com/The-Apokryf/.github/issues/1 
