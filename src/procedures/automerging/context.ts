@@ -1,4 +1,4 @@
-import type { GitHub, PullRequest } from "../../bridges/github.ts";
+import type { GitHub, PullRequest } from "../../bridges/git-integration/github.ts";
 import type { Context } from "../../core/context.ts";
 import type { Loop } from "../../models/index.ts";
 import type { FlowOutcome } from "../proposing/context.ts";

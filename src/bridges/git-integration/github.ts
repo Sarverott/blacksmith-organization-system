@@ -1,5 +1,5 @@
 // GitHub through its CLI, `gh` (authenticated by GH_TOKEN in GitHub Actions, or `gh auth login`).
-import type { Host } from "../core/host.ts";
+import type { Host } from "../../core/host.ts";
 
 export type Comparison = { aheadBy: number; commits: { parents: number; message: string }[] };
 export type PullRequest = {
@@ -116,3 +116,5 @@ export class GitHub {
     this.gh(["pr", "merge", String(number), "--merge"]);
   }
 }
+
+// extends remote-git

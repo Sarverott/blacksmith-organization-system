@@ -1,5 +1,5 @@
 // git through its command line. Only what the core needs, one method each.
-import type { Host } from "../core/host.ts";
+import type { Host } from "../../core/host.ts";
 
 export class Git {
   readonly host: Host;
