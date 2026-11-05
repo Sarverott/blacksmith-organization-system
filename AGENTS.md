@@ -49,10 +49,12 @@ of falling back on `~/__WORKSHOP`.
 
 ```
 src/
-├── bos.ts         spine: class BOS(host, options) - workshop, bootstrap(), inspect(), watch(), bumpScope()
+├── bos.ts         spine: class BOS(host, options) - workshop, bootstrap(), inspect(), watch(), bumpScope()…;
+│                  every model as BOS.<Model> (new BOS.Craftbook(host, path))
 ├── core/          host.ts (the one door to the machine), element.ts (anatomy: dirname, children,
-│                  descriptors → ensure + inspect), procedure.ts (named steps, trace), context.ts
-│                  (createIfMissing), tool.ts (one tool format), version.ts (semver + GRIH), paths.ts
+│                  descriptors → ensure + inspect; an Emitter: "created"), emitter.ts (on/once/off/emit),
+│                  procedure.ts (named steps, trace), context.ts (createIfMissing), tool.ts (one tool
+│                  format), version.ts (semver + GRIH), paths.ts (+ packagePath), json-file.ts, serialize.ts
 ├── hosts/         NodeHost (+ watch-tree.ts): the only files that touch node:* (fs, os, child_process)
 ├── bridges/       one file per outside system (github.ts: gh, git.ts: git), reached only through Host.run
 ├── models/        <model>/class.ts: the glossary as classes (workshop, system = .BOS and its parts,
