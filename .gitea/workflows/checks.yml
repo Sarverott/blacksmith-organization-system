@@ -1,0 +1,21 @@
+# On the gitea.com mirror (Gitea Actions). With .gitea/workflows/ present, Gitea runs these
+# and ignores .github/workflows/, which release and publish from GitHub only.
+# The same checks as GitHub's (task check): types, lint, tests.
+name: checks on the gitea.com mirror
+
+on:
+  push:
+    branches: [master, development]
+
+env:
+  HUSKY: "0"
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - run: npm ci
+      - run: npm run check
