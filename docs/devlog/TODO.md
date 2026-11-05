@@ -2,7 +2,7 @@
 
 What is being worked on now. The idea of every phase: [VISION.md](VISION.md);
 versions: [ROADMAP.md](ROADMAP.md); questions: [BRAINSTORM.md](BRAINSTORM.md);
-history: [../changelog/](../changelog/).
+history: [../changelog/](../changelog/phase-0.md).
 
 ## Phase 0: clear the ground
 

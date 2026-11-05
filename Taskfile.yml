@@ -8,6 +8,7 @@ includes:
   devlog:
     taskfile: ./docs/devlog/Taskfile.yml
     dir: ./docs/devlog
+  docs: ./docs/Taskfile.yml
 
 vars:
   BOS: node {{.ROOT_DIR}}/src/cli.ts

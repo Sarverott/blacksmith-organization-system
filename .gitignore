@@ -148,4 +148,5 @@ CMakeUserPresets.json
 *.tmp
 typings/
 .env.test
-apps/*/
+apps/*/site/
+docs/.venv/
