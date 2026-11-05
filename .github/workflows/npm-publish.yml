@@ -1,33 +1,30 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-
-name: Node.js Package
+# Publishes the package to npmjs.org when a GitHub release is created: a pre-release
+# under the npm tag `next` (decision Q7: 1.x is `next` until phase 2 is done), a release
+# under `latest`. Needs the repository secret npm_token (an npm automation token).
+# Nothing in the loop creates releases yet (phase 2); a release is the owner's act.
+name: publish
 
 on:
   release:
     types: [created]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - run: npm ci
-      - run: npm test
+permissions:
+  contents: read
+  id-token: write
 
-  publish-npm:
-    needs: build
+jobs:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 24
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          HUSKY: "0"
+      - run: npm run check
+      - run: npm publish --provenance --tag ${{ github.event.release.prerelease && 'next' || 'latest' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.npm_token }}

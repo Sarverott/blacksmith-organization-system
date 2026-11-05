@@ -1,0 +1,121 @@
+# Built by Read the Docs (.readthedocs.yaml) and locally: `task docs:serve`.
+# The docs are a self-contained sub-project: config, uv project, lock and Taskfile live
+# here, next to the pages. Always build from the repository root: mkdocs build -f docs/mkdocs.yml
+site_name: Blacksmith Organization System
+site_description: The BOS core - the workshop as code
+site_author: Sett Sarverott
+site_url: !ENV [READTHEDOCS_CANONICAL_URL, "http://127.0.0.1:8000/"]
+repo_url: https://github.com/Sarverott/blacksmith-organization-system
+repo_name: blacksmith-organization-system
+edit_uri: edit/development/docs/
+copyright: Copyright &copy; 2019-2026 Sett Sarverott, MIT license
+
+docs_dir: .
+site_dir: ../site
+# dot-directories stay out, except the agents' space
+exclude_docs: |
+  .*
+  !/.agents/
+  /mkdocs.yml
+  /pyproject.toml
+  /uv.lock
+  /requirements.txt
+  /Taskfile.yml
+  /_mkdocs/
+  /devlog/AGENTS.md
+  /devlog/Taskfile.yml
+  /devlog/STATE.md
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - content.action.edit
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: amber
+      toggle: { icon: material/weather-night, name: dark mode }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      accent: amber
+      toggle: { icon: material/weather-sunny, name: light mode }
+
+plugins:
+  - search
+
+hooks:
+  - _mkdocs/wikilinks.py   # Obsidian [[links]] → site links
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences:   # ```mermaid blocks become diagrams
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: README.md
+  - Architecture:
+      - architecture/README.md
+      - architecture/models.md
+      - architecture/interfaces.md
+      - architecture/bridges.md
+  - Devlog:
+      - devlog/README.md
+      - devlog/VISION.md
+      - devlog/ROADMAP.md
+      - devlog/TODO.md
+      - devlog/BRAINSTORM.md
+      - devlog/PROPOSALS.md
+      - devlog/ORDERS.md
+      - devlog/INQUIRIES.md
+  - Changelog:
+      - changelog/phase-0.md
+      - changelog/phase-1.md
+  - For agents:
+      - .agents/NOTES.md
+      - .agents/CLEO.md
+  - Glossary:
+      - glossary/README.md
+      - Network:
+          - glossary/setternet.md
+          - glossary/host-role.md
+          - glossary/canon.md
+      - Workshop:
+          - glossary/workshop.md
+          - glossary/system.md
+          - glossary/devarmory.md
+          - glossary/forge.md
+          - glossary/craftbook.md
+          - glossary/archive.md
+          - glossary/setup.md
+          - glossary/data.md
+          - glossary/nestrelm.md
+          - glossary/storylines.md
+          - glossary/views.md
+      - Loop:
+          - glossary/craft-loop.md
+          - glossary/grih.md
+      - Elements:
+          - glossary/artefact.md
+          - glossary/element-anatomy.md
+          - glossary/scope.md
+          - glossary/project.md
+          - glossary/sheme.md
+          - glossary/throwbox.md
+          - glossary/sarcophag.md
+          - glossary/exhibit.md
+          - glossary/scrapnote.md
+          - glossary/craftset.md
+          - glossary/collection.md
+          - glossary/postroad.md

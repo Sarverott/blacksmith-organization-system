@@ -1,91 +1,96 @@
 ```
-      █▄▄ █░░ ▄▀█ █▀▀ █▄▀ █▀ █▀▄▀█ █ ▀█▀ █░█
-      █▄█ █▄▄ █▀█ █▄▄ █░█ ▄█ █░▀░█ █ ░█░ █▀█
+      █▄▄ █░░ ▄▀█ █▀▀ █▄▀ █▀ █▀▄▀█ █ ▀█▀ █░█
+      █▄█ █▄▄ █▀█ █▄▄ █░█ ▄█ █░▀░█ █ ░█░ █▀█
 
-   █▀█ █▀█ █▀▀ ▄▀█ █▄░█ █ ▀█ ▄▀█ ▀█▀ █ █▀█ █▄░█
-   █▄█ █▀▄ █▄█ █▀█ █░▀█ █ █▄ █▀█ ░█░ █ █▄█ █░▀█
+   █▀█ █▀█ █▀▀ ▄▀█ █▄░█ █ ▀█ ▄▀█ ▀█▀ █ █▀█ █▄░█
+   █▄█ █▀▄ █▄█ █▀█ █░▀█ █ █▄ █▀█ ░█░ █ █▄█ █░▀█
 
-             █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█
-             ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█
+             █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█
+             ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█
 ```
-> ###### [Sett Sarverott](https://github.com/Sarverott) @ 2019-2024
+> ###### [Sett Sarverott](https://github.com/Sarverott) @ 2019-2026
 ---
 
-# The core of Blacksmith Organization System
-### automation of management in personal forest of projects  
-> Part of _R tier_ superproject "ANUBIS",
+# The core of the Blacksmith Organization System
 
----
+A programmer's work gets scattered across machines, drives and servers, and
+the copies drift apart: *variantogeddon*. BOS gives every host the same fixed
+shape, a **workshop**, and keeps that shape by code:
 
-## Projects related with BOS:
-- [Desktop manager](https://github.com/Sarverott/bos-desktop)
-- [Mobile app](https://github.com/Sarverott/bos-mobile)
-- [Standalone webserver](https://github.com/Sarverott/bos-server)
-- [Special GUI optimised for implementations](https://github.com/Sarverott/bos-gui)
+- **builds the base** of the environment: `__WORKSHOP` with its areas
+  `.BOS`, `devarmory`, `forge`, `craftbook`, `archive`, creating only what is
+  missing and never overwriting;
+- **listens** to every change in it and says where it happened: area › scope
+  › project;
+- **inspects** it as one coherent environment: every scope and project in the
+  forge (branch, version, anatomy) and what is out of order;
+- runs the **craft loop** every BOS project follows: branches, steps, phases,
+  milestones and their versions (semver `vX.Y.Z` for projects, GRIH
+  `vG.R.I.H` for scopes).
 
----
+This is the core: a TypeScript module and the `bos` command.
 
-### some information about:
+## Install
 
-- basic and effective metodology of catalogization of project types, gouping parts of project and families of related projects and maintenance working condition
+Node ≥ 22.18.
 
-- strategy invented espesialy for mad science of wast and divesed chaos of technomantic workspaces, tested in action, with clearified concrete concept
+```sh
+npm install --global blacksmith-organization-system   # gives the command `bos`
+npx blacksmith-organization-system help               # or without installing
+```
 
-- software system, that proofs mechanically, that it can be easy automated to help automate many casual software tasks
+## Use
 
-- perfect solution for long term maintain and archivisation of life work in multiple areas of artistical and informatical activity.
+```sh
+bos workshop status                 # the whole workshop: areas, scopes, projects, findings
+bos workshop bootstrap --dryRun     # what is missing; without --dryRun, create it
+bos workshop watch --record         # one line per change until Ctrl+C, kept in .BOS/storylines
+bos scope bump <scope> phase        # raise a scope's GRIH version: step, phase, milestone, flip
+bos devlog state                    # where a project stands, from its docs/devlog/
+bos help                            # every tool; --json gives machines the data
+```
 
----
+Which workshop: `--workshop=<path>`, else `$BOS_WORKSHOP`, else
+`$WORKSHOP_ROOT/__WORKSHOP`, else the nearest parent `__WORKSHOP`, else
+`~/__WORKSHOP`. `$WORKSHOP_RENAME` changes the name `__WORKSHOP`.
+`bos workshop locate` says which one and why. Only `bootstrap` and `bump`
+write, and they create only what is missing.
 
-### results of usage:
+As a library:
 
-- enjoy passion
-- skip mindless routines
-- keep productivity and quality of production
-- protect your work from version collisions and data losts
-- organize your life like ultimate boss of all cyberpunk blacksmiths
-- take controll of your forge.
----
+```ts
+import { BOS, NodeHost } from "blacksmith-organization-system";
 
-###### Source problems that makes me able to think it's more than possible
+const bos = new BOS(new NodeHost());
+await bos.bootstrap();
+const report = await bos.inspect();
+console.log(report.forge.scopes.length, report.findings.length);
+```
 
-The basic idea was to automate repository controll and make order in project folders for better workspaces' view and controll with easier projects and publication management. Basic idea was work well and just methods of workshop dirtree was big success in local workspace area. Problem appears when new workspaces joins area of my operations and variantogeddon from desynchronization of version grows to uncontrollable sizes. Next issues become visible, after attempts to maintain speed of commiting and supporting publications boundles in thesame time, using conventional methods. But this was only beginning...
+## Documentation
 
----
+https://blacksmith-organization-system.readthedocs.io/: the
+[glossary](https://blacksmith-organization-system.readthedocs.io/en/latest/glossary/)
+(every element of a workshop), the architecture of the core, the devlog and
+the changelog. To work on BOS itself:
+[CONTRIBUTING](https://github.com/Sarverott/blacksmith-organization-system/blob/development/.github/CONTRIBUTING.md).
 
-### Details of project:
+The agents' skills and the Claude Code plugin are
+[bos-skillset](https://github.com/Sarverott/bos-skillset), which builds on
+this core.
 
-- [About Models](./system/models/README.md) - workspace tree elements
+## Where the idea came from
 
-- [About Interfaces](./system/interfaces/README.md) - for standard interactions
+The basic idea was to automate repository control and make order in project
+folders for better workspaces' view and control, with easier projects and
+publication management. The workshop dirtree worked well in one local
+workspace. Problems appeared when new workspaces joined, and variantogeddon
+from desynchronized versions grew out of control; then more, when keeping up
+the speed of commits and publication bundles at the same time with
+conventional methods. But this was only the beginning…
 
-- [About Bridges](./system/bridges/README.md) - integration with other systems
+The legacy CommonJS core (v0.6.1) is kept as the git tag `legacy/v0.6.1`.
 
-- [About BOS Core](./system/core/README.md) - heart of cyberpunk blacksmith work
+## License
 
-- [About Factories](./system/factors/README.md) - templates for elements of BOS
-
-- [About Commands](./system/commands/README.md) - common set of commands
-
-- [About resources](./system/resources/README.md) - non-executable files
-
-- ~[Documentation](./docs/README.md) - main documentation~
-
-- [DEV-LOG](./docs/devlog.md) - some scrap notes
-
----
-
-
-### References:
-
-- ~npm REPO: https://www.npmjs.com/package/blacksmith-organization-system~
-- GitHub REPO: https://github.com/Sarverott/blacksmith-organization-system
-- also good to see about:
- - uses [carnival-toolbox](https://github.com/Sarverott/carnival-toolbox): npm library with many usefull tools
- - part of [project anubis](https://github.com/Sarverott/anubis-helpmate): ultimate acolyte assisting programm
- - ~[article about BOS metodology](https://sarverott.com/)~
-
- ---
-
-### LICENSE:
-> Copyright (c) 2019 Sett Sarverott, released on terms of [MIT license](https://github.com/Sarverott/blacksmith-organization-system/LICENSE)
+Copyright (c) 2019-2026 Sett Sarverott, released on terms of the [MIT license](LICENSE).

@@ -1,58 +1,75 @@
 {
   "name": "blacksmith-organization-system",
-  "version": "0.6.1",
-  "description": "Blacksmith Organization System - manage projects folders and files in your multiple workplaces, on servers and in publication repositories",
-  "main": "src/_index.js",
-  "scripts": {
-    "build": "sh ./dev/builder.sh",
-    "deploy": "sh ./dev/deployer.sh",
-    "test": "node _index.js cli --debug",
-    "start": "node src/_index.js"
-  },
-  "repository": "git+https://github.com/Sarverott/blacksmith-organization-system.git",
+  "version": "1.0.0",
+  "description": "Blacksmith Organization System (BOS) core: the workshop as code - build its base, listen to its changes, inspect it as one coherent environment",
   "keywords": [
     "bos",
     "blacksmith",
     "organization",
     "system",
-    "manage",
+    "workshop",
+    "forge",
     "projects"
   ],
-  "author": "Sett Sarverott <sett@sarverott.com> (http://sarverott.com)",
-  "license": "MIT",
+  "homepage": "https://github.com/Sarverott/blacksmith-organization-system#readme",
   "bugs": {
     "url": "https://github.com/Sarverott/blacksmith-organization-system/issues"
   },
-  "homepage": "https://github.com/Sarverott/blacksmith-organization-system#readme",
-  "dependencies": {
-    "babel": "^6.23.0",
-    "carnival-toolbox": "^1.2.4",
-    "express": "^4.21.1",
-    "socket.io": "^4.8.0",
-    "vue": "^3.5.12"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sarverott/blacksmith-organization-system.git"
   },
-  "publishConfig": {
-    "@sarverott:registry": "https://registry.npmjs.org/"
+  "license": "MIT",
+  "author": "Sett Sarverott <sett@sarverott.com> (http://sarverott.com)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "bos": "dist/cli.js"
   },
-  "directories": {
-    "doc": "docs"
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "resources",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "bos": "node src/cli.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "check": "npm run typecheck && npm run lint && npm test",
+    "commit": "cz",
+    "prepare": "husky",
+    "prepack": "npm run build"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
   },
   "devDependencies": {
-    "@electron-forge/cli": "^7.5.0",
-    "@eslint/js": "^9.13.0",
-    "@quick-start/create-electron": "^1.0.24",
-    "@vitejs/plugin-vue": "^5.1.4",
-    "create-vue": "^3.11.1",
-    "electron": "^33.0.0",
-    "electron-vite": "^2.3.0",
-    "eslint": "^8.57.1",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jest": "^28.8.3",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-promise": "^6.6.0",
-    "eslint-plugin-vue": "^9.29.0",
-    "globals": "^15.11.0",
-    "jest": "^29.7.0"
+    "@biomejs/biome": "2.5.14",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@commitlint/cz-commitlint": "^21.2.3",
+    "@types/node": "^24.0.0",
+    "commitizen": "^4.3.2",
+    "husky": "^9.1.7",
+    "inquirer": "^12.11.1",
+    "typescript": "^5.9.0",
+    "vitest": "^5.0.2"
   }
 }
