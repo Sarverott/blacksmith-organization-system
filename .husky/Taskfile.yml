@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+# Git hooks. The files in .husky/ only call these tasks, so a hook can be run and
+# changed like any other procedure. Included by the root Taskfile as `hooks:`.
+
+version: '3'
+
+tasks:
+  pre-commit:
+    desc: Format and lint what is staged (fixes go back into the commit), then typecheck and test
+    dir: '{{.TASKFILE_DIR}}/..'
+    cmds:
+      - npx biome check --write --staged --no-errors-on-unmatched
+      - git update-index --again
+      - npx tsc --noEmit
+      - npx vitest run --silent
+
+  commit-msg:
+    desc: 'Reject messages that are not conventional commits, e.g. task hooks:commit-msg -- .git/COMMIT_EDITMSG'
+    dir: '{{.TASKFILE_DIR}}/..'
+    cmds:
+      - npx --no -- commitlint --edit {{.CLI_ARGS}}

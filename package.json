@@ -52,7 +52,8 @@
     "format": "biome check --write .",
     "check": "npm run typecheck && npm run lint && npm test",
     "commit": "cz",
-    "prepare": "husky"
+    "prepare": "husky",
+    "prepack": "npm run build"
   },
   "config": {
     "commitizen": {
