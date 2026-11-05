@@ -33,15 +33,3 @@ export function createIfMissing(context: Context, target: string, create: () => 
   context.changes.push(target);
   return true;
 }
-
-// NOTE: not here but contexts are related with these:
-/*
-import { createContext, runInContext } from 'node:vm';
-import vfs from 'node:vfs';
-
-import { WASI } from 'node:wasi';
-import process from 'node:process';
-import { spawn } from 'node:child_process';
- import cluster from 'node:cluster';
- */
-// NOTE: this all can be used now

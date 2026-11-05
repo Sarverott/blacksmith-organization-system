@@ -48,7 +48,10 @@ export function inside(root: string, target: string): string | null {
   return path.startsWith(prefix) ? path.slice(prefix.length) : null;
 }
 
-// NOTE: if we have path-related handler functions then why we still uses like in "../cli.ts" messy parsing
-/*
-const CHECKOUT_ENV = new URL("../.env", import.meta.url);  // things like that can be and should be resolved here 
-*/
+// a file of this package (the checkout, or the installed package): its root is two levels
+// above this module, in src/core/ as in dist/core/
+//   packagePath("package.json")  packagePath(".env")
+export function packagePath(...names: string[]): string {
+  const root = new URL("../../", import.meta.url);
+  return join(decodeURIComponent(root.pathname), ...names);
+}
