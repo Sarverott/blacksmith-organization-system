@@ -1,5 +1,6 @@
+// extends remote-git
 // GitHub through its CLI, `gh` (authenticated by GH_TOKEN in GitHub Actions, or `gh auth login`).
-import type { Host } from "../../core/host.ts";
+import { RemoteGit } from "./remote-git.ts";
 
 export type Comparison = { aheadBy: number; commits: { parents: number; message: string }[] };
 export type PullRequest = {
@@ -10,22 +11,12 @@ export type PullRequest = {
   crossRepository: boolean;
 };
 
-export class GitHub {
-  readonly host: Host;
-  // the directory of the repository; gh finds the repository from its remote
-  readonly cwd: string;
-
-  constructor(host: Host, cwd: string) {
-    this.host = host;
-    this.cwd = cwd;
-  }
+// the source of this repository; gh finds which one from the remote of the clone (cwd)
+export class GitHub extends RemoteGit {
+  static override readonly domain: string = "github.com";
 
   gh(args: string[]): string {
-    const { status, stdout, stderr } = this.host.run("gh", args, { cwd: this.cwd });
-    if (status !== 0) {
-      throw new Error(`gh ${args.slice(0, 2).join(" ")}: ${(stderr || stdout).trim()}`);
-    }
-    return stdout.trim();
+    return this.command("gh", args);
   }
 
   json<T>(args: string[]): T {

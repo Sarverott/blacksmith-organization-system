@@ -1,4 +1,4 @@
-import type { Git } from "../../bridges/git-integration/git-base.ts";
+import type { LocalGit } from "../../bridges/index.ts";
 import type { Context } from "../../core/context.ts";
 import type { AuthorsLine, Identity } from "../../models/index.ts";
 
@@ -12,7 +12,7 @@ export type CreditOutcome = {
 
 export type CreditContext = Context & {
   file: string;
-  git: Git;
+  git: LocalGit;
   lines: AuthorsLine[];
   identities: Identity[];
   outcome: CreditOutcome;

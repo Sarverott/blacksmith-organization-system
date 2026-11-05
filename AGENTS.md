@@ -56,7 +56,8 @@ src/
 │                  procedure.ts (named steps, trace), context.ts (createIfMissing), tool.ts (one tool
 │                  format), version.ts (semver + GRIH), paths.ts (+ packagePath), json-file.ts, serialize.ts
 ├── hosts/         NodeHost (+ watch-tree.ts): the only files that touch node:* (fs, os, child_process)
-├── bridges/       one file per outside system (github.ts: gh, git.ts: git), reached only through Host.run
+├── bridges/       a folder per kind of outside system, every bridge a Bridge (base.ts: its command through
+│                  Host.run); git-integration/: Git → LocalGit, RemoteGit → GitHub, Gitea, GitLab…
 ├── models/        <model>/class.ts: the glossary as classes (workshop, system = .BOS and its parts,
 │                  devarmory, forge, scope, project, craftbook, archive, devlog, loop, settings = .github/bos.json)
 ├── procedures/    <name>/DESCRIPTION.md + one file per step + _index.ts (the order):
