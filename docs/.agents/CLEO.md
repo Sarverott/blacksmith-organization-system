@@ -101,3 +101,29 @@ workflows, devlog and agents' space from one place.
   package; its duplicated code is removed there.
 
 Each phase is a Y release, each step a Z. Open questions: `docs/devlog/BRAINSTORM.md`.
+
+## UNIXUSAT=1793868900000 · the first batch is done
+
+The reforge stands: the core builds a workshop, watches it and inspects all of
+it, and the inspection of this host's real workshop (334 projects) is quick and
+clean. What I'd keep from this round:
+
+- **The Host is worth its weight.** Everything above `hosts/node.ts` is plain
+  TypeScript over an interface, so a browser, a remote or a fake host for tests
+  is one class away. It cost about 100 lines.
+- **One declaration, two uses.** A model says once what it has (dirname,
+  children, descriptors); `ensure` creates from it and `inspect` reads from it.
+  That's how the dry run plans exactly what the real run does, which a test
+  checks.
+- **The devlog as data** matters more than it looks: phase completion read
+  from TODO.md is what the loop needs for its Y / I bumps, so phase 2 can be
+  small.
+- **The noise in the real forge** (325 projects on `master`) is the most
+  interesting finding: the shape of the forge and what is in it have drifted
+  apart. Q6 asks what the owner wants there; I'd rather move mirrors out than
+  soften the rule.
+
+What I'd like next: the loop engine (phase 2) on top of `loop.json`, so the
+branch flow in AGENTS.md stops being prose. And `opening`, the first procedure
+from `scripts/shell-procedures/`, because it is where `dev/<name>` branches
+start to exist by code.

@@ -23,3 +23,12 @@ jobs:
           HUSKY: "0"
       - run: npm run check
       - run: npm run build
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv run --project docs mkdocs build --strict -f docs/mkdocs.yml
+        env:
+          NO_MKDOCS_2_WARNING: "1"

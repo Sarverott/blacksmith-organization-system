@@ -1,91 +1,110 @@
 ```
-      █▄▄ █░░ ▄▀█ █▀▀ █▄▀ █▀ █▀▄▀█ █ ▀█▀ █░█
-      █▄█ █▄▄ █▀█ █▄▄ █░█ ▄█ █░▀░█ █ ░█░ █▀█
+      █▄▄ █░░ ▄▀█ █▀▀ █▄▀ █▀ █▀▄▀█ █ ▀█▀ █░█
+      █▄█ █▄▄ █▀█ █▄▄ █░█ ▄█ █░▀░█ █ ░█░ █▀█
 
-   █▀█ █▀█ █▀▀ ▄▀█ █▄░█ █ ▀█ ▄▀█ ▀█▀ █ █▀█ █▄░█
-   █▄█ █▀▄ █▄█ █▀█ █░▀█ █ █▄ █▀█ ░█░ █ █▄█ █░▀█
+   █▀█ █▀█ █▀▀ ▄▀█ █▄░█ █ ▀█ ▄▀█ ▀█▀ █ █▀█ █▄░█
+   █▄█ █▀▄ █▄█ █▀█ █░▀█ █ █▄ █▀█ ░█░ █ █▄█ █░▀█
 
-             █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█
-             ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█
+             █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█
+             ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█
 ```
-> ###### [Sett Sarverott](https://github.com/Sarverott) @ 2019-2024
+> ###### [Sett Sarverott](https://github.com/Sarverott) @ 2019-2026
 ---
 
-# The core of Blacksmith Organization System
-### automation of management in personal forest of projects  
-> Part of _R tier_ superproject "ANUBIS",
+# The core of the Blacksmith Organization System
 
----
+A programmer's work gets scattered across machines, drives and servers, and
+the copies drift apart: *variantogeddon*. BOS gives every host the same fixed
+shape, a **workshop**, and keeps that shape by code:
 
-## Projects related with BOS:
-- [Desktop manager](https://github.com/Sarverott/bos-desktop)
-- [Mobile app](https://github.com/Sarverott/bos-mobile)
-- [Standalone webserver](https://github.com/Sarverott/bos-server)
-- [Special GUI optimised for implementations](https://github.com/Sarverott/bos-gui)
+- **builds the base** of the environment: `__WORKSHOP` with its areas
+  `.BOS`, `devarmory`, `forge`, `craftbook`, `archive`, creating only what is
+  missing and never overwriting;
+- **listens** to every change in it and says where it happened: area › scope
+  › project;
+- **inspects** it as one coherent environment: every scope and project in the
+  forge (branch, version, anatomy) and what is out of order;
+- runs the **craft loop** every BOS project follows: branches, steps, phases,
+  milestones and their versions (semver `vX.Y.Z` for projects, GRIH
+  `vG.R.I.H` for scopes).
 
----
+This repository is the core, a TypeScript module. The agents' skills and the
+Claude Code plugin are [bos-skillset](https://github.com/Sarverott/bos-skillset),
+which builds on it.
 
-### some information about:
+## Use
 
-- basic and effective metodology of catalogization of project types, gouping parts of project and families of related projects and maintenance working condition
+Node ≥ 22.18. From a checkout (`npm install`):
 
-- strategy invented espesialy for mad science of wast and divesed chaos of technomantic workspaces, tested in action, with clearified concrete concept
+```sh
+node src/cli.ts workshop status            # the whole workshop: areas, scopes, projects, findings
+node src/cli.ts workshop bootstrap --dry-run   # what is missing; without --dry-run, create it
+node src/cli.ts workshop watch --record    # one line per change until Ctrl+C, kept in .BOS/storylines
+node src/cli.ts scope bump <scope> phase   # raise a scope's GRIH version: step, phase, milestone, flip
+node src/cli.ts devlog state               # where this project stands, from docs/devlog/
+node src/cli.ts help                       # every tool; --json gives machines the data
+```
 
-- software system, that proofs mechanically, that it can be easy automated to help automate many casual software tasks
+or the same through Task: `task status`, `task bootstrap`, `task watch`,
+`task devlog:state`. The active workshop is `--workshop=<path>`, else
+`$BOS_WORKSHOP`, else the nearest parent `__WORKSHOP`, else `~/__WORKSHOP`.
 
-- perfect solution for long term maintain and archivisation of life work in multiple areas of artistical and informatical activity.
+As a library:
 
----
+```ts
+import { BOS, NodeHost } from "blacksmith-organization-system";
 
-### results of usage:
+const bos = new BOS(new NodeHost());
+await bos.bootstrap();
+const report = await bos.inspect();
+console.log(report.forge.scopes.length, report.findings.length);
+```
 
-- enjoy passion
-- skip mindless routines
-- keep productivity and quality of production
-- protect your work from version collisions and data losts
-- organize your life like ultimate boss of all cyberpunk blacksmiths
-- take controll of your forge.
----
+## Inside
 
-###### Source problems that makes me able to think it's more than possible
+```
+src/
+├── main.ts        the spine: class BOS (bootstrap, inspect, watch, bumpScope)
+├── core/          Host (the one door to the machine), element anatomy, procedure, tool, versions, paths
+├── hosts/         NodeHost; other runtimes later
+├── models/        the glossary as classes: workshop, .BOS parts, forge, scope, project, devlog…
+├── procedures/    bootstrapping, inspecting, watching, versioning: DESCRIPTION.md + one file per step
+├── tools/         what `bos <model> <tool>` runs; the same entries are its help
+├── views/         text for people
+└── cli.ts, index.ts
+```
 
-The basic idea was to automate repository controll and make order in project folders for better workspaces' view and controll with easier projects and publication management. Basic idea was work well and just methods of workshop dirtree was big success in local workspace area. Problem appears when new workspaces joins area of my operations and variantogeddon from desynchronization of version grows to uncontrollable sizes. Next issues become visible, after attempts to maintain speed of commiting and supporting publications boundles in thesame time, using conventional methods. But this was only beginning...
+Meaning comes first: [`docs/glossary/`](docs/glossary/README.md) defines every
+element, one page each. The plan and the talk with the owner are in
+[`docs/devlog/`](docs/devlog/README.md), the history in
+[`docs/changelog/`](docs/changelog/phase-0.md), the rules for agents and
+people in [AGENTS.md](AGENTS.md). Documentation:
+https://blacksmith-organization-system.readthedocs.io/
 
----
+## Develop
 
-### Details of project:
+```sh
+task install     # dependencies and git hooks
+task check       # types, lint, tests (= CI)
+task commit      # a conventional commit, guided
+task docs:serve  # the docs at http://127.0.0.1:8000
+```
 
-- [About Models](./system/models/README.md) - workspace tree elements
+Work happens on `development` (people and agents on their own `dev/<name>`),
+never on `master`. Tests only touch temporary workshops.
 
-- [About Interfaces](./system/interfaces/README.md) - for standard interactions
+## Where the idea came from
 
-- [About Bridges](./system/bridges/README.md) - integration with other systems
+The basic idea was to automate repository control and make order in project
+folders for better workspaces' view and control, with easier projects and
+publication management. The workshop dirtree worked well in one local
+workspace. Problems appeared when new workspaces joined, and variantogeddon
+from desynchronized versions grew out of control; then more, when keeping up
+the speed of commits and publication bundles at the same time with
+conventional methods. But this was only the beginning…
 
-- [About BOS Core](./system/core/README.md) - heart of cyberpunk blacksmith work
+The legacy CommonJS core (v0.6.1) is kept as the git tag `legacy/v0.6.1`.
 
-- [About Factories](./system/factors/README.md) - templates for elements of BOS
+## License
 
-- [About Commands](./system/commands/README.md) - common set of commands
-
-- [About resources](./system/resources/README.md) - non-executable files
-
-- ~[Documentation](./docs/README.md) - main documentation~
-
-- [DEV-LOG](./docs/devlog.md) - some scrap notes
-
----
-
-
-### References:
-
-- ~npm REPO: https://www.npmjs.com/package/blacksmith-organization-system~
-- GitHub REPO: https://github.com/Sarverott/blacksmith-organization-system
-- also good to see about:
- - uses [carnival-toolbox](https://github.com/Sarverott/carnival-toolbox): npm library with many usefull tools
- - part of [project anubis](https://github.com/Sarverott/anubis-helpmate): ultimate acolyte assisting programm
- - ~[article about BOS metodology](https://sarverott.com/)~
-
- ---
-
-### LICENSE:
-> Copyright (c) 2019 Sett Sarverott, released on terms of [MIT license](https://github.com/Sarverott/blacksmith-organization-system/LICENSE)
+Copyright (c) 2019-2026 Sett Sarverott, released on terms of the [MIT license](LICENSE).

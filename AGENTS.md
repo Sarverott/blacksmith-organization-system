@@ -7,42 +7,71 @@ Keep it current when something changes.
 
 ## What this repository is
 
-The **core** of the Blacksmith Organization System (BOS): the code that defines
-the workshop's elements, the procedures run on them, and the craft loop
-(branches, phases, steps, versions) every BOS project follows.
+The **core** of the Blacksmith Organization System (BOS), a TypeScript module:
+it builds the base of a workshop, listens to its changes, inspects it as one
+coherent environment, and holds the craft loop (branches, steps, phases,
+versions) every BOS project follows.
 
 ```
 ~/__WORKSHOP/forge/blacksmith-organization-system/   scope: family of BOS repositories
-├── blacksmith-organization-system/   ← this repo: the core (origin: Sarverott/OLD-VERSIONS_blacksmith-organization-system, [`TODO`] rename)
-└── bos-skillset/                     skills, Claude Code plugin ("the suit"), MCP; consumes the core
+├── blacksmith-organization-system/   ← this repo: the core (github: Sarverott/blacksmith-organization-system, npm: blacksmith-organization-system)
+└── bos-skillset/                     skills, Claude Code plugin, MCP (github: Sarverott/bos-skillset); will build on the core
 ```
 
-Direction (owner's decision, 2026-11-05): the core is built **here first**;
-`bos-skillset` then uses mostly code from here instead of carrying its own.
-What lives where after the split is drafted in `docs/.agents/CLEO.md`.
-
-**State now:** `src/` is the legacy CommonJS code (v0.6.1, about 40 unused
-dependencies). It is to be **rebuilt**, not extended: simplified, with clear
-mechanics, and everything that isn't needed removed. Do not add features to
-the legacy files.
+The legacy CommonJS core (v0.6.1) is the tag `legacy/v0.6.1`; its shell
+scripts are in `scripts/` as sketches of procedures still to be coded.
 
 ## Read first
 
-1. `docs/devlog/DRAFT.md`: the owner's draft, the source of the direction.
-2. `docs/.agents/CLEO.md`: conclusions from every source and the rebuild plan.
-3. `docs/devlog/BRAINSTORM.md`: open questions `Q<n>`; never settle one in code.
-4. `docs/glossary/`: one page per element (workshop, forge, scope, sarcophag…).
-   Meaning before code: write or change the page first, then the code.
+1. `docs/devlog/README.md`: what each devlog file is and how a batch of the
+   owner's orders moves. Then `VISION.md`, `ROADMAP.md`, `TODO.md`.
+2. `docs/devlog/BRAINSTORM.md`: open questions `Q<n>`; never settle one in code.
+3. `docs/devlog/ORDERS.md`, `INQUIRIES.md`: if anything is written below their
+   `---`, it is the owner's and comes first (see "Taking in" below).
+4. `docs/changelog/`: how it got here, the owner's words verbatim.
+5. `docs/.agents/`: what agents found and concluded (`NOTES.md`, `CLEO.md`).
+6. `docs/glossary/`: one page per element. Meaning before code: write or
+   change the page first, then the model.
 
-## Sources to adapt
+`task devlog:state` (or `node src/cli.ts devlog state`) shows where it all stands.
 
-All of it may be taken, renamed or dropped; nothing has to be kept as it is.
+## Architecture
 
-| Source | Path | What to take |
-| ------ | ---- | ------------ |
-| bos-skillset | `../bos-skillset/` | the spine (`src/main.ts`, `src/core/`), models, procedures, bridges, toolkit (one tool = CLI + MCP + help), husky, biome, commitlint, semantic-release |
-| gitrecon | `~/__WORKSHOP/forge/redscope-technologies/gitrecon` | branch loop as data (`.github/bos.config.json`: stages, directions, `rejection`, automerge flags), its engine (`.github/bos/flow.py`) and workflows, hooks that only call Taskfile tasks, routine flags (`.husky/bos.config.json`), `metadata.json` as single source, `scrapnote-<UNIXUSAT>.md` |
-| Amoorion | `~/__WORKSHOP/forge/sarverott/github-repos/amoorion` | `docs/.agents/` (GUIDE, MAP, NOTES, CLEO), devlog files (VISION, TODO, BRAINSTORM `Q<n>`, PROPOSALS `PP<n>`, ORDERS, INQUIRIES), append-only `docs/changelog/phase-<n>.md`, step = Z / phase = Y / all phases = X releases (`.github/flow.toml`), pre-release marking after merge back, "everything is a method" |
+```
+src/
+├── main.ts        spine: class BOS(host, options) - workshop, bootstrap(), inspect(), watch(), bumpScope()
+├── core/          host.ts (the one door to the machine), element.ts (anatomy: dirname, children,
+│                  descriptors → ensure + inspect), procedure.ts (named steps, trace), context.ts
+│                  (createIfMissing), tool.ts (one tool format), version.ts (semver + GRIH), paths.ts
+├── hosts/node.ts  NodeHost: the only file that touches node:fs / node:os
+├── models/        <model>/class.ts: the glossary as classes (workshop, system = .BOS and its parts,
+│                  devarmory, forge, scope, project, craftbook, archive, devlog)
+├── procedures/    <name>/DESCRIPTION.md + one file per step + _index.ts (the order):
+│                  bootstrapping, inspecting (rules.ts: one function per finding), watching, versioning
+├── tools/         <model>.ts: what `bos <model> <tool>` runs; _index.ts collects them
+├── views/         text for people (status tree, event line, help, STATE.md)
+├── cli.ts         bos <model> <tool> [operands] [--flags]; --json, --workshop=
+└── index.ts       library entry
+tests/             vitest, one file per concern; helpers.ts makes temporary workshops
+scripts/           legacy shell sketches (reference only)
+docs/              devlog, changelog, .agents, glossary; MkDocs site (docs/mkdocs.yml, Read the Docs)
+```
+
+Source runs as is on Node ≥ 22.18 (type stripping): only erasable TypeScript
+(no enums, no parameter properties, no namespaces), imports name the `.ts`
+file. `npm run build` emits `dist/` for the package.
+
+## Commands
+
+```sh
+task check          # tsc + biome + vitest (= CI, = the pre-commit hook)
+task test -- <name> # some tests
+task format         # biome fixes
+task commit         # commitizen
+task docs:build     # MkDocs --strict
+task devlog:state   # docs/devlog/STATE.md
+task status | bootstrap | watch   # the core on the active workshop
+```
 
 ## The craft loop
 
@@ -52,16 +81,16 @@ All of it may be taken, renamed or dropped; nothing has to be kept as it is.
 %%{init: {"gitGraph": {"mainBranchName": "master"}}}%%
 gitGraph
   commit id: "canon"
-  branch developement
+  branch development
   commit id: "open round"
   branch dev/Sarverott
-  checkout developement
+  checkout development
   branch dev/Cleo
   checkout dev/Cleo
   commit id: "step (agent)"
   checkout dev/Sarverott
   commit id: "step (owner)"
-  checkout developement
+  checkout development
   merge dev/Cleo
   merge dev/Sarverott
   branch revision
@@ -76,77 +105,83 @@ gitGraph
 
 - `master`: spine of canon. Never commit or push to it directly; it moves only
   through a pull request from `releasing`.
-- `developement`: the merged accumulation of every contributor's `dev/<name>`
-  branch (the name keeps its historical spelling; see `Q1`).
+- `development`: the merged accumulation of every contributor's `dev/<name>`
+  branch (decision Q1: formerly misspelt `developement`).
 - `dev/<name>`: one per contributor, human or agent: `dev/Sarverott`,
   `dev/Cleo` (Claude Code), `dev/<codex-name>`… An agent works **only** on its
-  own `dev/<name>` branch.
+  own `dev/<name>` branch and merges it into `development` when a batch is done.
 - `revision` → `testing` → `releasing` → `master`; a stage that fails goes to
-  `rejection`, which returns to `developement` *(from gitrecon; not yet here)*.
+  `rejection`, which returns to `development` *(phase 2, from gitrecon)*.
 
 ### Steps, phases, milestones, versions
 
 | Event | Project (semver `vX.Y.Z`) | Scope (GRIH `vG.R.I.H`) |
 | ----- | ------------------------- | ----------------------- |
 | step: one finished, checked piece of work, one commit | Z | H |
-| phase: a planned group of steps completed | Y | I |
+| phase: every item of a TODO.md phase ticked | Y | I |
 | milestone | X | R |
 | the script flips: pre-alpha → alpha, a key concept changes | X | G |
 
-Every step ends in a commit. Phases and milestones are defined in
-`docs/devlog/TODO.md` *(planned)*; how the code detects their completion is
-part of the rebuild.
+`core/version.ts` computes them; a scope keeps its version in
+`<scope>/.bos/scope.json` (decision Q5). Wiring the bumps to commits and
+TODO.md phases is phase 2.
 
-### Tooling (target; being set up)
+## Taking in a batch of the owner
 
-commitizen (conventional commits, bumps), husky (git hooks that only call
-Taskfile tasks), biome.js (lint + format), Taskfile (every procedure and
-workmode is a task), GitHub workflows (the loop: open the next PR, check,
-merge, bump, tag). Workmodes are sets of tasks with file-change listeners and
-git hooks. Each coding agent's host CLI runs in its own container, on its own
-`dev/<name>` branch; the owner has one too *(planned, see CLEO.md)*.
+In this order, each its own commit:
+
+1. **The owner's edits** in the working tree: commit them as they are.
+2. **ORDERS.md**: the answers move word for word into
+   `docs/changelog/phase-<n>.md` with the questions and a **Decision:** each;
+   the answered `Q<n>` leave BRAINSTORM.md; ORDERS.md keeps only its header.
+3. **INQUIRIES.md**: first the plan (VISION, ROADMAP, TODO), the words
+   verbatim into the changelog, then the work; INQUIRIES.md keeps its header.
 
 ## Where things go
 
 | It is | It goes to |
 | ----- | ---------- |
-| the owner's draft, plan, orders | `docs/devlog/` (DRAFT, VISION, TODO, ORDERS, INQUIRIES) |
-| a question for the owner | `docs/devlog/BRAINSTORM.md` as `Q<n>` with a *Lean:* |
+| the owner's words | `docs/devlog/ORDERS.md` / `INQUIRIES.md`, then the changelog, verbatim |
+| a plan | `docs/devlog/VISION.md`, `ROADMAP.md`, `TODO.md` |
+| a question for the owner | `docs/devlog/BRAINSTORM.md` as `## Q<n>. <title>` with a *Lean:* |
 | an agent's idea for debate | `docs/devlog/PROPOSALS.md` as `PP<n>` |
-| what happened, per phase | `docs/changelog/phase-<n>.md`, append-only, sections start with `UNIXUSAT=<ms> · commit <hash>` |
+| what happened, per phase | `docs/changelog/phase-<n>.md`, append-only, sections `## UNIXUSAT=<ms> · commit <hash>` |
 | an agent's findings, assumptions, own view | `docs/.agents/` |
 | a definition of an element | `docs/glossary/<element>.md` |
-| work for another repository | `~/__WORKSHOP/forge/NOTES-for-repositories.md` |
+| work for another repository | `~/__WORKSHOP/forge/NOTES-for-repositories.md` (never edit the other repo) |
 | a loose note of the owner | `~/__WORKSHOP/craftbook/scrapnotes/` |
 
 ## `docs/.agents/`: the agents' own space
 
 Agents write here; people only read it. Each agent keeps its own file
-(`CLEO.md` for Claude Code) plus the shared `NOTES.md` (findings, newest on top,
-dated). Agents don't write their notes elsewhere in `docs/`, and people don't
-edit `docs/.agents/` (they answer in `docs/devlog/`).
+(`CLEO.md` for Claude Code) plus the shared `NOTES.md` (findings, newest on
+top, dated). People answer in `docs/devlog/`, not here.
 
 ## Rules
 
-1. **Contributors committee.** Every agent and every person is a member of the
-   contributors committee: same loop, same checks, own branch, own name.
+1. **Contributors committee.** Every agent and every person is a member: same
+   loop, same checks, own branch, own name.
 2. **Re-check before acting.** The owner works in parallel. Run `git status`
    first; anything you didn't make is the owner's: treat it as intended and
    never revert or overwrite it.
-3. **Commits.** Conventional commits (`type(scope): subject`); the type decides
-   the bump, so choose it honestly. One commit per finished step. An agent's
-   commits end with its `Co-Authored-By:` line. Never `--no-verify`.
-4. **Code is the procedure.** Every structure and mechanic of BOS is code, not
-   only prose: a new behaviour is a procedure step in its own file, collected
-   by the nearest `_index`, described in a `DESCRIPTION.md`.
-5. **Small files, one concern each.** Revisions by the owner and by agents then
-   don't collide, and feedback has an address.
-6. **BOS creates only what is missing.** It never overwrites or deletes without
-   an explicit, dry-run-aware step.
-7. **Outside systems only through bridges** (git, GitHub, Gitea, docker,
-   ollama…), nowhere else.
-8. **Test against a temporary workshop**, never the real `~/__WORKSHOP`.
+3. **Commits.** Conventional commits (`type(scope): subject`), checked by
+   commitlint in the `commit-msg` hook. One commit per finished step, ticking
+   its TODO item. An agent's commits end with its `Co-Authored-By:` line.
+   Never `--no-verify`; chain a commit after checks with `&&`.
+4. **Code is the procedure.** A new behaviour is a procedure directory: a
+   `DESCRIPTION.md` (why), one file per step (how), `_index.ts` (the order).
+   A new finding of `bos workshop status` is one function in
+   `procedures/inspecting/rules.ts`.
+5. **Small files, one concern each**, collected by the nearest `_index.ts`.
+6. **BOS creates only what is missing.** Every write goes through
+   `createIfMissing` or an explicit, dry-run-aware step; a dry run plans
+   exactly what the real run does.
+7. **One door to the machine.** Only `hosts/` imports `node:*` (and `cli.ts`
+   to start). Outside systems (git remotes, GitHub, Gitea, docker…) will get
+   bridges of their own; nowhere else.
+8. **Test against a temporary workshop** (`tests/helpers.ts`), never the real
+   `~/__WORKSHOP`. A fixed bug gets a test.
 9. **Unknowns are `[TODO]`.** Don't invent meanings; mark interpretations
    *(assumed)*; open questions go to BRAINSTORM.md.
 10. **Ask first** before pushing, tagging, publishing (npm, GitHub releases),
-    renaming remotes or changing repository settings.
+    changing remotes or repository settings.

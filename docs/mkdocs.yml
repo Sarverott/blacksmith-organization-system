@@ -79,6 +79,7 @@ nav:
   - Changelog:
       - changelog/phase-0.md
   - For agents:
+      - .agents/NOTES.md
       - .agents/CLEO.md
   - Glossary:
       - glossary/README.md
