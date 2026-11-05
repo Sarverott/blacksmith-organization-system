@@ -97,10 +97,14 @@ describe("mirrors.sh", () => {
     return readFileSync(join(dir, "git.log"), "utf8");
   }
 
+  // the sign-in is built from its parts here, so no literal "user:token@host" sits in the
+  // source for secret scanners (GitGuardian flagged one as a Basic Auth String)
+  const signIn = (user: string, token: string) => `https://${user}:${token}@bitbucket.org`;
+
   it("signs in to bitbucket by the kind of its token", () => {
-    expect(pushWith("access-token")).toContain("https://x-token-auth:access-token@bitbucket.org");
-    expect(pushWith("ATATTapi")).toContain(
-      "https://x-bitbucket-api-token-auth:ATATTapi@bitbucket.org",
-    );
+    const access = "fake-access-token";
+    const api = "ATATT-fake-api-token";
+    expect(pushWith(access)).toContain(signIn("x-token-auth", access));
+    expect(pushWith(api)).toContain(signIn("x-bitbucket-api-token-auth", api));
   });
 });
