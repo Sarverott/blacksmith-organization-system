@@ -1,7 +1,7 @@
 # The full loop (revision → testing → releasing → master): opens the pull request of a
 # branch's forward step (bos flow next-pr). By hand only until the full loop is driven
-# (decisions Q10, Q11); the routine goes the short way development → master.
-name: flow
+# (decisions Q10, Q11); the routine goes the short way revision → master.
+name: "loop › by hand: the pull request of a branch's next step"
 
 on:
   workflow_dispatch:

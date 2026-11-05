@@ -46,19 +46,25 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] `bos flow explain` / `next` / `next-pr` / `automerge`, through the GitHub bridge (`Host.run` → `gh`)
 - [x] Settings in `.github/bos.json`: `loop` (replaces `.bos/loop.json`) and `versioning` (bumps per station) (chat 2)
 - [x] `bos flow bump <station>`: the project's version bumped per `versioning`, only when already released (tagged) (chat 2)
-- [x] Checks split: one reusable `checks.yml` (types, lint, tests, build, docs, commits, package); `check.yml` runs only what a push changed; `pr-checks.yml` runs all (chat 3)
-- [x] Workflows of the routine: `revision.yml` (minor bump), `release.yml` (tag, GitHub release, npm, wiki, webhooks, back into development), `flow.yml` (full loop, `workflow_dispatch` only); all with `workflow_dispatch` (Q10, Q11)
+- [x] Checks split: one reusable set (types, lint, tests, build, docs, commits, package); on push only what changed; on pull requests all (chat 3)
+- [x] Workflows of the routine: revision (minor bump), release (tag, GitHub release, npm, wiki, webhooks, back into development), the full loop by hand; all with `workflow_dispatch` (Q10, Q11)
 - [x] GitHub wiki: `docs/.gh-wiki` (ignored), `scripts/gh-wiki.py` + `resources/docs-templates/`, `task docs:wiki` (inquiry)
 - [x] AGENTS.md: the routine, and what an agent pushes without asking (chat 1)
 - [x] First run of the routine: `development` pushed, PR `development → master`, `development` pushed to `revision`
 - [x] `scripts/` reduced to what is required: replaced scripts removed (they stay in `legacy/v0.6.1`), the rest listed as sketches to port (inquiry)
-- [x] Tag `v1.0.0` and GitHub pre-release: by `release.yml` when PR #3 was merged; the wiki synced
+- [x] Tag `v1.0.0` and GitHub pre-release: by the release workflow when PR #3 was merged; the wiki synced
 - [x] Publishing secrets from the environment `publish-env` (`NPM_TOKEN`, `READTHEDOCS_API_TOKEN`); Read the Docs activates and builds each release
 - [x] Workflow steps as scripts: `scripts/workflows/*.sh`, run as `task workflows:<name>`
-- [ ] `v1.0.0` on npm under `next` (`npm-publish.yml` by hand with the tag, now that `NPM_TOKEN` exists)
+- [x] 1.x on npm under `next`: `v1.1.0` (PR #4); `v1.0.0` itself is not on npm (its tag predates the publish step)
 - [x] The old `reforge` branch deleted on GitHub (all of it in `development`)
 - [ ] The full loop driven (`revision → testing → releasing → master`), `testing`/`releasing` moved to `master` (Q9, Q10: later)
-- [ ] Rulesets (`docs/rulesets/`): meaning [TODO] from the owner
+- [x] Workflows named by what they are: `checks-*`, `loop-*`, `<registry>-<kind>-publish` (inquiry)
+- [x] The pull request to `master` opened by the revision workflow (`revision → master`), not by the agent (inquiry)
+- [x] `.github/AUTHORS`: `bos project authors` (procedure `crediting`, glossary `authors`), kept by the revision workflow (inquiry)
+- [x] Badges: one row in the GitHub, npm and documentation READMEs (inquiry)
+- [x] Publishing: npm on GitHub Packages (pre-releases too); container images on Docker Hub and ghcr.io for a full release (`Dockerfile`) (the owner's stubs)
+- [ ] Rulesets (`docs/rulesets/`): parked, PP1 (the owner: a rough idea, not needed now)
+- [ ] Q12: what a "stable LTS" release is (the images go with every full release meanwhile)
 - [ ] Mirrors: glossary page `archive/.repos-mirrors` (each mirror a sarcophag) (Q6)
 - [ ] Procedure `archiving`: `bos archive mirror <forge path>` → bare clone `archive/.repos-mirrors/<scope>___<project>.git`, dry run first, the forge copy removed only on confirmation (Q6)
 - [ ] Inspecting: a finding for clones in the forge that belong among the mirrors (Q6)
@@ -66,7 +72,8 @@ history: [../changelog/](../changelog/phase-0.md).
 
 ## Phase 3: workplaces
 
-- [ ] A Docker image of BOS on Docker Hub (`DOCKER_HUB_TOKEN` in `publish-env`)
+- [x] A Docker image of BOS (`Dockerfile`; Docker Hub and ghcr.io, done in phase 2)
+- [ ] The first image, with the first full release; then its badge in the READMEs
 - [ ] Containers: one per agent host CLI (Codex, Claude Code), one for the owner
 - [ ] Workmodes: sets of Taskfile tasks with file watchers and git hooks
 - [ ] The git bridge (`src/bridges/git.ts`, tags only so far) grows: status, add, commit
