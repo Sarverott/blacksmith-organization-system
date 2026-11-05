@@ -108,6 +108,7 @@ nav:
       - Loop:
           - glossary/craft-loop.md
           - glossary/grih.md
+          - glossary/authors.md
       - Elements:
           - glossary/artefact.md
           - glossary/element-anatomy.md

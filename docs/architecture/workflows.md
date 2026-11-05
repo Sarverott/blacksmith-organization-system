@@ -8,47 +8,68 @@ this checkout, reading `.github/bos.json`. Decisions Q10, Q11 and the owner's
 routine (changelog [phase 2](../changelog/phase-2.md)). Every workflow can also
 be started by hand (`workflow_dispatch`).
 
+## Names
+
+A file name says what the workflow is and when it runs; its `name:` says the
+same in the Actions tab. Three families (owner's inquiry, phase 2):
+
+- `checks-*`: the checks, and when they run;
+- `loop-*`: the craft loop's stations (`revision`, `master`) and the by-hand step;
+- `<registry>-<kind>-publish`: one publishing target each.
+
 ## The routine, on GitHub
 
 ```mermaid
 flowchart LR
   dev["dev/&lt;name&gt;"] -->|merge, push| development
-  development -->|push: check.yml, only what changed| development
+  development -->|push: checks-on-push-changed-parts| development
   development -->|agent stops: push| revision
-  revision -->|revision.yml: minor bump if released| development
-  development -->|PR: pr-checks.yml| master
-  master -->|release.yml| out["tag · GitHub release · npm · wiki · webhooks"]
+  revision -->|loop-revision-…: checks, authors, bump| development
+  revision -->|loop-revision-…: opens the PR| master
+  master -->|loop-master-release-and-publish| out["tag · GitHub release · npm ×2 · images · docs · webhooks"]
   out -->|master back| development
 ```
 
 | Workflow | Runs on | Does |
 | -------- | ------- | ---- |
-| `checks.yml` | called by the others; by hand: all | one job per check: `types`, `lint`, `tests`, `build` (code), `docs` (MkDocs `--strict`), `package` (packs, installs, runs `bos`), `commits` (commitlint over a range) |
-| `check.yml` | push to `development`, `dev/**` | only the parts the push touched: code, docs, or both (a new branch: both) |
-| `pr-checks.yml` | pull request into a station | every check, the commits of the pull request too; then `bos flow automerge` (a pull request into `master` waits for a person) |
-| `revision.yml` | push to `revision` | `bos flow bump revision`: a released version gets the minor; the bump is pushed to `revision` and merged into `development` |
-| `release.yml` | push to `master` | checks; `bos flow bump master` (the patch, only for a released version: a hotfix); tag `v<version>` and GitHub release (a pre-release while npm is `next`, Q7); then Discord/Telegram, npm, Read the Docs, the wiki, social media; `master` back into `development`; the BOS workshop called |
-| `npm-publish.yml` | called by `release.yml`; a GitHub release made by a person | `npm publish --provenance`, `next` for a pre-release |
-| `flow.yml` | by hand only | `bos flow next-pr <branch>`: the full loop `revision → testing → releasing → master`, not driven yet |
+| `checks-reusable-set.yml` | called by the others; by hand: all | one job per check: `types`, `lint`, `tests`, `build` (code), `docs` (MkDocs `--strict`), `package` (packs, installs, runs `bos`), `commits` (commitlint over a range) |
+| `checks-on-push-changed-parts.yml` | push to `development`, `dev/**` | only the parts the push touched: code, docs, or both (a new branch: both) |
+| `checks-on-pull-request-then-automerge.yml` | pull request into a station, opened by a person | every check, the commits of the pull request too; then `bos flow automerge` (a pull request into `master` waits for a person) |
+| `loop-revision-bump-checks-pull-request.yml` | push to `revision` | every check (the commits since `master` too); `bos project authors` (`.github/AUTHORS`); `bos flow bump revision` (a released version gets the minor); what it committed is pushed to `revision` and merged into `development`; then the pull request `revision → master` is opened (or the open one follows) |
+| `loop-master-release-and-publish.yml` | push to `master` | checks; `bos flow bump master` (the patch, only for a released version: a hotfix); tag `v<version>` and GitHub release (a pre-release while npm is `next`, Q7); then Discord/Telegram, the publish workflows, Read the Docs, the wiki, social media; `master` back into `development`; the BOS workshop called |
+| `npmjs-npm-package-publish.yml` | called by the release; a GitHub release made by a person; by hand | `npm publish --provenance` to npmjs.org, `next` for a pre-release |
+| `github-npm-package-publish.yml` | called by the release; by hand | the package on GitHub Packages as `@sarverott/blacksmith-organization-system` (it takes scoped names only), pre-releases under `next` |
+| `docker-container-publish.yml` | called by a full release; by hand | the image of the `Dockerfile` on Docker Hub: `<version>`, `<major>.<minor>`, `latest` |
+| `github-container-publish.yml` | called by a full release; by hand | the same image on `ghcr.io/sarverott/blacksmith-organization-system` |
+| `loop-next-pull-request-by-hand.yml` | by hand only | `bos flow next-pr <branch>`: the full loop `revision → testing → releasing → master`, not driven yet |
 
 A push made by a workflow with its own token starts no other workflow, so the
-bumps and the merge back into `development` do not loop. After `revision.yml`
-or `release.yml` ran, **pull `development`**.
+bumps and the merges back into `development` do not loop; for the same reason
+the pull request `revision → master`, opened with that token, starts no
+checks of its own: the revision workflow ran them before opening it and its
+description links that run. After the revision or the release workflow ran,
+**pull `development`**.
+
+Container images are made only for a full release (not a pre-release); while
+npm is `next` (Q7) there is none. "Stable LTS" is open: BRAINSTORM Q12.
 
 ## Steps
 
 | Task (`scripts/workflows/`) | Does | Used by |
 | --------------------------- | ---- | ------- |
-| `changes` | which parts a push touched: `code`, `docs` | `check.yml` |
-| `commits` | commitlint from a base, never before commitlint came in | `checks.yml` |
-| `package` | packs, installs into an empty project, runs `bos` | `checks.yml` |
-| `bump` | `bos flow bump <station>`, committed and pushed | `revision.yml`, `release.yml` |
-| `merge-into` | a ref merged into a branch, pushed | `revision.yml`, `release.yml` |
-| `release` | tag `v<version>` and GitHub release, unless tagged | `release.yml` |
-| `publish` | `npm publish --provenance`, unless that version is on npm | `npm-publish.yml` |
-| `wiki` | the docs into the GitHub wiki, pushed | `release.yml` |
-| `readthedocs` | the tag's version activated and built, `latest` rebuilt | `release.yml` |
-| `notify` | `community` (Discord, Telegram), `social`, `workshop` hooks | `release.yml` |
+| `changes` | which parts a push touched: `code`, `docs` | `checks-on-push-changed-parts` |
+| `commits` | commitlint from a base, never before commitlint came in | `checks-reusable-set` |
+| `package` | packs, installs into an empty project, runs `bos` | `checks-reusable-set` |
+| `authors` | `bos project authors`, committed and pushed when `.github/AUTHORS` changed | `loop-revision-…` |
+| `bump` | `bos flow bump <station>`, committed and pushed | `loop-revision-…`, `loop-master-…` |
+| `merge-into` | a ref merged into a branch, pushed | `loop-revision-…`, `loop-master-…` |
+| `pull-request` | the pull request `<head> → <base>`, unless one is open or nothing is new | `loop-revision-…` |
+| `release` | tag `v<version>` and GitHub release, unless tagged | `loop-master-…` |
+| `publish` | `npm publish` to `npmjs` (with provenance) or `github` (scoped), unless that version is there | `*-npm-package-publish` |
+| `image-gate` | whether an image is made: a full release and a token | `*-container-publish` |
+| `wiki` | the docs into the GitHub wiki, pushed | `loop-master-…` |
+| `readthedocs` | the tag's version activated and built, `latest` rebuilt | `loop-master-…` |
+| `notify` | `community` (Discord, Telegram), `social`, `workshop` hooks | `loop-master-…` |
 
 ## Secrets
 
@@ -59,10 +80,11 @@ them declare it.
 
 | Secret | Where | For |
 | ------ | ----- | --- |
-| `NPM_TOKEN` | `publish-env` | npm: publishing (`npm-publish.yml`) |
+| `NPM_TOKEN` | `publish-env` | npm: publishing to npmjs.org (`npmjs-npm-package-publish.yml`) |
 | `READTHEDOCS_API_TOKEN` | `publish-env` | Read the Docs: activate and build the tag's version |
-| `DOCKER_HUB_TOKEN` | `publish-env` | [`TODO`] not used yet: a Docker image of BOS (phase 3, workplaces) |
+| `DOCKER_HUB_TOKEN` | `publish-env` | Docker Hub: pushing the image (`docker-container-publish.yml`); the user is the variable `DOCKER_HUB_USERNAME`, default `sarverott` *(assumed)* |
 | `SCALAR_API_TOKEN` | `publish-env` | [`TODO`] not used yet: an API reference on Scalar, once BOS has an HTTP API (phase 4) |
+| (none) | | GitHub Packages (npm and ghcr.io) use the workflow's own token |
 | `WIKI_TOKEN` | repository | a token that can push the wiki; without it the workflow's own token is used (it worked for `v1.0.0`) |
 | `DISCORD_WEBHOOK` | repository | a Discord channel's webhook URL: the dev community |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | repository | a Telegram bot and the chat it writes to |

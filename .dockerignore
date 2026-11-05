@@ -1,0 +1,11 @@
+# only what the Dockerfile copies matters; everything else stays out of the context
+*
+!package.json
+!package-lock.json
+!.npmrc
+!tsconfig.json
+!tsconfig.build.json
+!README.md
+!LICENSE
+!src
+!resources

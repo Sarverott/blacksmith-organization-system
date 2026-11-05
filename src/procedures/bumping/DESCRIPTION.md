@@ -1,8 +1,8 @@
 # bumping
 
 Moves the project's version when work lands on a station of the loop:
-`bos flow bump <station>`. Run by the routine's workflows (`revision.yml`,
-`release.yml`); safe by hand with `--dryRun`. Which station bumps what is
+`bos flow bump <station>`. Run by the routine's workflows (`loop-revision-bump-checks-pull-request.yml`,
+`loop-master-release-and-publish.yml`); safe by hand with `--dryRun`. Which station bumps what is
 the `versioning` section of `.github/bos.json` (default: `revision` minor,
 `master` patch).
 

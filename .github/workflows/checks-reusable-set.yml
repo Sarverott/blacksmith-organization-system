@@ -1,7 +1,8 @@
 # Every check of the core, one job each, so a run can take only the part it needs.
-# Called by check.yml (what a push changed), pr-checks.yml (everything) and
-# release.yml; started by hand it runs everything.
-name: checks
+# Called by checks-on-push-changed-parts.yml (what a push changed),
+# checks-on-pull-request-then-automerge.yml, loop-revision-bump-checks-pull-request.yml
+# and loop-master-release-and-publish.yml (everything); started by hand it runs everything.
+name: "checks › reusable set: types, lint, tests, build, package, docs, commits"
 
 on:
   workflow_call:
