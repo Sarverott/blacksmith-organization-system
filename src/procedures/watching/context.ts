@@ -1,5 +1,5 @@
 import type { Context } from "../../core/context.ts";
-import type { Workshop } from "../../models/_index.ts";
+import type { Workshop } from "../../models/index.ts";
 
 export type WorkshopEvent = {
   unixusat: number;

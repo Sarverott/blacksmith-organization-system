@@ -2,7 +2,9 @@ import type { InspectContext } from "./report.ts";
 
 export function readForge({ workshop, report }: InspectContext): void {
   const forge = workshop.forge;
-  if (!forge.exists()) return;
+  if (!forge.exists()) {
+    return;
+  }
   report.forge.looseFiles = forge.looseFiles();
   report.forge.scopes = forge.scopes().map((scope) => ({
     name: scope.name,

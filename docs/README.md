@@ -15,6 +15,11 @@
 [![npmgraph](https://img.shields.io/badge/npmgraph-dependencies-informational)](https://npmgraph.js.org/?q=blacksmith-organization-system)
 [![VirusTotal](https://img.shields.io/badge/VirusTotal-release%20files-informational)](https://github.com/Sarverott/blacksmith-organization-system/releases/tag/latest)
 [![nightly](https://img.shields.io/badge/nightly-revision-orange)](https://github.com/Sarverott/blacksmith-organization-system/releases/tag/nightly)
+[![github.com source](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fsource-github.com.json)](https://github.com/Sarverott/blacksmith-organization-system)
+[![gitea.com mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-gitea.com.json)](https://gitea.com/Sarverott/blacksmith-organization-system)
+[![gitlab.com mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-gitlab.com.json)](https://gitlab.com/Sarverott/blacksmith-organization-system)
+[![bitbucket.org mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-bitbucket.org.json)](https://bitbucket.org/apokryf/blacksmith-organization-system/)
+[![sr.ht mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-sr.ht.json)](https://git.sr.ht/~sarverott/blacksmith-organization-system)
 
 
 ```

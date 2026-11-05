@@ -1,2 +1,2 @@
 # git hooks only hand their event to a task (.husky/Taskfile.yml); HUSKY=0 turns them off
-task hooks:pre-commit
+sh .husky/task hooks:pre-commit

@@ -2,8 +2,16 @@
 import { tool } from "../core/tool.ts";
 import { bumpText, explainText, outcomeText, stepText } from "../views/flow.ts";
 
-const dirArg = { name: "dir", type: "string", info: "a path inside the project (default: current directory)" } as const;
-const dryRunArg = { name: "dryRun", type: "boolean", info: "only say what would be done on GitHub" } as const;
+const dirArg = {
+  name: "dir",
+  type: "string",
+  info: "a path inside the project (default: current directory)",
+} as const;
+const dryRunArg = {
+  name: "dryRun",
+  type: "boolean",
+  info: "only say what would be done on GitHub",
+} as const;
 const dir = (value: unknown) => value as string | undefined;
 
 export const flowTools = [
@@ -23,7 +31,13 @@ export const flowTools = [
     name: "next",
     info: "the forward step of a branch in the loop (reads only, no GitHub)",
     args: [
-      { name: "branch", type: "string", info: "a station or a contributor's branch", positional: true, required: true },
+      {
+        name: "branch",
+        type: "string",
+        info: "a station or a contributor's branch",
+        positional: true,
+        required: true,
+      },
       dirArg,
     ],
     run: (bos, input) => bos.loop(dir(input.dir)).loop.step(String(input.branch)),
@@ -35,11 +49,18 @@ export const flowTools = [
     info: "open on GitHub the pull request of a branch's forward step, unless there is nothing to propose",
     readOnly: false,
     args: [
-      { name: "branch", type: "string", info: "the branch that moved", positional: true, required: true },
+      {
+        name: "branch",
+        type: "string",
+        info: "the branch that moved",
+        positional: true,
+        required: true,
+      },
       dirArg,
       dryRunArg,
     ],
-    run: (bos, input) => bos.propose(String(input.branch), { dir: dir(input.dir), dryRun: Boolean(input.dryRun) }),
+    run: (bos, input) =>
+      bos.propose(String(input.branch), { dir: dir(input.dir), dryRun: Boolean(input.dryRun) }),
     render: outcomeText,
   }),
   tool({
@@ -48,13 +69,21 @@ export const flowTools = [
     info: "merge a loop pull request on GitHub when the loop lets it merge by itself",
     readOnly: false,
     args: [
-      { name: "pr", type: "string", info: "the pull request's number", positional: true, required: true },
+      {
+        name: "pr",
+        type: "string",
+        info: "the pull request's number",
+        positional: true,
+        required: true,
+      },
       dirArg,
       dryRunArg,
     ],
     run: (bos, input) => {
       const number = Number(input.pr);
-      if (!Number.isInteger(number) || number < 1) throw new Error(`not a pull request number: ${input.pr}`);
+      if (!Number.isInteger(number) || number < 1) {
+        throw new Error(`not a pull request number: ${input.pr}`);
+      }
       return bos.automerge(number, { dir: dir(input.dir), dryRun: Boolean(input.dryRun) });
     },
     render: outcomeText,
@@ -75,7 +104,8 @@ export const flowTools = [
       dirArg,
       { name: "dryRun", type: "boolean", info: "only say what the version would become" },
     ],
-    run: (bos, input) => bos.bump(String(input.station), { dir: dir(input.dir), dryRun: Boolean(input.dryRun) }),
+    run: (bos, input) =>
+      bos.bump(String(input.station), { dir: dir(input.dir), dryRun: Boolean(input.dryRun) }),
     render: bumpText,
   }),
   tool({
@@ -83,7 +113,10 @@ export const flowTools = [
     name: "bump-commit",
     info: "bump the version for one commit on a contributor's branch (versioning.commits; the pre-commit hook runs it)",
     readOnly: false,
-    args: [dirArg, { name: "dryRun", type: "boolean", info: "only say what the version would become" }],
+    args: [
+      dirArg,
+      { name: "dryRun", type: "boolean", info: "only say what the version would become" },
+    ],
     run: (bos, input) => bos.bumpCommit({ dir: dir(input.dir), dryRun: Boolean(input.dryRun) }),
     render: bumpText,
   }),
@@ -93,17 +126,36 @@ export const flowTools = [
     info: "git merge driver of package.json and its lock: the higher version on every side, then a three-way merge",
     readOnly: false,
     args: [
-      { name: "base", type: "string", info: "the common ancestor's file (%O)", positional: true, required: true },
-      { name: "ours", type: "string", info: "our file, the result goes here (%A)", positional: true, required: true },
+      {
+        name: "base",
+        type: "string",
+        info: "the common ancestor's file (%O)",
+        positional: true,
+        required: true,
+      },
+      {
+        name: "ours",
+        type: "string",
+        info: "our file, the result goes here (%A)",
+        positional: true,
+        required: true,
+      },
       { name: "theirs", type: "string", info: "their file (%B)", positional: true, required: true },
       dirArg,
     ],
     run: async (bos, input) => {
-      const outcome = await bos.mergeVersion(String(input.base), String(input.ours), String(input.theirs), {
-        dir: dir(input.dir),
-      });
+      const outcome = await bos.mergeVersion(
+        String(input.base),
+        String(input.ours),
+        String(input.theirs),
+        {
+          dir: dir(input.dir),
+        },
+      );
       // a conflict must fail the driver, so git leaves the file conflicted
-      if (outcome.action === "conflict") throw new Error(`conflicts besides the version (${outcome.version})`);
+      if (outcome.action === "conflict") {
+        throw new Error(`conflicts besides the version (${outcome.version})`);
+      }
       return outcome;
     },
     render: (outcome) => `merged; version ${outcome.version ?? "none"}`,

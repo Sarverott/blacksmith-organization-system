@@ -90,3 +90,13 @@ tasks:
     desc: 'Tell who listens of a release: task workflows:notify -- community|social|workshop <tag>'
     dir: '{{.ROOT_DIR}}'
     cmds: ['{{.SCRIPTS}}/notify.sh {{.CLI_ARGS}}']
+
+  mirrors:
+    desc: 'Every branch and tag pushed to each mirror of .github/bos.json, a status badge each: task workflows:mirrors -- <badges dir>'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/mirrors.sh {{.CLI_ARGS}}']
+
+  status-badges:
+    desc: 'The badge files as the only commit of the branch badges (shields.io endpoints): task workflows:status-badges -- <badges dir>'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/status-badges.sh {{.CLI_ARGS}}']

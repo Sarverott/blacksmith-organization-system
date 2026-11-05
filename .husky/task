@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+# Runs a task with the task binary itself, e.g. sh .husky/task hooks:pre-commit.
+# husky (and npm run, npx) put node_modules/.bin in PATH, and there @go-task/cli's npm
+# wrapper exits 0 even when the task fails: a failed check would let the commit through.
+# The task of PATH without any node_modules/.bin, else the binary that package downloaded.
+path=$(printf '%s' "$PATH" | tr ':' '\n' | grep -v 'node_modules/\.bin$' | paste -sd: -)
+bin=$(PATH=$path command -v task) || bin=node_modules/@go-task/cli/bin/task
+exec "$bin" "$@"

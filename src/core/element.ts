@@ -2,9 +2,15 @@
 // Every model of the workshop is an Element. Its fixed parts are declared once,
 // statically, and the same declaration drives creating (ensure) and reading (inspect).
 //   class Forge extends Element { static type = "forge"; static dirname = "forge"; }
+// An Element is an Emitter: ensure() emits "created" with the path of each thing it creates
+// (a dry run creates nothing, so it emits nothing).
+//   new BOS.Craftbook(host, path).on("created", (path) => ...).ensure(context);
+// The models (src/models/) are its subclasses.
 import { type Context, createIfMissing } from "./context.ts";
+import { Emitter } from "./emitter.ts";
 import type { Host } from "./host.ts";
 import { basename, join } from "./paths.ts";
+import { serialize } from "./serialize.ts";
 
 export type Descriptor = (element: Element, context: Context) => string | object;
 
@@ -26,7 +32,7 @@ export type ElementNode = {
   children: ElementNode[];
 };
 
-export class Element {
+export class Element extends Emitter {
   static type = "element";
   // fixed directory name, relative to the parent; null for freely named elements (a scope, a project)
   static dirname: string | null = null;
@@ -42,6 +48,7 @@ export class Element {
   readonly parent: Element | null;
 
   constructor(host: Host, path: string, parent: Element | null = null) {
+    super();
     this.host = host;
     this.path = path;
     this.parent = parent;
@@ -80,13 +87,20 @@ export class Element {
 
   // create the directory, missing descriptors and mandatory children; never overwrite
   ensure(context: Context): this {
-    createIfMissing(context, this.path, () => this.host.mkdir(this.path));
+    if (createIfMissing(context, this.path, () => this.host.mkdir(this.path)) && !context.dryRun) {
+      this.emit("created", this.path);
+    }
     for (const [name, content] of Object.entries(this.kind.descriptors)) {
       const target = this.file(name);
-      createIfMissing(context, target, () => this.host.writeText(target, serialize(content(this, context))));
+      const write = () => this.host.writeText(target, serialize(content(this, context)));
+      if (createIfMissing(context, target, write) && !context.dryRun) {
+        this.emit("created", target);
+      }
     }
     for (const child of this.childElements()) {
-      if (child.kind.mandatory) child.ensure(context);
+      if (child.kind.mandatory) {
+        child.ensure(context);
+      }
     }
     return this;
   }
@@ -109,7 +123,9 @@ export class Element {
 
   readJSON<T>(name: string, fallback: T): T {
     const text = this.host.readText(this.file(name));
-    if (text === null) return fallback;
+    if (text === null) {
+      return fallback;
+    }
     try {
       return JSON.parse(text) as T;
     } catch {
@@ -118,15 +134,13 @@ export class Element {
   }
 
   writeJSON(name: string, value: object, context: Context): void {
-    if (!context.dryRun) this.host.writeText(this.file(name), serialize(value));
+    if (!context.dryRun) {
+      this.host.writeText(this.file(name), serialize(value));
+    }
     context.changes.push(this.file(name));
   }
 
   toString(): string {
     return `[<BOS.${this.type}::${this.path}>]`;
   }
-}
-
-export function serialize(content: string | object): string {
-  return typeof content === "string" ? content : `${JSON.stringify(content, null, 2)}\n`;
 }

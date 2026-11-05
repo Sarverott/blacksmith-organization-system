@@ -69,6 +69,12 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] Releases that move: `nightly` (revision), `latest` (every release), each with the package's `.tgz` (inquiry)
 - [x] Package reports in every README (bundlephobia, socket.dev, Snyk, npmgraph); release files to VirusTotal (inquiry)
 - [ ] `VIRUSTOTAL_API_KEY` in `publish-env` (the owner)
+- [x] Mirrors of the source: gitea.com, gitlab.com, bitbucket.org, sr.ht, every branch and tag, a status badge per place, the checks on each mirror's CI (inquiry)
+- [ ] The four mirror secrets in `publish-env`: `MIRROR_GITEA_TOKEN`, `MIRROR_GITLAB_TOKEN`, `MIRROR_BITBUCKET_TOKEN`, `MIRROR_SOURCEHUT_SSH_KEY` (the owner)
+- [x] The owner's review notes in the code: biome in more lines, `bos.ts`, namespaces, `BOS.<Model>`, `index.ts`, `JsonFile`, `packagePath`, a readable `cli.ts` and views, `Element` emits events (review)
+- [x] Git hooks fail again when a check fails: `.husky/task` runs the task binary, not `@go-task/cli`'s npm wrapper (found)
+- [ ] `bos` without a command, in a terminal: a REPL (readline), each line one `<model> <tool>` (review)
+- [ ] Watching by the models: each element declares what of it is watched, instead of one tree watcher (review)
 - [ ] The release `stable`: what passed the tests of deployment and of dependent projects, on `releasing` (with the full loop)
 - [ ] An LTS line in `versioning` once two majors live side by side (Q12 b)
 - [ ] Mirrors: glossary page `archive/.repos-mirrors` (each mirror a sarcophag) (Q6)
@@ -81,6 +87,7 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] A Docker image of BOS (`Dockerfile`; Docker Hub and ghcr.io, done in phase 2)
 - [ ] The first image, with the first full release; then its badge in the READMEs
 - [ ] Containers: one per agent host CLI (Codex, Claude Code), one for the owner
+- [ ] Contexts that isolate: procedures run in `node:vm` contexts, WASI, child processes or a cluster (review: "this all can be used now")
 - [ ] Workmodes: sets of Taskfile tasks with file watchers and git hooks
 - [ ] The git bridge (`src/bridges/git.ts`, tags only so far) grows: status, add, commit
 - [ ] Scrapnote vaults: `craftbook/<scope>___<project>/scrapnotes/` as a git repository (Obsidian vault), `<project>/docs/.scrapnotes` its link, ignored by the project (Q8)

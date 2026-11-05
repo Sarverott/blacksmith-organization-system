@@ -9,10 +9,15 @@ export function normalize(path: string): string {
   const absolute = path.startsWith("/");
   const out: string[] = [];
   for (const part of path.split("/")) {
-    if (!part || part === ".") continue;
+    if (!part || part === ".") {
+      continue;
+    }
     if (part === "..") {
-      if (out.length && out[out.length - 1] !== "..") out.pop();
-      else if (!absolute) out.push("..");
+      if (out.length && out[out.length - 1] !== "..") {
+        out.pop();
+      } else if (!absolute) {
+        out.push("..");
+      }
       continue;
     }
     out.push(part);
@@ -36,7 +41,17 @@ export function dirname(path: string): string {
 export function inside(root: string, target: string): string | null {
   const base = normalize(root);
   const path = normalize(target);
-  if (path === base) return "";
+  if (path === base) {
+    return "";
+  }
   const prefix = base === "/" ? "/" : `${base}/`;
   return path.startsWith(prefix) ? path.slice(prefix.length) : null;
+}
+
+// a file of this package (the checkout, or the installed package): its root is two levels
+// above this module, in src/core/ as in dist/core/
+//   packagePath("package.json")  packagePath(".env")
+export function packagePath(...names: string[]): string {
+  const root = new URL("../../", import.meta.url);
+  return join(decodeURIComponent(root.pathname), ...names);
 }

@@ -18,7 +18,9 @@ export type TreeHandlers = {
 
 function asError(error: unknown): Error {
   const code = (error as NodeJS.ErrnoException | undefined)?.code;
-  if (code === "ENOSPC") return new Error(WATCH_LIMIT);
+  if (code === "ENOSPC") {
+    return new Error(WATCH_LIMIT);
+  }
   return error instanceof Error ? error : new Error(String(error));
 }
 
@@ -34,7 +36,9 @@ export function watchTree(root: string, { onChange, onError, skip }: TreeHandler
   const watchers = new Map<string, FSWatcher>();
   let failed = false;
   const fail = (error: unknown) => {
-    if (failed) return;
+    if (failed) {
+      return;
+    }
     failed = true;
     stop();
     onError(asError(error));
@@ -42,20 +46,30 @@ export function watchTree(root: string, { onChange, onError, skip }: TreeHandler
 
   // relative: "" for the root, else "a/b"
   const add = (relative: string) => {
-    if (failed || watchers.has(relative) || (relative && skip(relative))) return;
+    if (failed || watchers.has(relative) || (relative && skip(relative))) {
+      return;
+    }
     const path = relative ? `${root}/${relative}` : root;
     let watcher: FSWatcher;
     try {
       watcher = watch(path, (kind, filename) => {
-        if (!filename) return;
+        if (!filename) {
+          return;
+        }
         const changed = relative ? `${relative}/${filename}` : String(filename);
-        if (kind === "rename" && isDirectory(`${root}/${changed}`)) add(changed);
-        if (kind === "rename" && !watchers.has(changed)) drop(changed);
+        if (kind === "rename" && isDirectory(`${root}/${changed}`)) {
+          add(changed);
+        }
+        if (kind === "rename" && !watchers.has(changed)) {
+          drop(changed);
+        }
         onChange({ path: changed, kind: kind === "rename" ? "rename" : "change" });
       });
     } catch (error) {
       // the directory vanished between listing and watching: nothing to watch
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") return;
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+        return;
+      }
       return fail(error);
     }
     watcher.on("error", fail);
@@ -66,21 +80,28 @@ export function watchTree(root: string, { onChange, onError, skip }: TreeHandler
         .filter((entry) => entry.isDirectory())
         .map((entry) => entry.name);
     } catch {}
-    for (const name of entries) add(relative ? `${relative}/${name}` : name);
+    for (const name of entries) {
+      add(relative ? `${relative}/${name}` : name);
+    }
   };
 
   // a removed directory: close its watcher and those below it
   const drop = (relative: string) => {
-    if (isDirectory(`${root}/${relative}`)) return;
-    for (const [key, watcher] of watchers)
+    if (isDirectory(`${root}/${relative}`)) {
+      return;
+    }
+    for (const [key, watcher] of watchers) {
       if (key === relative || key.startsWith(`${relative}/`)) {
         watcher.close();
         watchers.delete(key);
       }
+    }
   };
 
   const stop = () => {
-    for (const watcher of watchers.values()) watcher.close();
+    for (const watcher of watchers.values()) {
+      watcher.close();
+    }
     watchers.clear();
   };
 

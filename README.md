@@ -25,6 +25,11 @@
 [![npmgraph](https://img.shields.io/badge/npmgraph-dependencies-informational)](https://npmgraph.js.org/?q=blacksmith-organization-system)
 [![VirusTotal](https://img.shields.io/badge/VirusTotal-release%20files-informational)](https://github.com/Sarverott/blacksmith-organization-system/releases/tag/latest)
 [![nightly](https://img.shields.io/badge/nightly-revision-orange)](https://github.com/Sarverott/blacksmith-organization-system/releases/tag/nightly)
+[![github.com source](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fsource-github.com.json)](https://github.com/Sarverott/blacksmith-organization-system)
+[![gitea.com mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-gitea.com.json)](https://gitea.com/Sarverott/blacksmith-organization-system)
+[![gitlab.com mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-gitlab.com.json)](https://gitlab.com/Sarverott/blacksmith-organization-system)
+[![bitbucket.org mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-bitbucket.org.json)](https://bitbucket.org/apokryf/blacksmith-organization-system/)
+[![sr.ht mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-sr.ht.json)](https://git.sr.ht/~sarverott/blacksmith-organization-system)
 
 ---
 
@@ -95,6 +100,24 @@ the changelog. To work on BOS itself:
 The agents' skills and the Claude Code plugin are
 [bos-skillset](https://github.com/Sarverott/bos-skillset), which builds on
 this core.
+
+## public repositories of source code with cloned mirrors
+
+Every branch and tag of the source goes to each mirror on every change, deletions
+too (`mirrors-propagate-and-status-badges.yml`, the list in `.github/bos.json`).
+The first badge of a place is the HTTP status of its page - `403 FORBIDDEN` when
+its update failed - the second its own pipeline, running the checks.
+
+- main source on github [![github.com source](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fsource-github.com.json)](https://github.com/Sarverott/blacksmith-organization-system) [![checks](https://img.shields.io/github/actions/workflow/status/Sarverott/blacksmith-organization-system/checks-on-push-changed-parts.yml?branch=development&label=checks)](https://github.com/Sarverott/blacksmith-organization-system/actions)
+  - https://github.com/Sarverott/blacksmith-organization-system
+- mirror on gitea [![gitea.com mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-gitea.com.json)](https://gitea.com/Sarverott/blacksmith-organization-system) [![gitea checks](https://gitea.com/Sarverott/blacksmith-organization-system/actions/workflows/checks.yml/badge.svg?branch=master)](https://gitea.com/Sarverott/blacksmith-organization-system/actions)
+  - https://gitea.com/Sarverott/blacksmith-organization-system
+- mirror on gitlab [![gitlab.com mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-gitlab.com.json)](https://gitlab.com/Sarverott/blacksmith-organization-system) [![gitlab pipeline](https://gitlab.com/Sarverott/blacksmith-organization-system/badges/master/pipeline.svg)](https://gitlab.com/Sarverott/blacksmith-organization-system/-/pipelines)
+  - https://gitlab.com/Sarverott/blacksmith-organization-system
+- mirror on bitbucket [![bitbucket.org mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-bitbucket.org.json)](https://bitbucket.org/apokryf/blacksmith-organization-system/) [![bitbucket pipelines](https://img.shields.io/bitbucket/pipelines/apokryf/blacksmith-organization-system/master)](https://bitbucket.org/apokryf/blacksmith-organization-system/pipelines)
+  - https://bitbucket.org/apokryf/blacksmith-organization-system/
+- mirror on sourcehut [![sr.ht mirror](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FSarverott%2Fblacksmith-organization-system%2Fbadges%2Fmirror-sr.ht.json)](https://git.sr.ht/~sarverott/blacksmith-organization-system) [![sr.ht builds](https://builds.sr.ht/~sarverott/blacksmith-organization-system/commits/master/checks.yml.svg)](https://builds.sr.ht/~sarverott/blacksmith-organization-system/commits/master/checks.yml)
+  - https://git.sr.ht/~sarverott/blacksmith-organization-system
 
 ## Where the idea came from
 

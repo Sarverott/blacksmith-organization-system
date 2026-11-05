@@ -23,8 +23,20 @@ export { loopOf, loopOfSettings } from "./loop/load.ts";
 export { projectAround } from "./project/around.ts";
 export { Project, type ProjectReport } from "./project/class.ts";
 export { SCOPE_FILE, Scope } from "./scope/class.ts";
-export { BUMPS, type Bump, DEFAULT_VERSIONING, type SettingsData, type VersioningData } from "./settings/data.ts";
-export { branchMatches, type Settings, settingsFile, settingsOf, versioningOf } from "./settings/load.ts";
+export {
+  BUMPS,
+  type Bump,
+  DEFAULT_VERSIONING,
+  type SettingsData,
+  type VersioningData,
+} from "./settings/data.ts";
+export {
+  branchMatches,
+  type Settings,
+  settingsFile,
+  settingsOf,
+  versioningOf,
+} from "./settings/load.ts";
 export { System } from "./system/class.ts";
 export { Data, Nests, Setup } from "./system/parts.ts";
 export { Logs, Manifests, Storylines, Ttystories } from "./system/storylines.ts";

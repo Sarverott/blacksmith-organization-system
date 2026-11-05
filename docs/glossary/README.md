@@ -61,6 +61,7 @@ Internal parts of `.BOS/`:
 | [craft loop](craft-loop.md) | The branches every change travels and the events that version it |
 | [GRIH](grih.md) | The version scale of a scope: Generation, Reconstruction, Integration, Hooking |
 | [authors](authors.md) | Every entity that makes a project (people, agents, bots), one line each in `.github/AUTHORS` |
+| [mirror](mirror.md) | A copy of a project's repository on another host, kept identical to the source by the loop |
 
 ## Tree
 

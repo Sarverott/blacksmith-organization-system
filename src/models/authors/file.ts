@@ -12,9 +12,13 @@ export function authorsFile(projectPath: string): string {
 // a missing file has no lines
 export function readAuthors(host: Host, file: string): AuthorsLine[] {
   const text = host.readText(file);
-  if (text === null) return [];
+  if (text === null) {
+    return [];
+  }
   const lines = text.split("\n");
-  if (lines.at(-1) === "") lines.pop();
+  if (lines.at(-1) === "") {
+    lines.pop();
+  }
   return lines.map((line) => ({ text: line, entry: parseEntry(line) }));
 }
 

@@ -8,13 +8,21 @@ export const versionTools = [
     name: "bump",
     info: "the next version after a loop event; semver X.Y.Z, or GRIH G.R.I.H with --grih",
     args: [
-      { name: "version", type: "string", info: "current version, e.g. 0.6.1", positional: true, required: true },
+      {
+        name: "version",
+        type: "string",
+        info: "current version, e.g. 0.6.1",
+        positional: true,
+        required: true,
+      },
       { name: "event", type: "string", info: EVENTS.join(", "), positional: true, required: true },
       { name: "grih", type: "boolean", info: "read and write GRIH instead of semver" },
     ],
     run: (_bos, input) => {
       const event = String(input.event);
-      if (!isLoopEvent(event)) throw new Error(`"${event}" is not a loop event (${EVENTS.join(", ")})`);
+      if (!isLoopEvent(event)) {
+        throw new Error(`"${event}" is not a loop event (${EVENTS.join(", ")})`);
+      }
       return (input.grih ? bumpGrih : bumpSemver)(String(input.version), event);
     },
     render: (result) => result,

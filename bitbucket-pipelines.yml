@@ -1,0 +1,21 @@
+# On the bitbucket.org mirror (Bitbucket Pipelines). The source is GitHub; this repository
+# only receives it (.github/workflows/mirrors-propagate-and-status-badges.yml).
+# The same checks as GitHub's (task check): types, lint, tests.
+image: node:24
+
+definitions:
+  steps:
+    - step: &checks
+        name: checks
+        caches: [node]
+        script:
+          - export HUSKY=0
+          - npm ci
+          - npm run check
+
+pipelines:
+  branches:
+    master:
+      - step: *checks
+    development:
+      - step: *checks

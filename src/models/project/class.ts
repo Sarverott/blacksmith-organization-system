@@ -16,7 +16,8 @@ export class Project extends Element {
   static type = "project";
 
   anatomy(): { present: string[]; missing: string[] } {
-    const has = (part: string) => [part, ...(ALIASES[part] ?? [])].some((name) => this.host.exists(this.file(name)));
+    const has = (part: string) =>
+      [part, ...(ALIASES[part] ?? [])].some((name) => this.host.exists(this.file(name)));
     const parts = Object.keys(ANATOMY);
     return { present: parts.filter(has), missing: parts.filter((part) => !has(part)) };
   }
