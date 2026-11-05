@@ -21,4 +21,14 @@ export class Git {
   tagExists(tag: string): boolean {
     return this.git(["tag", "--list", tag]) === tag;
   }
+
+  // everyone in the history of HEAD, oldest first: author, committer and each
+  // Co-authored-by trailer, as "Name <email>" lines (repeated; the caller dedupes)
+  identities(): string[] {
+    const format = "%an <%ae>%n%cn <%ce>%n%(trailers:key=Co-authored-by,valueonly,separator=%x0A)";
+    const { status, stdout } = this.host.run("git", ["log", "--reverse", `--format=${format}`], { cwd: this.cwd });
+    // a repository without commits has nobody yet
+    if (status !== 0) return [];
+    return stdout.split("\n").filter((line) => line.trim());
+  }
 }

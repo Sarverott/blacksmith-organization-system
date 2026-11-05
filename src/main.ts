@@ -8,6 +8,7 @@ import { createContext } from "./core/context.ts";
 import type { Host } from "./core/host.ts";
 import type { LoopEvent } from "./core/version.ts";
 import {
+  authorsFile,
   type Loop,
   loopOfSettings,
   type Project,
@@ -24,11 +25,14 @@ import {
   type BumpOutcome,
   bootstrapping,
   bumping,
+  type CreditOutcome,
+  crediting,
   emptyReport,
   type FlowOutcome,
   inspecting,
   proposing,
   unbumped,
+  uncredited,
   undecided,
   type VersionContext,
   versioning,
@@ -111,6 +115,21 @@ export class BOS {
       outcome: unbumped(),
     };
     return (await bumping.run(context)).outcome;
+  }
+
+  // name everyone of the project's commits in its .github/AUTHORS
+  async authors({ dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {}): Promise<CreditOutcome> {
+    const { project } = this.loop(dir);
+    const file = authorsFile(project.path);
+    const context = {
+      ...createContext(this.host, { dryRun }),
+      file,
+      git: new Git(this.host, project.path),
+      lines: [],
+      identities: [],
+      outcome: uncredited(file),
+    };
+    return (await crediting.run(context)).outcome;
   }
 
   // open the pull request of a branch's forward step on GitHub
