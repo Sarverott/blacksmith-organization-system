@@ -12,7 +12,9 @@ export function workshopName(host: Host): string {
 export function findAncestorWorkshop(start: string, name = WORKSHOP_DIRNAME): string | null {
   let dir = normalize(start);
   while (dir !== "/") {
-    if (basename(dir) === name) return dir;
+    if (basename(dir) === name) {
+      return dir;
+    }
     dir = dirname(dir);
   }
   return null;
@@ -23,7 +25,8 @@ export type Located = { root: string; source: string };
 // the workshop itself ($BOS_WORKSHOP), or the directory that holds it ($WORKSHOP_ROOT,
 // e.g. a partition kept for tests and demonstrations, so the home workshop stays private)
 export function locateWorkshop(host: Host, explicit?: string): Located {
-  const absolute = (path: string) => normalize(path.startsWith("/") ? path : join(host.cwd(), path));
+  const absolute = (path: string) =>
+    normalize(path.startsWith("/") ? path : join(host.cwd(), path));
   const variable = (name: string) =>
     host
       .env(name)
@@ -41,20 +44,33 @@ export function locateWorkshop(host: Host, explicit?: string): Located {
   ];
   for (const [source, rule] of rules) {
     const root = rule();
-    if (root) return { root, source };
+    if (root) {
+      return { root, source };
+    }
   }
   throw new Error("no workshop found");
 }
 
-export type Place = { area: string | null; scope?: string | null; project?: string | null; inner?: string | null };
+export type Place = {
+  area: string | null;
+  scope?: string | null;
+  project?: string | null;
+  inner?: string | null;
+};
 
 // where a path sits inside a workshop: its area and, in the forge, its scope;
 // null when outside. The project needs the scope's tree: Workshop.placeOf resolves it.
 export function placeOf(root: string, target: string): Place | null {
   const rel = inside(root, target);
-  if (rel === null) return null;
-  if (rel === "") return { area: null };
+  if (rel === null) {
+    return null;
+  }
+  if (rel === "") {
+    return { area: null };
+  }
   const [area = null, ...rest] = rel.split("/");
-  if (area === "forge") return { area, scope: rest[0] ?? null, inner: rest.slice(1).join("/") || null };
+  if (area === "forge") {
+    return { area, scope: rest[0] ?? null, inner: rest.slice(1).join("/") || null };
+  }
   return { area, inner: rest.join("/") || null };
 }

@@ -1,7 +1,15 @@
 // Host for Node.js: the real file system, clock and environment.
 
 import { spawnSync } from "node:child_process";
-import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import {
+  appendFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { homedir, hostname, userInfo } from "node:os";
 import { resolve } from "node:path";
 
@@ -64,8 +72,14 @@ export class NodeHost implements Host {
   }
 
   run(command: string, args: string[], options: { cwd?: string } = {}): RunResult {
-    const result = spawnSync(command, args, { cwd: options.cwd, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
-    if (result.error) return { status: 127, stdout: "", stderr: `${command}: ${result.error.message}` };
+    const result = spawnSync(command, args, {
+      cwd: options.cwd,
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+    });
+    if (result.error) {
+      return { status: 127, stdout: "", stderr: `${command}: ${result.error.message}` };
+    }
     return { status: result.status ?? 1, stdout: result.stdout, stderr: result.stderr };
   }
 

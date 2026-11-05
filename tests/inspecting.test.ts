@@ -25,7 +25,9 @@ describe("inspecting", () => {
     const report = await bos.inspect();
     const scopes = Object.fromEntries(report.forge.scopes.map((s) => [s.name, s.projects]));
     expect(scopes.sarverott?.map((p) => p.name)).toEqual(["gitrecon"]);
-    expect(scopes.bos?.map((p) => [p.name, p.git?.branch, p.version?.version])).toEqual([["core", "master", "0.6.1"]]);
+    expect(scopes.bos?.map((p) => [p.name, p.git?.branch, p.version?.version])).toEqual([
+      ["core", "master", "0.6.1"],
+    ]);
     expect(rules(report.findings)).toContain("work-on-master");
   });
 

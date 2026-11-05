@@ -9,10 +9,18 @@ describe("bootstrapping", () => {
   it("builds the five areas and the parts of .BOS", async () => {
     const root = tempWorkshop();
     await bosFor(root).bootstrap();
-    for (const area of [".BOS", "devarmory", "forge", "craftbook", "archive"])
+    for (const area of [".BOS", "devarmory", "forge", "craftbook", "archive"]) {
       expect(existsSync(join(root, area))).toBe(true);
-    for (const part of ["setup", "data", "nests/.index.json", "nests/.manifest.json", "workshop.json"])
+    }
+    for (const part of [
+      "setup",
+      "data",
+      "nests/.index.json",
+      "nests/.manifest.json",
+      "workshop.json",
+    ]) {
       expect(existsSync(join(root, ".BOS", part))).toBe(true);
+    }
   });
 
   it("a dry run writes nothing and plans exactly what the real run creates", async () => {
@@ -36,7 +44,9 @@ describe("bootstrapping", () => {
   it("records a bootstrap that created something", async () => {
     const root = tempWorkshop();
     await bosFor(root).bootstrap();
-    const log = readFileSync(join(root, ".BOS/storylines/logs/workshop.jsonl"), "utf8").trim().split("\n");
+    const log = readFileSync(join(root, ".BOS/storylines/logs/workshop.jsonl"), "utf8")
+      .trim()
+      .split("\n");
     expect(log).toHaveLength(1);
     expect(JSON.parse(log[0] ?? "")).toMatchObject({ event: "bootstrap" });
   });

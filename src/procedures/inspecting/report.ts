@@ -2,7 +2,12 @@ import type { Context } from "../../core/context.ts";
 import type { ElementNode } from "../../core/element.ts";
 import type { ProjectReport, Workshop } from "../../models/_index.ts";
 
-export type Finding = { level: "error" | "warning" | "info"; rule: string; path: string; message: string };
+export type Finding = {
+  level: "error" | "warning" | "info";
+  rule: string;
+  path: string;
+  message: string;
+};
 
 export type ScopeReport = {
   name: string;

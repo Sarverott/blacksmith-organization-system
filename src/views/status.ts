@@ -27,7 +27,9 @@ function forgeLines(report: WorkshopReport): string[] {
       const branch = project.git?.branch ?? (project.git?.detached ? "(detached)" : "(no HEAD)");
       const version = project.version ? `v${project.version.version}` : "-";
       const parts = project.anatomy.present.length + project.anatomy.missing.length;
-      lines.push(`    ${rel}  ${branch}  ${version}  anatomy ${project.anatomy.present.length}/${parts}`);
+      lines.push(
+        `    ${rel}  ${branch}  ${version}  anatomy ${project.anatomy.present.length}/${parts}`,
+      );
     }
   }
   return lines;
@@ -35,12 +37,20 @@ function forgeLines(report: WorkshopReport): string[] {
 
 function findingLines(findings: Finding[], all: boolean): string[] {
   const count = (level: Finding["level"]) => findings.filter((f) => f.level === level).length;
-  const lines = [`findings: ${count("error")} errors, ${count("warning")} warnings, ${count("info")} notes`];
+  const lines = [
+    `findings: ${count("error")} errors, ${count("warning")} warnings, ${count("info")} notes`,
+  ];
   for (const finding of findings) {
-    if (finding.level === "info" && !all) continue;
-    lines.push(`  ${MARK[finding.level]} ${finding.rule}  ${finding.path}\n      ${finding.message}`);
+    if (finding.level === "info" && !all) {
+      continue;
+    }
+    lines.push(
+      `  ${MARK[finding.level]} ${finding.rule}  ${finding.path}\n      ${finding.message}`,
+    );
   }
-  if (!all && count("info")) lines.push("  (notes hidden: --all shows them)");
+  if (!all && count("info")) {
+    lines.push("  (notes hidden: --all shows them)");
+  }
   return lines;
 }
 
@@ -48,12 +58,23 @@ export function statusText(report: WorkshopReport, { all = false } = {}): string
   const head = `workshop ${report.root}${report.source ? `  (found by: ${report.source})` : ""}`;
   const areas = report.areas ? areaLines(report.areas, report.root).slice(1) : [];
   const strays = report.strays.length ? [`  ! not areas: ${report.strays.join(", ")}`] : [];
-  return [head, ...areas, ...strays, "", ...forgeLines(report), "", ...findingLines(report.findings, all)].join("\n");
+  return [
+    head,
+    ...areas,
+    ...strays,
+    "",
+    ...forgeLines(report),
+    "",
+    ...findingLines(report.findings, all),
+  ].join("\n");
 }
 
 export function bootstrapText(changes: string[], dryRun: boolean): string {
-  if (!changes.length) return "nothing missing: the workshop is complete";
-  return [`${dryRun ? "would create" : "created"} ${changes.length}:`, ...changes.map((path) => `  + ${path}`)].join(
-    "\n",
-  );
+  if (!changes.length) {
+    return "nothing missing: the workshop is complete";
+  }
+  return [
+    `${dryRun ? "would create" : "created"} ${changes.length}:`,
+    ...changes.map((path) => `  + ${path}`),
+  ].join("\n");
 }

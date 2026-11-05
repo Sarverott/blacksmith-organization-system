@@ -83,10 +83,14 @@ export class Element {
     createIfMissing(context, this.path, () => this.host.mkdir(this.path));
     for (const [name, content] of Object.entries(this.kind.descriptors)) {
       const target = this.file(name);
-      createIfMissing(context, target, () => this.host.writeText(target, serialize(content(this, context))));
+      createIfMissing(context, target, () =>
+        this.host.writeText(target, serialize(content(this, context))),
+      );
     }
     for (const child of this.childElements()) {
-      if (child.kind.mandatory) child.ensure(context);
+      if (child.kind.mandatory) {
+        child.ensure(context);
+      }
     }
     return this;
   }
@@ -109,7 +113,9 @@ export class Element {
 
   readJSON<T>(name: string, fallback: T): T {
     const text = this.host.readText(this.file(name));
-    if (text === null) return fallback;
+    if (text === null) {
+      return fallback;
+    }
     try {
       return JSON.parse(text) as T;
     } catch {
@@ -118,7 +124,9 @@ export class Element {
   }
 
   writeJSON(name: string, value: object, context: Context): void {
-    if (!context.dryRun) this.host.writeText(this.file(name), serialize(value));
+    if (!context.dryRun) {
+      this.host.writeText(this.file(name), serialize(value));
+    }
     context.changes.push(this.file(name));
   }
 

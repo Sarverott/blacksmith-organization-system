@@ -2,7 +2,15 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { DEFAULT_LOOP, DEFAULT_VERSIONING, Loop, loopOf, NodeHost, settingsOf, versioningOf } from "../src/index.ts";
+import {
+  DEFAULT_LOOP,
+  DEFAULT_VERSIONING,
+  Loop,
+  loopOf,
+  NodeHost,
+  settingsOf,
+  versioningOf,
+} from "../src/index.ts";
 import { tempWorkshop, write } from "./helpers.ts";
 
 describe("the craft loop", () => {
@@ -21,7 +29,12 @@ describe("the craft loop", () => {
   });
 
   it("sends a contributor's branch into development, never merging it by itself", () => {
-    expect(loop.step("dev/Cleo")).toEqual({ from: "dev/Cleo", to: "development", automerge: false, back: [] });
+    expect(loop.step("dev/Cleo")).toEqual({
+      from: "dev/Cleo",
+      to: "development",
+      automerge: false,
+      back: [],
+    });
     expect(loop.step("feature/x")).toBeNull();
   });
 
@@ -32,10 +45,12 @@ describe("the craft loop", () => {
       directions: { master: ["development"], development: ["review"] },
       automerge: { staging: true },
     };
-    expect(() => new Loop(broken, "x.json")).toThrow(/x\.json.*"review" is not a station.*"staging" is not a station/);
-    expect(() => new Loop({ ...DEFAULT_LOOP, contributors: { pattern: "dev/", into: "development" } })).toThrow(
-      /end with \*/,
+    expect(() => new Loop(broken, "x.json")).toThrow(
+      /x\.json.*"review" is not a station.*"staging" is not a station/,
     );
+    expect(
+      () => new Loop({ ...DEFAULT_LOOP, contributors: { pattern: "dev/", into: "development" } }),
+    ).toThrow(/end with \*/);
   });
 
   it("reads the loop section of a project's .github/bos.json over the default", () => {
@@ -59,13 +74,19 @@ describe("versioning settings", () => {
     const project = join(tempWorkshop(), "p");
     const host = new NodeHost();
     expect(versioningOf(settingsOf(host, project))).toEqual(DEFAULT_VERSIONING);
-    write(join(project, ".github/bos.json"), JSON.stringify({ versioning: { bumps: { testing: "patch" } } }));
+    write(
+      join(project, ".github/bos.json"),
+      JSON.stringify({ versioning: { bumps: { testing: "patch" } } }),
+    );
     expect(versioningOf(settingsOf(host, project)).bumps).toEqual({
       revision: "minor",
       master: "patch",
       testing: "patch",
     });
-    write(join(project, ".github/bos.json"), JSON.stringify({ versioning: { bumps: { master: "huge" } } }));
+    write(
+      join(project, ".github/bos.json"),
+      JSON.stringify({ versioning: { bumps: { master: "huge" } } }),
+    );
     expect(() => versioningOf(settingsOf(host, project))).toThrow(/bumps\.master is "huge"/);
   });
 });

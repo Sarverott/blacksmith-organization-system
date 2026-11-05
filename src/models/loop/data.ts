@@ -31,6 +31,13 @@ export const DEFAULT_LOOP: LoopData = {
   },
   contributors: { pattern: "dev/*", into: "development" },
   autocreate: true,
-  automerge: { master: false, development: true, revision: true, testing: true, releasing: false, rejection: false },
+  automerge: {
+    master: false,
+    development: true,
+    revision: true,
+    testing: true,
+    releasing: false,
+    rejection: false,
+  },
   release: "master",
 };

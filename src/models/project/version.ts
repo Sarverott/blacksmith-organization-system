@@ -13,10 +13,14 @@ const READERS: [string, (text: string) => string | undefined][] = [
 export function readVersion(host: Host, root: string): DeclaredVersion {
   for (const [source, read] of READERS) {
     const text = host.readText(join(root, source));
-    if (text === null) continue;
+    if (text === null) {
+      continue;
+    }
     try {
       const version = read(text);
-      if (version) return { version, source };
+      if (version) {
+        return { version, source };
+      }
     } catch {
       // a broken manifest declares nothing; the next one may
     }

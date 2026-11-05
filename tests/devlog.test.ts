@@ -8,7 +8,9 @@ import { tempWorkshop, write } from "./helpers.ts";
 
 function devlogWith(files: Record<string, string>): Devlog {
   const dir = join(tempWorkshop(), "docs/devlog");
-  for (const [name, text] of Object.entries(files)) write(join(dir, name), text);
+  for (const [name, text] of Object.entries(files)) {
+    write(join(dir, name), text);
+  }
   return new Devlog(new NodeHost(), dir);
 }
 
@@ -28,7 +30,8 @@ describe("devlog as data", () => {
   it("lists open questions and proposals", () => {
     const devlog = devlogWith({
       "BRAINSTORM.md": "# B\n\n## Q6. First\n\ntext\n\n## Q7. Second\n",
-      "PROPOSALS.md": "# P\n\n### PP1 beg\n> from: x\n> label/topic/name/title: naming\n### PP1 end\n",
+      "PROPOSALS.md":
+        "# P\n\n### PP1 beg\n> from: x\n> label/topic/name/title: naming\n### PP1 end\n",
     });
     expect(devlog.questions()).toEqual(["Q6: First", "Q7: Second"]);
     expect(devlog.proposals()).toEqual(["PP1: naming"]);

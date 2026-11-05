@@ -19,7 +19,9 @@ export function read(context: CreditContext): void {
   const seen = new Set<string>();
   for (const line of context.git.identities()) {
     const identity = parseIdentity(line);
-    if (!identity || seen.has(keyOf(identity))) continue;
+    if (!identity || seen.has(keyOf(identity))) {
+      continue;
+    }
     seen.add(keyOf(identity));
     context.identities.push(identity);
   }
@@ -38,7 +40,9 @@ export function match(context: CreditContext): void {
     }
     const entry = lines[at]?.entry as AuthorEntry;
     const better = completed(entry, identity);
-    if (!better) continue;
+    if (!better) {
+      continue;
+    }
     // a mentioned entry, completed: updated and moved to the bottom
     const text = formatEntry(better);
     lines.splice(at, 1);
@@ -51,7 +55,9 @@ export function match(context: CreditContext): void {
 
 export function write(context: CreditContext): void {
   const { outcome } = context;
-  if (!outcome.added.length && !outcome.updated.length) return;
+  if (!outcome.added.length && !outcome.updated.length) {
+    return;
+  }
   if (context.dryRun) {
     outcome.action = "would-write";
     return;

@@ -15,10 +15,16 @@ function readManifest(context: BumpContext, name: string): Manifest | null {
 export function read(context: BumpContext): void {
   const { outcome, station } = context;
   const version = readManifest(context, "package.json")?.version;
-  if (!version) throw new Error(`no version in ${join(context.projectPath, "package.json")}`);
+  if (!version) {
+    throw new Error(`no version in ${join(context.projectPath, "package.json")}`);
+  }
   outcome.from = version;
-  outcome.bump = context.everyCommit ? context.versioning.commits.bump : (context.versioning.bumps[station] ?? null);
-  if (!outcome.bump) outcome.reason = `nothing bumps on ${station}: ${version} stays`;
+  outcome.bump = context.everyCommit
+    ? context.versioning.commits.bump
+    : (context.versioning.bumps[station] ?? null);
+  if (!outcome.bump) {
+    outcome.reason = `nothing bumps on ${station}: ${version} stays`;
+  }
 }
 
 // the tags that release the line a bump leaves: patch 1.2.3 → v1.2.3,
@@ -26,21 +32,33 @@ export function read(context: BumpContext): void {
 function lineOf(context: BumpContext, version: string, bump: Bump): string {
   const [x, y] = version.split(".");
   const prefix = context.versioning.tagPrefix;
-  return bump === "patch" ? `${prefix}${version}` : bump === "minor" ? `${prefix}${x}.${y}.*` : `${prefix}${x}.*`;
+  return bump === "patch"
+    ? `${prefix}${version}`
+    : bump === "minor"
+      ? `${prefix}${x}.${y}.*`
+      : `${prefix}${x}.*`;
 }
 
 export function check(context: BumpContext): void {
   const { outcome } = context;
-  if (outcome.reason || !outcome.from || !outcome.bump || context.everyCommit) return;
+  if (outcome.reason || !outcome.from || !outcome.bump || context.everyCommit) {
+    return;
+  }
   const line = lineOf(context, outcome.from, outcome.bump);
   if (context.git.tags(line).length === 0) {
-    Object.assign(outcome, { action: "kept", to: outcome.from, reason: `${line} is not released yet: it stays` });
+    Object.assign(outcome, {
+      action: "kept",
+      to: outcome.from,
+      reason: `${line} is not released yet: it stays`,
+    });
   }
 }
 
 export function write(context: BumpContext): void {
   const { outcome } = context;
-  if (outcome.reason || !outcome.from || !outcome.bump) return;
+  if (outcome.reason || !outcome.from || !outcome.bump) {
+    return;
+  }
   const to = bumpSemver(outcome.from, EVENT_OF[outcome.bump]);
   outcome.to = to;
   context.changes.push(`version ${outcome.from} → ${to} (${outcome.bump}, ${context.station})`);
@@ -50,11 +68,21 @@ export function write(context: BumpContext): void {
   }
   for (const name of ["package.json", "package-lock.json"]) {
     const manifest = readManifest(context, name);
-    if (!manifest) continue;
+    if (!manifest) {
+      continue;
+    }
     manifest.version = to;
     const root = manifest.packages?.[""];
-    if (root) root.version = to;
-    context.host.writeText(join(context.projectPath, name), `${JSON.stringify(manifest, null, 2)}\n`);
+    if (root) {
+      root.version = to;
+    }
+    context.host.writeText(
+      join(context.projectPath, name),
+      `${JSON.stringify(manifest, null, 2)}\n`,
+    );
   }
-  Object.assign(outcome, { action: "bumped", reason: `bumped ${outcome.from} → ${to} (${outcome.bump})` });
+  Object.assign(outcome, {
+    action: "bumped",
+    reason: `bumped ${outcome.from} → ${to} (${outcome.bump})`,
+  });
 }

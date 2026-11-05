@@ -28,5 +28,7 @@ export const DEFAULT_VERSIONING: VersioningData = {
 
 export type SettingsData = {
   loop?: Partial<LoopData>;
-  versioning?: Partial<Omit<VersioningData, "commits">> & { commits?: Partial<VersioningData["commits"]> };
+  versioning?: Partial<Omit<VersioningData, "commits">> & {
+    commits?: Partial<VersioningData["commits"]>;
+  };
 };
