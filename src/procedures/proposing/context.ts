@@ -1,4 +1,4 @@
-import type { GitHub } from "../../bridges/github.ts";
+import type { GitHub } from "../../bridges/git-integration/github.ts";
 import type { Context } from "../../core/context.ts";
 import type { Loop, LoopStep } from "../../models/index.ts";
 

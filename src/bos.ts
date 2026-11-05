@@ -2,8 +2,8 @@
 // the procedures on it. Every face of BOS (CLI, library, later MCP and HTTP) goes
 // through these methods.
 //   const bos = new BOS(new NodeHost());  const report = await bos.inspect();
-import { Git } from "./bridges/git.ts";
-import { GitHub } from "./bridges/github.ts";
+import { Git } from "./bridges/git-integration/git-base.ts";
+import { GitHub } from "./bridges/git-integration/github.ts";
 import { createContext } from "./core/context.ts";
 import { Element } from "./core/element.ts";
 import type { Host } from "./core/host.ts";

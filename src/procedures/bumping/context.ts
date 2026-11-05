@@ -1,4 +1,4 @@
-import type { Git } from "../../bridges/git.ts";
+import type { Git } from "../../bridges/git-integration/git-base.ts";
 import type { Context } from "../../core/context.ts";
 import type { Bump, VersioningData } from "../../models/index.ts";
 

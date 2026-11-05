@@ -12,7 +12,8 @@
       "!dist",
       "!**/package-lock.json",
       "!scripts",
-      "!docs/.obsidian"
+      "!docs/.obsidian",
+      "!resources/web/public"
     ]
   },
   "formatter": {
@@ -50,5 +51,15 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["package.json"],
+      "json": {
+        "formatter": {
+          "expand": "always"
+        }
+      }
+    }
+  ]
 }
