@@ -9,8 +9,8 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] AGENTS.md and CLAUDE.md for the core; Cleo's conclusions in `docs/.agents/CLEO.md`
 - [x] Branch `development` created from `developement` (Q1)
 - [x] `development` pushed to GitHub; `developement` removed here (Q1)
-- [ ] `developement` removed on GitHub: `git push origin --delete developement` (Q1; its head `c7da0df` is in `development`; the owner runs it, refused to agents by the permission check)
-- [ ] Remotes: this repo → `Sarverott/blacksmith-organization-system`, bos-skillset → `Sarverott/bos-skillset` (Q2; local git config)
+- [x] `developement` removed on GitHub (Q1; by the owner)
+- [x] Remotes: this repo → `Sarverott/blacksmith-organization-system`, bos-skillset → `Sarverott/bos-skillset` (Q2; local git config)
 - [x] Read the Docs: the core has its own MkDocs site (RTD builds the core's repository since the rename) (Q2)
 - [x] npm: `package.json` of the core is `blacksmith-organization-system`, repository URL the core's (Q2)
 - [ ] bos-skillset follows the rename: its remote, package name, AGENTS.md (left in `forge/NOTES-for-repositories.md`; not edited from here) (Q2)

@@ -138,10 +138,16 @@ TODO.md phases is phase 2.
 
 ## Taking in a batch of the owner
 
-In this order, each its own commit:
+In this order:
 
-1. **The owner's edits** in the working tree: commit them as they are.
-2. **ORDERS.md**: the answers move word for word into
+1. **The owner's edits** in the working tree go to `dev/Sarverott`, as they
+   are, **one commit per change**. The agent writes each message
+   (conventional, commitlint-checked): what changed, and in the body how the
+   agent understands it - what it is, why it is where it is, the assumptions
+   made - ending with the agent's `Co-Authored-By:` line. The owner reads
+   there whether the agent understood. `dev/Sarverott` is then merged into
+   `development` (`--no-ff`), like the agent's own `dev/<name>`.
+2. **ORDERS.md** (on the agent's branch, as everything below): the answers move word for word into
    `docs/changelog/phase-<n>.md` with the questions and a **Decision:** each;
    the answered `Q<n>` leave BRAINSTORM.md; ORDERS.md keeps only its header.
 3. **INQUIRIES.md**: first the plan (VISION, ROADMAP, TODO), the words
