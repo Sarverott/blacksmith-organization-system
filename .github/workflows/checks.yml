@@ -1,0 +1,108 @@
+# Every check of the core, one job each, so a run can take only the part it needs.
+# Called by check.yml (what a push changed), pr-checks.yml (everything) and
+# release.yml; started by hand it runs everything.
+name: checks
+
+on:
+  workflow_call:
+    inputs:
+      code:
+        description: types, lint, tests, build
+        type: boolean
+        default: true
+      docs:
+        description: the MkDocs site, --strict
+        type: boolean
+        default: true
+      package:
+        description: what npm would publish
+        type: boolean
+        default: false
+      commits:
+        description: "commit messages from this commit (exclusive) to HEAD; empty: not checked"
+        type: string
+        default: ""
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HUSKY: "0"
+
+jobs:
+  types:
+    if: inputs.code || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - run: npm run typecheck
+
+  lint:
+    if: inputs.code || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - run: npm run lint
+
+  tests:
+    if: inputs.code || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - run: npm test
+
+  build:
+    if: inputs.code || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - run: npm run build
+
+  package:
+    if: inputs.package || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - name: The package installs and its bos runs
+        run: |
+          npm pack
+          mkdir ../try && cd ../try && npm init -y >/dev/null
+          npm install "$GITHUB_WORKSPACE"/blacksmith-organization-system-*.tgz
+          npx bos --version
+
+  docs:
+    if: inputs.docs || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv run --project docs mkdocs build --strict -f docs/mkdocs.yml
+        env:
+          NO_MKDOCS_2_WARNING: "1"
+
+  commits:
+    if: inputs.commits != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - run: npx commitlint --from "${{ inputs.commits }}" --to HEAD --verbose

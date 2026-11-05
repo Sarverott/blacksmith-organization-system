@@ -24,6 +24,7 @@ the [glossary](../glossary/README.md); this part says how the code holds it.
 - [Models](models.md): the tree of elements, and the anatomy every model shares.
 - [Interfaces](interfaces.md): the ways in: the CLI, the library, later an API and more.
 - [Bridges](bridges.md): the ways out: other systems BOS talks to.
+- [Workflows](workflows.md): the craft loop on GitHub, calling `bos flow`.
 
 Three rules hold it together (AGENTS.md has all of them):
 

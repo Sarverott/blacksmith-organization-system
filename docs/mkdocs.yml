@@ -70,6 +70,7 @@ nav:
       - architecture/models.md
       - architecture/interfaces.md
       - architecture/bridges.md
+      - architecture/workflows.md
   - Devlog:
       - devlog/README.md
       - devlog/VISION.md
