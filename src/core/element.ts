@@ -5,6 +5,13 @@
 import { type Context, createIfMissing } from "./context.ts";
 import type { Host } from "./host.ts";
 import { basename, join } from "./paths.ts";
+// NOTE: hmmm... why not make it listen? make Element extend event emitter to allow us define listeners with for example:
+/*
+// DRAFT OF IDEA EXAMPLE
+const testNote = new BOS.Scrapnote(...)
+testNote.on("test", ()=>{})
+testNote.emmit("test")
+*/
 
 export type Descriptor = (element: Element, context: Context) => string | object;
 
@@ -138,3 +145,5 @@ export class Element {
 export function serialize(content: string | object): string {
   return typeof content === "string" ? content : `${JSON.stringify(content, null, 2)}\n`;
 }
+
+// NOTE: all that uses this is actualy placed in src/models as i see... or at least most of uses is there
