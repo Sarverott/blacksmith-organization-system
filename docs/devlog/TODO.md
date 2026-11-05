@@ -38,7 +38,7 @@ history: [../changelog/](../changelog/phase-0.md).
 ## Phase 2: the loop as code
 
 - [x] Documentation: `docs/architecture/` (models, interfaces, bridges) from the `about-*` pages, which are removed
-- [ ] Documentation: `docs/scrapnote-example.md` archived in the changelog, its ideas placed, the file removed
+- [x] Documentation: `docs/scrapnote-example.md` archived in the changelog, its ideas placed, the file removed
 - [ ] Documentation: one audience per README - `README.md` (npm and everywhere), `docs/README.md` (the documentation's index), `.github/README.md` (GitHub)
 - [ ] Documentation: `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` for the contributors committee
 - [ ] Glossary: `grih` and `craft-loop` (from the legacy `docs/README.md`)

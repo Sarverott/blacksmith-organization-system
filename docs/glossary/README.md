@@ -2,7 +2,7 @@
 
 > DRAFT. One page per element of the Blacksmith Organization System environment.
 > Gaps are marked [`TODO`]. Interpretations not yet confirmed by the author are marked *(assumed)*.
-> Sources: author's annotations, `docs/README.md`, `docs/devlog.md`, `docs/scrapnote-example.md` (PL).
+> Sources: author's annotations, `docs/README.md`, `docs/devlog.md`, the scrapnote archived in `docs/changelog/phase-1.md` (PL).
 
 ## The skeleton: three layers
 
