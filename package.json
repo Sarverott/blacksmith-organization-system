@@ -1,6 +1,6 @@
 {
   "name": "blacksmith-organization-system",
-  "version": "0.6.1",
+  "version": "1.0.0",
   "description": "Blacksmith Organization System (BOS) core: the workshop as code - build its base, listen to its changes, inspect it as one coherent environment",
   "keywords": [
     "bos",

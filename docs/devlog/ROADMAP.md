@@ -25,4 +25,5 @@ Where the core goes, on the version scales of the craft loop. The why is in
 | M3: everyone has a workplace | 3 | agents and the owner each work in their own container and branch, in workmodes |
 | M4: one BOS | 4 | the skillset, the apps and integrations build on this core |
 
-Which version the reforged core starts from is open (BRAINSTORM `Q7`).
+The reforge is a flip: the core is `1.0.0` from the end of phase 1 (decision
+Q7), on npm under the tag `next` until phase 2 is done.
