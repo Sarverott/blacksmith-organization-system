@@ -1,5 +1,18 @@
 // Every model of the workshop, one directory each (glossary as classes).
 export { Archive } from "./archive/class.ts";
+export {
+  type AuthorEntry,
+  type AuthorKind,
+  completed,
+  entryOf,
+  formatEntry,
+  type Identity,
+  kindOf,
+  names,
+  parseEntry,
+  parseIdentity,
+} from "./authors/entry.ts";
+export { type AuthorsLine, authorsFile, authorsText, readAuthors } from "./authors/file.ts";
 export { Craftbook, Scrapnotes } from "./craftbook/class.ts";
 export { Devarmory } from "./devarmory/class.ts";
 export { DEVLOG_FILES, Devlog, type Phase } from "./devlog/class.ts";

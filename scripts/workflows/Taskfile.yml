@@ -31,10 +31,20 @@ tasks:
     dir: '{{.ROOT_DIR}}'
     cmds: ['{{.SCRIPTS}}/bump.sh {{.CLI_ARGS}}']
 
+  authors:
+    desc: 'bos project authors, committed and pushed when .github/AUTHORS changed: task workflows:authors -- <branch>'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/authors.sh {{.CLI_ARGS}}']
+
   merge-into:
     desc: 'Merge a ref into a branch and push it: task workflows:merge-into -- origin/master development'
     dir: '{{.ROOT_DIR}}'
     cmds: ['{{.SCRIPTS}}/merge-into.sh {{.CLI_ARGS}}']
+
+  pull-request:
+    desc: 'Open the pull request <head> → <base> unless one is open: task workflows:pull-request -- revision master'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/pull-request.sh {{.CLI_ARGS}}']
 
   release:
     desc: 'Tag v<version> and the GitHub release, unless tagged: task workflows:release [-- --prerelease]'
@@ -42,9 +52,14 @@ tasks:
     cmds: ['{{.SCRIPTS}}/release.sh {{.CLI_ARGS}}']
 
   publish:
-    desc: 'npm publish with provenance: task workflows:publish -- next|latest'
+    desc: 'npm publish (npmjs.org with provenance, or GitHub Packages): task workflows:publish -- npmjs|github next|latest'
     dir: '{{.ROOT_DIR}}'
     cmds: ['{{.SCRIPTS}}/publish.sh {{.CLI_ARGS}}']
+
+  image-gate:
+    desc: 'Whether a container image of a tag is published (a full release, a token): task workflows:image-gate -- <tag>'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/image-gate.sh {{.CLI_ARGS}}']
 
   wiki:
     desc: 'The docs of a tag into the GitHub wiki, pushed: task workflows:wiki -- <tag>'

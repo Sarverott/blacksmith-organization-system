@@ -1,0 +1,73 @@
+# Work landed on revision (the routine: an agent pushes development to revision when it
+# stops for the owner). In order:
+#   1. every check, the commits since master too
+#   2. .github/AUTHORS names every entity of the commits (bos project authors)
+#   3. the version bumped as .github/bos.json says (default: minor), only a released one
+#   4. what 2 and 3 committed goes back into development: pull it
+#   5. the pull request revision → master is opened, or the open one follows; the owner
+#      merges it and loop-master-release-and-publish.yml releases
+# A pull request opened with the workflow's token starts no workflow, so its checks are
+# step 1, linked from its description. Steps: scripts/workflows/ (task workflows:<name>).
+name: "loop › revision: checks, authors, bump, pull request to master"
+
+on:
+  push:
+    branches: [revision]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: revision
+  cancel-in-progress: false
+
+env:
+  HUSKY: "0"
+
+jobs:
+  base:
+    # the commit master stands on: the commits after it are checked
+    runs-on: ubuntu-latest
+    outputs:
+      master: ${{ steps.master.outputs.sha }}
+    steps:
+      - id: master
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: echo "sha=$(gh api "repos/$GITHUB_REPOSITORY/commits/master" --jq .sha)" >> "$GITHUB_OUTPUT"
+
+  checks:
+    needs: base
+    uses: ./.github/workflows/checks-reusable-set.yml
+    with:
+      code: true
+      docs: true
+      package: true
+      commits: ${{ needs.base.outputs.master }}
+
+  revision:
+    needs: checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: revision, fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - uses: go-task/setup-task@v1
+      - name: Every entity of the commits in .github/AUTHORS
+        id: authors
+        run: task workflows:authors -- revision
+      - name: Bump and push to revision
+        id: bump
+        run: task workflows:bump -- revision "landed on revision"
+      - name: What was committed here, into development
+        if: steps.authors.outputs.changed == 'true' || steps.bump.outputs.bumped == 'true'
+        run: task workflows:merge-into -- revision development
+      - name: The pull request revision → master
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: task workflows:pull-request -- revision master

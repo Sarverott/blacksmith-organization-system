@@ -1,17 +1,19 @@
-# Every push to master releases (decision Q10): the merged pull request development →
-# master, a person's merge. In order:
+# Every push to master releases (decision Q10): the merged pull request revision →
+# master (opened by loop-revision-bump-checks-pull-request.yml), a person's merge. In order:
 #   1. checks; a version reaching master already released gets the patch (a hotfix)
 #   2. tag v<version> and the GitHub release (skipped when that tag exists)
 #   3. the dev community hears of it (Discord, Telegram)
-#   4. npm (npm-publish.yml); in parallel the docs: Read the Docs activates and builds
-#      the tag, the GitHub wiki is synced
+#   4. published, each by its own workflow: npm on npmjs.org and on GitHub Packages
+#      (pre-releases too); a full release only: the container image on Docker Hub and
+#      ghcr.io. In parallel the docs: Read the Docs activates and builds the tag, the
+#      GitHub wiki is synced
 #   5. social media hear of it
 #   6. master goes back into development, and the listening BOS workshop is called
 # Every step that is more than one command is a script in scripts/workflows/, run as
 # `task workflows:<name>` (readable and runnable by hand). Every outward call runs only
 # when its secret is set (docs/architecture/workflows.md lists them); publishing ones
 # come from the environment publish-env.
-name: release
+name: "loop › master: release, publish, docs, back into development"
 
 on:
   push:
@@ -32,7 +34,7 @@ env:
 
 jobs:
   checks:
-    uses: ./.github/workflows/checks.yml
+    uses: ./.github/workflows/checks-reusable-set.yml
     with: { code: true, docs: true, package: true }
 
   release:
@@ -73,7 +75,7 @@ jobs:
   publish:
     needs: release
     if: needs.release.outputs.tag
-    uses: ./.github/workflows/npm-publish.yml
+    uses: ./.github/workflows/npmjs-npm-package-publish.yml
     with:
       tag: ${{ needs.release.outputs.tag }}
       prerelease: ${{ needs.release.outputs.prerelease == 'true' }}
@@ -81,6 +83,37 @@ jobs:
     permissions:
       contents: read
       id-token: write
+
+  github-npm:
+    needs: release
+    if: needs.release.outputs.tag
+    uses: ./.github/workflows/github-npm-package-publish.yml
+    with:
+      tag: ${{ needs.release.outputs.tag }}
+      prerelease: ${{ needs.release.outputs.prerelease == 'true' }}
+    permissions:
+      contents: read
+      packages: write
+
+  docker-hub:
+    needs: release
+    if: needs.release.outputs.tag && needs.release.outputs.prerelease != 'true'
+    uses: ./.github/workflows/docker-container-publish.yml
+    with:
+      tag: ${{ needs.release.outputs.tag }}
+    secrets: inherit
+    permissions:
+      contents: read
+
+  ghcr:
+    needs: release
+    if: needs.release.outputs.tag && needs.release.outputs.prerelease != 'true'
+    uses: ./.github/workflows/github-container-publish.yml
+    with:
+      tag: ${{ needs.release.outputs.tag }}
+    permissions:
+      contents: read
+      packages: write
 
   readthedocs:
     needs: release
@@ -111,7 +144,7 @@ jobs:
       - run: task workflows:wiki -- "${{ needs.release.outputs.tag }}"
 
   social:
-    needs: [release, publish, readthedocs, wiki]
+    needs: [release, publish, github-npm, docker-hub, ghcr, readthedocs, wiki]
     if: ${{ !cancelled() && needs.release.outputs.tag }}
     runs-on: ubuntu-latest
     env:
@@ -123,7 +156,7 @@ jobs:
 
   back:
     # after everything of the release, whatever it ended with; pull development after it
-    needs: [release, community, publish, readthedocs, wiki, social]
+    needs: [release, community, publish, github-npm, docker-hub, ghcr, readthedocs, wiki, social]
     if: ${{ !cancelled() && needs.release.outputs.tag }}
     runs-on: ubuntu-latest
     permissions:

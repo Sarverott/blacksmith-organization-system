@@ -1,6 +1,8 @@
 # Every check on a pull request into a station of the loop, then automerge when the
 # loop lets it (.github/bos.json; a pull request into master always waits for a person).
-name: pr-checks
+# A pull request opened by a workflow (revision → master) starts no workflow: its
+# checks ran in loop-revision-bump-checks-pull-request.yml before it was opened.
+name: "checks › on pull request: all, then automerge if the loop lets it"
 
 on:
   pull_request:
@@ -22,7 +24,7 @@ concurrency:
 
 jobs:
   checks:
-    uses: ./.github/workflows/checks.yml
+    uses: ./.github/workflows/checks-reusable-set.yml
     with:
       code: true
       docs: true

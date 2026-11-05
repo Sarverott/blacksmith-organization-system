@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# What a push changed: outputs code=true|false and docs=true|false (check.yml).
+# What a push changed: outputs code=true|false and docs=true|false (checks-on-push-changed-parts.yml).
 # Usage: changes.sh <commit before the push>   (empty, zeros or unknown: everything)
 source "$(dirname "$0")/_common.sh"
 before="${1:-}"

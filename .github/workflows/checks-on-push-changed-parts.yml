@@ -1,7 +1,7 @@
 # The quick check of a push to development or a contributor's branch: only the parts
-# of checks.yml that what was pushed touches (code, docs). Everything runs on pull
-# requests (pr-checks.yml).
-name: check
+# of checks-reusable-set.yml that what was pushed touches (code, docs). Everything
+# runs on revision and on pull requests.
+name: "checks › on push to development and dev/**: only the changed parts"
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
   checks:
     needs: changes
     if: needs.changes.outputs.code == 'true' || needs.changes.outputs.docs == 'true'
-    uses: ./.github/workflows/checks.yml
+    uses: ./.github/workflows/checks-reusable-set.yml
     with:
       code: ${{ needs.changes.outputs.code == 'true' }}
       docs: ${{ needs.changes.outputs.docs == 'true' }}

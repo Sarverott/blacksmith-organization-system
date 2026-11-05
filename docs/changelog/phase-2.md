@@ -187,3 +187,94 @@ in environment "publish-env" for github actions and workflows i made secrets: DO
   `workflows:`; a workflow step is `task workflows:<name> -- <arguments>`
   (Task installed by `go-task/setup-task`). Checked with shellcheck and
   actionlint.
+
+
+## UNIXUSAT=1793890407455 · commit 1ef7532
+
+The owner merged PR #4: `v1.1.0` released, on npm under `next` (the first
+1.x there; `v1.0.0` itself never reached npm, its tag predates the publish
+step). Then, on `dev/Sarverott`: a second check badge, the AUTHORS file with
+the owner's entry, three comment-only publish workflows (Docker Hub, GitHub
+container registry, GitHub npm package), PP1 (rulesets, concluded "not
+needed now"), the rulesets' examples and ten empty or trivial sketches of
+`scripts/` removed, and four inquiries. In chat: "at our current state it
+should do some stuff there. check my inputs there".
+
+````text
+## relocate PR from dev
+after we push `development -> revision` instead of creation PR from dev branch we can do it as part of revision. let's move it like that so next up we can make it be shaped to proper way we aim to.
+
+## workflow title names and filenames
+it is hard to not be missleaded by names like "check.yml" and "checks.yml" - make them longer and selfexplanatory
+also inside we have property "name" so this can be also more concrete there
+
+## the AUTHORS file
+it is AUTHORS or .github/AUTHORS or .github/AUTHORS.csv or something like that
+here we should place all entities that make this project
+example entry:
+```
+Sarverott   "Sett Sarverott A.A.B."   <sett@sarverott.com>  (https://sett.sarverott.com)
+```
+later it can be updated with sign mechanics. something like that in future entries:
+```
+Sarverott   "Sett Sarverott A.A.B."   <sett@sarverott.com>  (https://sett.sarverott.com)    [SIGN::type::public_sign_string]
+```
+so it is simply in every entry there is something like that
+- `entry = $NICKNAME+'\t"'+$NAMED_IDENTITY+'"\t<'+$EMAIL+'>\t('+$URL+')\n'` - full entry
+- `entry = $NICKNAME+'\t<'+$EMAIL+'>\n'` - minimalistic yet fullfilling proper verified identity
+- `entry = $NICKNAME+'\n'` - unverified, just mentioned, if updated then move to bottom
+- `entry = '<'+$EMAIL+'>\n'` - unverified, just mentioned, if updated then move to bottom
+all entities present among commits should be placed there
+new one appends file if not present there already
+dependabot, github actions, users, AI agents - everyone should be written there
+collect info about them from git log
+
+## mode badges in README
+work with current badges and update them as we want it to be well-presented in every place where it is readme of our project
+````
+
+- **Decision (inquiry, PR from revision):** the agent no longer opens the
+  pull request. It pushes `development` to `revision`; the revision workflow
+  runs every check, names new entities in AUTHORS, bumps, brings what it
+  committed into `development`, and opens `revision → master` (or leaves the
+  open one, which follows). A pull request opened with the workflow's token
+  starts no workflow, so its checks are the revision run, linked from the
+  description. The shape the loop aims at (`revision → testing → releasing`)
+  can grow from there. AGENTS.md "The routine".
+- **Decision (inquiry, workflow names):** three families, the file name says
+  what and when, `name:` says it again in the Actions tab: `checks-*`
+  (`checks-reusable-set`, `checks-on-push-changed-parts`,
+  `checks-on-pull-request-then-automerge`), `loop-*`
+  (`loop-revision-bump-checks-pull-request`, `loop-master-release-and-publish`,
+  `loop-next-pull-request-by-hand`), `<registry>-<kind>-publish` (the owner's
+  pattern: `npmjs-npm-package-publish`, `github-npm-package-publish`,
+  `docker-container-publish`, `github-container-publish`).
+- **Decision (inquiry, AUTHORS):** `.github/AUTHORS` (the place the owner
+  made); `bos project authors`, procedure `crediting`, glossary page
+  `authors`: authors, committers and `Co-authored-by` from git log, oldest
+  first, appended as `nickname<TAB><email>`; a mentioned entry the commits
+  complete is updated and moved to the bottom; signs `[SIGN::type::...]` are
+  read and kept. An entity is the entry whose email it has, or whose
+  nickname or named identity is (or begins with) its git name *(assumed: so
+  the owner's two commit emails stay one entry)*. Cleo's entry is written by
+  hand; the revision workflow keeps the file complete.
+- **Decision (inquiry, badges):** one row everywhere (the GitHub, npm and
+  documentation READMEs; the wiki's Home is the documentation's): the state
+  of the stations (`release` on `master`, `revision`, `checks` on
+  `development`), then the GitHub release, `npm@next`, node, docs, wiki,
+  license. The owner's branchless check badge became `release` on `master`:
+  the default branch's state *(assumed)*, since the push checks never run on
+  `master`. A Docker badge waits for the first image.
+- **Decision (the publish stubs):** filled. GitHub npm package: every
+  release, pre-releases under `next`, as `@sarverott/blacksmith-organization-system`
+  (GitHub Packages takes scoped names only), the workflow's own token.
+  Docker Hub and ghcr.io: the image of a new `Dockerfile` (the `bos`
+  command, `WORKSHOP_ROOT=/workspace`), tags `<version>`, `<major>.<minor>`,
+  `latest`, only for a release that is not a pre-release, so none while npm
+  is `next` (Q7). Docker Hub uses `DOCKER_HUB_TOKEN` of `publish-env` and the
+  variable `DOCKER_HUB_USERNAME`, default `sarverott` *(assumed)*. What "stable
+  LTS" means is BRAINSTORM Q12.
+- **Decision (PP1, rulesets):** parked as the owner concluded; the rulesets
+  TODO item points at it.
+- **Decision (sketches):** `scripts/README.md` keeps the three sketches left
+  and names the procedures of the removed ones, still planned.

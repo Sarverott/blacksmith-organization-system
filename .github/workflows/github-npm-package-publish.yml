@@ -1,0 +1,50 @@
+# as package npm: https://github.com/Sarverott/blacksmith-organization-system/packages
+# also prereleases
+#
+# Publishes the package to GitHub Packages (npm.pkg.github.com) as
+# @sarverott/blacksmith-organization-system, which takes scoped names only: called by
+# loop-master-release-and-publish.yml for every release, pre-releases too (under `next`),
+# or by hand with a tag. The token is the workflow's own (packages: write).
+# Steps: scripts/workflows/publish.sh (task workflows:publish -- github <npm tag>).
+name: "publish › npm package to GitHub Packages (pre-releases under next)"
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: the git tag to publish, e.g. v1.1.0
+        type: string
+        required: true
+      prerelease:
+        type: boolean
+        default: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: the git tag to publish, e.g. v1.1.0
+        type: string
+        required: true
+      prerelease:
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ github.token }}
+      HUSKY: "0"
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ inputs.tag }}" }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+      - uses: go-task/setup-task@v1
+      - run: npm ci
+      - run: task workflows:publish -- github ${{ inputs.prerelease && 'next' || 'latest' }}
