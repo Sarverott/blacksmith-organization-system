@@ -66,6 +66,7 @@ src/
 ├── cli.ts         bos <model> <tool> [operands] [--flags]; --json, --workshop=
 └── index.ts       library entry
 tests/             vitest, one file per concern; helpers.ts makes temporary workshops
+Dockerfile         the bos command as a container image (the publish workflows; phase 3: workplaces)
 scripts/           workflows/ (the steps of .github/workflows, task workflows:<name>), gh-wiki.py (docs → GitHub wiki),
                    legacy shell sketches still to port (reference only)
 docs/              devlog, changelog, .agents, glossary; MkDocs site (docs/mkdocs.yml, Read the Docs)
@@ -146,21 +147,23 @@ TODO.md phases is phase 2.
 
 ## The routine
 
-How a batch ends (phase 2: the short way `development → master`; the full
+How a batch ends (phase 2: the short way `revision → master`; the full
 loop through `revision → testing → releasing` comes later):
 
 1. Every step is a commit on the agent's `dev/<name>`; checked steps may be
    merged and pushed to `origin/development` at any time.
 2. When the agent stops and needs the owner: merge `dev/<name>` into
-   `development` (`--no-ff`), push it, open the pull request
-   `development → master` (or leave the open one, it follows), and push
-   `development` to `revision`.
-3. On GitHub: `revision.yml` bumps the minor version if the current one is
-   released already and pushes the bump to `revision` and `development` -
-   **pull `development` before the next batch**. `pr-checks.yml` checks the
-   pull request. The owner merges it; `release.yml` tags, makes the GitHub
-   release, publishes to npm, syncs the wiki, calls the webhooks and merges
-   `master` back into `development`.
+   `development` (`--no-ff`), push it, and push `development` to
+   `revision`. The agent opens no pull request.
+3. On GitHub, `loop-revision-bump-checks-pull-request.yml` runs every check,
+   names new entities in `.github/AUTHORS`, bumps the minor version if the
+   current one is released already, pushes what it committed to `revision`
+   and `development` - **pull `development` before the next batch** - and
+   opens the pull request `revision → master` (an open one follows). The
+   owner merges it; `loop-master-release-and-publish.yml` tags, makes the
+   GitHub release, publishes (npm, GitHub Packages, container images for a
+   full release), syncs the docs, calls the webhooks and merges `master`
+   back into `development`.
 
 Settings of all this: `.github/bos.json` (`loop`, `versioning`); `bos flow
 explain` shows them.

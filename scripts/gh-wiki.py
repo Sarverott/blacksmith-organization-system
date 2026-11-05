@@ -10,7 +10,7 @@ anything else point at the file in the repository. Home, _Sidebar and _Footer
 are rendered from resources/docs-templates/ (the sidebar from the MkDocs
 nav). Pages written last time and gone from the docs are removed (listed in
 the wiki's .bos-wiki.json); pages written by hand in the wiki are left alone.
-Committing and pushing the wiki is left to the caller (release.yml).
+Committing and pushing the wiki is left to the caller (loop-master-release-and-publish.yml).
 
 Python, not the TypeScript core: it is a build-side tool of the docs, run in
 the docs' uv project next to MkDocs (whose YAML loader it borrows).
