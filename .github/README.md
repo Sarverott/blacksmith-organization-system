@@ -1,8 +1,9 @@
 # blacksmith-organization-system
-
+[![check](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/check.yml/badge.svg)](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/check.yml)
 [![check](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/check.yml/badge.svg?branch=development)](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/check.yml)
 [![npm](https://img.shields.io/npm/v/blacksmith-organization-system/next?label=npm%40next)](https://www.npmjs.com/package/blacksmith-organization-system)
 [![docs](https://readthedocs.org/projects/blacksmith-organization-system/badge/?version=latest)](https://blacksmith-organization-system.readthedocs.io/)
+
 
 The **core of the Blacksmith Organization System** (BOS): a TypeScript module
 and the `bos` command that build, watch and inspect a programmer's workshop
