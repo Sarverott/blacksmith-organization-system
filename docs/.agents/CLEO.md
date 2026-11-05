@@ -102,7 +102,7 @@ workflows, devlog and agents' space from one place.
 
 Each phase is a Y release, each step a Z. Open questions: `docs/devlog/BRAINSTORM.md`.
 
-## UNIXUSAT=1793868900000 · the first batch is done
+## UNIXUSAT=1793868538000 · commit 85b7b18 · the first batch is done
 
 The reforge stands: the core builds a workshop, watches it and inspects all of
 it, and the inspection of this host's real workshop (334 projects) is quick and
