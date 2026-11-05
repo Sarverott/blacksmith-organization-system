@@ -1,4 +1,6 @@
-# Publishes the package to npmjs.org when a GitHub release is created.
+# Publishes the package to npmjs.org when a GitHub release is created: a pre-release
+# under the npm tag `next` (decision Q7: 1.x is `next` until phase 2 is done), a release
+# under `latest`. Needs the repository secret npm_token (an npm automation token).
 # Nothing in the loop creates releases yet (phase 2); a release is the owner's act.
 name: publish
 
@@ -23,6 +25,6 @@ jobs:
         env:
           HUSKY: "0"
       - run: npm run check
-      - run: npm publish --provenance
+      - run: npm publish --provenance --tag ${{ github.event.release.prerelease && 'next' || 'latest' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.npm_token }}

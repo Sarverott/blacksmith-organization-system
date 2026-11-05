@@ -26,12 +26,17 @@ In the [craftbook](craftbook.md):
 - `craftbook/scrapnotes/*.{md,txt,log,rst}`
 - `craftbook/scrapnotes/*/*.{md,txt,log,rst}`
 - `craftbook/*.{md,txt,log,rst}`, `craftbook/*/*.{md,txt,log,rst}`
+- a project's own notes: `craftbook/<scope>___<project>/scrapnotes/`, a git
+  repository (an Obsidian vault) committing itself on every save, seen from
+  the project as `docs/.scrapnotes` (a link, ignored by the project's git).
+  Decision Q8; coded in phase 3.
 
 ## Lifecycle
 
 written → tagged and categorized → promoted to a document, or kept as a scrapnote
 
-Example: `docs/scrapnote-example.md` (a Google Keep note, PL)
+Example: the owner's Google Keep note (PL), archived word for word in
+[changelog phase 1](../changelog/phase-1.md).
 
 ## Open questions
 

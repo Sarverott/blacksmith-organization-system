@@ -12,8 +12,7 @@ copyright: Copyright &copy; 2019-2026 Sett Sarverott, MIT license
 
 docs_dir: .
 site_dir: ../site
-# dot-directories stay out, except the agents' space; about-*.md are legacy notes of v0.6.1,
-# kept in the repository but not on the site
+# dot-directories stay out, except the agents' space
 exclude_docs: |
   .*
   !/.agents/
@@ -26,7 +25,6 @@ exclude_docs: |
   /devlog/AGENTS.md
   /devlog/Taskfile.yml
   /devlog/STATE.md
-  /about-*.md
 
 theme:
   name: material
@@ -67,6 +65,11 @@ markdown_extensions:
 
 nav:
   - Home: README.md
+  - Architecture:
+      - architecture/README.md
+      - architecture/models.md
+      - architecture/interfaces.md
+      - architecture/bridges.md
   - Devlog:
       - devlog/README.md
       - devlog/VISION.md
@@ -100,6 +103,9 @@ nav:
           - glossary/nestrelm.md
           - glossary/storylines.md
           - glossary/views.md
+      - Loop:
+          - glossary/craft-loop.md
+          - glossary/grih.md
       - Elements:
           - glossary/artefact.md
           - glossary/element-anatomy.md
@@ -113,5 +119,3 @@ nav:
           - glossary/craftset.md
           - glossary/collection.md
           - glossary/postroad.md
-  - Notes:
-      - scrapnote-example.md

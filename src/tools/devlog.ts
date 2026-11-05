@@ -1,26 +1,15 @@
 // bos devlog <tool>: the devlog of the project around the current directory
 import { createContext } from "../core/context.ts";
-import { dirname, join, normalize } from "../core/paths.ts";
 import { tool } from "../core/tool.ts";
 import type { BOS } from "../main.ts";
 import { Devlog } from "../models/devlog/class.ts";
-import { Project } from "../models/project/class.ts";
-import { isRepository } from "../models/project/git.ts";
+import { projectAround } from "../models/project/around.ts";
 import { type DevlogState, stateMarkdown } from "../views/devlog.ts";
 
 const dirArg = { name: "dir", type: "string", info: "a path inside the project (default: current directory)" } as const;
 
-// the nearest git repository at or above dir
-function projectAround(bos: BOS, dir?: string): Project {
-  const start = normalize(dir ? (dir.startsWith("/") ? dir : join(bos.host.cwd(), dir)) : bos.host.cwd());
-  for (let at = start; ; at = dirname(at)) {
-    if (isRepository(bos.host, at)) return new Project(bos.host, at);
-    if (at === "/") throw new Error(`${start} is not inside a git repository`);
-  }
-}
-
 function readState(bos: BOS, dir?: string): DevlogState {
-  const project = projectAround(bos, dir);
+  const project = projectAround(bos.host, dir);
   const devlog = project.child(Devlog);
   const report = project.report();
   return {
@@ -44,7 +33,7 @@ export const devlogTools = [
     run: (bos, input) => {
       const state = readState(bos, input.dir as string | undefined);
       if (input.write) {
-        const devlog = projectAround(bos, input.dir as string | undefined).child(Devlog);
+        const devlog = projectAround(bos.host, input.dir as string | undefined).child(Devlog);
         const context = createContext(bos.host);
         bos.host.writeText(devlog.file("STATE.md"), stateMarkdown(state));
         context.changes.push(devlog.file("STATE.md"));
