@@ -159,3 +159,31 @@ per release, checks only on pull requests):
   agent stops for the owner it merges its `dev/<name>` into `development`,
   pushes, opens (or keeps) the pull request `development → master` and
   pushes `development` to `revision`.
+
+## UNIXUSAT=1793884973464 · commit 8cd050a
+
+The owner merged PR #3; `release.yml` made the tag `v1.0.0`, the GitHub
+pre-release and the first wiki sync, and merged `master` back into
+`development`; npm was skipped (no token). Then, in chat:
+
+````text
+in environment "publish-env" for github actions and workflows i made secrets: DOCKER_HUB_TOKEN , NPM_TOKEN , SCALAR_API_TOKEN , READTHEDOCS_API_TOKEN . old "reforge" branch can be deleted if nothing usefull remains there to readapt to current state. delegate more complex shell scripts from workflows to "scripts/workflows/*.sh" and to be included with call of taskfile ("scripts/workflows/Taskfile.yml") - this way we can deobfuscate our code and improove transparency.
+````
+
+- **Decision, secrets:** the jobs that publish declare the environment
+  `publish-env`: `npm-publish.yml` uses `NPM_TOKEN` (it was `npm_token`, a
+  repository secret that never existed), `release.yml` gains a
+  `readthedocs` job (`READTHEDOCS_API_TOKEN`: the release's tag activated
+  and built as a version of its own, `latest` rebuilt). `DOCKER_HUB_TOKEN`
+  and `SCALAR_API_TOKEN` have nothing to publish yet: a Docker image of BOS
+  (phase 3, workplaces) and an API reference (once BOS has an HTTP API)
+  *(assumed)*, both in TODO.md.
+- **Decision, reforge:** `reforge` on GitHub (`8233fd6`) had no commit
+  `development` lacks; deleted.
+- **Decision, workflow steps:** every step longer than one command is a
+  script `scripts/workflows/<name>.sh` (shared `_common.sh`: strict mode,
+  the bot's identity, step outputs), named by
+  `scripts/workflows/Taskfile.yml`, included in the root Taskfile as
+  `workflows:`; a workflow step is `task workflows:<name> -- <arguments>`
+  (Task installed by `go-task/setup-task`). Checked with shellcheck and
+  actionlint.

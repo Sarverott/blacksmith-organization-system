@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+# The steps of the GitHub workflows (.github/workflows/) that are more than one
+# command: one script each, here, so a workflow only says which task runs and
+# every step can be read, and run by hand, on its own. Included by the root
+# Taskfile as `workflows:`; always run from the repository root.
+#   task workflows:<name> -- <arguments>
+
+version: '3'
+
+vars:
+  SCRIPTS: '{{.TASKFILE_DIR}}'
+
+tasks:
+  changes:
+    desc: 'What a push changed (code, docs), e.g. task workflows:changes -- <commit before>'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/changes.sh {{.CLI_ARGS}}']
+
+  commits:
+    desc: 'commitlint from a base commit, never before commitlint came in: task workflows:commits -- <base>'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/commits.sh {{.CLI_ARGS}}']
+
+  package:
+    desc: The package as npm would publish it, installed into an empty project, its bos run
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/package.sh']
+
+  bump:
+    desc: 'bos flow bump, committed and pushed to the station: task workflows:bump -- <station> [why]'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/bump.sh {{.CLI_ARGS}}']
+
+  merge-into:
+    desc: 'Merge a ref into a branch and push it: task workflows:merge-into -- origin/master development'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/merge-into.sh {{.CLI_ARGS}}']
+
+  release:
+    desc: 'Tag v<version> and the GitHub release, unless tagged: task workflows:release [-- --prerelease]'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/release.sh {{.CLI_ARGS}}']
+
+  publish:
+    desc: 'npm publish with provenance: task workflows:publish -- next|latest'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/publish.sh {{.CLI_ARGS}}']
+
+  wiki:
+    desc: 'The docs of a tag into the GitHub wiki, pushed: task workflows:wiki -- <tag>'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/wiki.sh {{.CLI_ARGS}}']
+
+  readthedocs:
+    desc: 'Read the Docs: the tag activated and built, latest rebuilt: task workflows:readthedocs -- <tag>'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/readthedocs.sh {{.CLI_ARGS}}']
+
+  notify:
+    desc: 'Tell who listens of a release: task workflows:notify -- community|social|workshop <tag>'
+    dir: '{{.ROOT_DIR}}'
+    cmds: ['{{.SCRIPTS}}/notify.sh {{.CLI_ARGS}}']

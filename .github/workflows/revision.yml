@@ -26,17 +26,10 @@ jobs:
         with: { ref: revision, fetch-depth: 0 }
       - uses: actions/setup-node@v4
         with: { node-version: 24 }
-      - name: Bump, commit, and push to revision and development
-        # pushed with this workflow's token, it starts no other workflow
-        run: |
-          out=$(node src/cli.ts flow bump revision --json)
-          echo "$out"
-          [ "$(jq -r .action <<< "$out")" = bumped ] || exit 0
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -qam "chore(release): bump $(jq -r '.from + " → " + .to' <<< "$out") (landed on revision)"
-          git push origin HEAD:revision
-          git fetch origin development
-          git checkout -B development origin/development
-          git merge --no-edit revision
-          git push origin development
+      - uses: go-task/setup-task@v1
+      - name: Bump and push to revision
+        id: bump
+        run: task workflows:bump -- revision "landed on revision"
+      - name: The bump into development
+        if: steps.bump.outputs.bumped == 'true'
+        run: task workflows:merge-into -- revision development
