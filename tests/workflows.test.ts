@@ -68,3 +68,39 @@ describe("pull-request.sh", () => {
     expect(log).not.toContain("pr create");
   });
 });
+
+describe("mirrors.sh", () => {
+  // one bitbucket mirror; `git` and `curl` scripted: git logs, every page answers 200
+  function pushWith(token: string): string {
+    const dir = mkdtempSync(join(tmpdir(), "bos-mirrors-"));
+    const url = "https://bitbucket.org/w/r.git";
+    const mirror = { name: "bb", host: "bitbucket.org", web: "https://bitbucket.org/w/r" };
+    write(
+      join(dir, ".github/bos.json"),
+      JSON.stringify({
+        mirrors: {
+          source: { host: "github.com", web: "https://github.com/o/r" },
+          to: [{ ...mirror, git: url, user: "x-token-auth", secret: "MIRROR_BB" }],
+        },
+      }),
+    );
+    const bin = join(dir, "bin");
+    write(join(bin, "git"), `#!/bin/sh\necho "$@" >> "${dir}/git.log"\n`);
+    write(join(bin, "curl"), "#!/bin/sh\nprintf 200\n");
+    chmodSync(join(bin, "git"), 0o755);
+    chmodSync(join(bin, "curl"), 0o755);
+    const { status } = spawnSync("bash", [resolve("scripts/workflows/mirrors.sh"), "badges"], {
+      cwd: dir,
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, MIRROR_BB: token, HOME: dir },
+    });
+    expect(status).toBe(0);
+    return readFileSync(join(dir, "git.log"), "utf8");
+  }
+
+  it("signs in to bitbucket by the kind of its token", () => {
+    expect(pushWith("access-token")).toContain("https://x-token-auth:access-token@bitbucket.org");
+    expect(pushWith("ATATTapi")).toContain(
+      "https://x-bitbucket-api-token-auth:ATATTapi@bitbucket.org",
+    );
+  });
+});

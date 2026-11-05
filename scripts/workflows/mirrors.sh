@@ -72,6 +72,11 @@ push() {
     return $result
   fi
   local host="${url#https://}"
+  # bitbucket.org: an access token (repository, workspace) signs in as x-token-auth, an
+  # Atlassian API token (ATATT…, scope write:repository:bitbucket) as x-bitbucket-api-token-auth
+  if [ "$user" = x-token-auth ] && [[ "$secret" == ATATT* ]]; then
+    user=x-bitbucket-api-token-auth
+  fi
   git push --quiet --prune "https://$user:$secret@$host" "${refspecs[@]}"
 }
 
