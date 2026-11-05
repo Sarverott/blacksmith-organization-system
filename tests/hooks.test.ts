@@ -25,3 +25,18 @@ describe(".husky/task", () => {
     expect(status).not.toBe(0);
   });
 });
+
+describe("package.json as the version bump writes it", () => {
+  // the bump (here, and in the revision workflow, outside any hook) writes JSON.stringify(…, 2):
+  // every array on its own lines; biome must take that as formatted, or CI's lint fails
+  it("is formatted for biome", () => {
+    const written = `${JSON.stringify({ name: "x", files: ["dist", "README.md"] }, null, 2)}\n`;
+    const { status, stdout } = spawnSync(
+      "npx",
+      ["biome", "format", "--stdin-file-path=package.json"],
+      { input: written, encoding: "utf8" },
+    );
+    expect(status).toBe(0);
+    expect(stdout).toBe(written);
+  });
+});
