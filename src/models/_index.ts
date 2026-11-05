@@ -2,6 +2,7 @@
 export { Archive } from "./archive/class.ts";
 export { Craftbook, Scrapnotes } from "./craftbook/class.ts";
 export { Devarmory } from "./devarmory/class.ts";
+export { DEVLOG_FILES, Devlog, type Phase } from "./devlog/class.ts";
 export { Forge } from "./forge/class.ts";
 export { Project, type ProjectReport } from "./project/class.ts";
 export { SCOPE_FILE, Scope } from "./scope/class.ts";

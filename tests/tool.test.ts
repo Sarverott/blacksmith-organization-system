@@ -18,7 +18,7 @@ describe("tools", () => {
   });
 
   it("names what exists when a tool is unknown", () => {
-    expect(() => findTool("nope", "x")).toThrow(/models: workshop, scope, version/);
+    expect(() => findTool("nope", "x")).toThrow(/models: workshop, scope, devlog, version/);
     expect(() => findTool("workshop", "x")).toThrow(/tools: locate, status, bootstrap, watch/);
   });
 });
