@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "devarmory/manifest.json",
+  "description": "The tools of the devarmory, with checksums, so missing or damaged ones can be found and restored (glossary: devarmory). What one tool and one file hold is still [TODO]; BOS writes it empty: { \"tools\": {}, \"files\": {} }.",
+  "type": "object",
+  "properties": {
+    "tools": {
+      "description": "Each tool by its name. [TODO]",
+      "type": "object"
+    },
+    "files": {
+      "description": "Each file of the devarmory by its path, with its checksum. [TODO]",
+      "type": "object"
+    }
+  },
+  "required": ["tools", "files"]
+}
