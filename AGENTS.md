@@ -124,7 +124,7 @@ gitGraph
   own `dev/<name>` branch and merges it into `development` when a batch is done.
 - `revision` → `testing` → `releasing` → `master`; a stage that fails goes to
   `rejection`, which returns to `development` (from gitrecon). The loop is
-  data (`src/models/loop/data.ts`, a project's own `.bos/loop.json`);
+  data (`src/models/loop/data.ts`, a project's own `.github/bos.json`);
   `bos flow explain` shows it, `bos flow next-pr` / `automerge` move it on
   GitHub (phase 2: the workflows that call them are next).
 
@@ -140,6 +140,27 @@ gitGraph
 `core/version.ts` computes them; a scope keeps its version in
 `<scope>/.bos/scope.json` (decision Q5). Wiring the bumps to commits and
 TODO.md phases is phase 2.
+
+## The routine
+
+How a batch ends (phase 2: the short way `development → master`; the full
+loop through `revision → testing → releasing` comes later):
+
+1. Every step is a commit on the agent's `dev/<name>`; checked steps may be
+   merged and pushed to `origin/development` at any time.
+2. When the agent stops and needs the owner: merge `dev/<name>` into
+   `development` (`--no-ff`), push it, open the pull request
+   `development → master` (or leave the open one, it follows), and push
+   `development` to `revision`.
+3. On GitHub: `revision.yml` bumps the minor version if the current one is
+   released already and pushes the bump to `revision` and `development` -
+   **pull `development` before the next batch**. `pr-checks.yml` checks the
+   pull request. The owner merges it; `release.yml` tags, makes the GitHub
+   release, publishes to npm, syncs the wiki, calls the webhooks and merges
+   `master` back into `development`.
+
+Settings of all this: `.github/bos.json` (`loop`, `versioning`); `bos flow
+explain` shows them.
 
 ## Taking in a batch of the owner
 
@@ -206,5 +227,8 @@ top, dated). People answer in `docs/devlog/`, not here.
    `~/__WORKSHOP` unless the owner asks. A fixed bug gets a test.
 9. **Unknowns are `[TODO]`.** Don't invent meanings; mark interpretations
    *(assumed)*; open questions go to BRAINSTORM.md.
-10. **Ask first** before pushing, tagging, publishing (npm, GitHub releases),
-    changing remotes or repository settings.
+10. **Push freely, ask the rest.** An agent pushes `development`, its own
+    `dev/<name>` and `revision` without asking (decision of the owner, phase
+    2). Anything else - `master`, `testing`, `releasing`, tags, releases,
+    publishing (npm, the wiki's repository), remotes, repository settings -
+    is asked for first, with the reason.
