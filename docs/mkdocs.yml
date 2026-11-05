@@ -78,6 +78,7 @@ nav:
       - devlog/INQUIRIES.md
   - Changelog:
       - changelog/phase-0.md
+      - changelog/phase-1.md
   - For agents:
       - .agents/NOTES.md
       - .agents/CLEO.md
