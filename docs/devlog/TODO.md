@@ -50,7 +50,7 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] Workflows of the routine: `revision.yml` (minor bump), `release.yml` (tag, GitHub release, npm, wiki, webhooks, back into development), `flow.yml` (full loop, `workflow_dispatch` only); all with `workflow_dispatch` (Q10, Q11)
 - [x] GitHub wiki: `docs/.gh-wiki` (ignored), `scripts/gh-wiki.py` + `resources/docs-templates/`, `task docs:wiki` (inquiry)
 - [x] AGENTS.md: the routine, and what an agent pushes without asking (chat 1)
-- [ ] First run of the routine: `development` pushed, PR `development → master`, `development` pushed to `revision`
+- [x] First run of the routine: `development` pushed, PR `development → master`, `development` pushed to `revision`
 - [x] `scripts/` reduced to what is required: replaced scripts removed (they stay in `legacy/v0.6.1`), the rest listed as sketches to port (inquiry)
 - [ ] Tag `v1.0.0` and npm: by `release.yml` when the first PR to `master` is merged (needs the `npm_token` secret)
 - [ ] The full loop driven (`revision → testing → releasing → master`), `testing`/`releasing` moved to `master` (Q9, Q10: later)
