@@ -1,4 +1,4 @@
-import type { Git } from "../../bridges/git-integration/git-base.ts";
+import type { LocalGit } from "../../bridges/index.ts";
 import type { Context } from "../../core/context.ts";
 
 export type ReconcileOutcome = {
@@ -8,7 +8,7 @@ export type ReconcileOutcome = {
 };
 
 export type ReconcileContext = Context & {
-  git: Git;
+  git: LocalGit;
   files: { base: string; ours: string; theirs: string };
   texts: { base: string; ours: string; theirs: string };
   outcome: ReconcileOutcome;

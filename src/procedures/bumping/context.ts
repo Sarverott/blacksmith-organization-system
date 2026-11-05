@@ -1,4 +1,4 @@
-import type { Git } from "../../bridges/git-integration/git-base.ts";
+import type { LocalGit } from "../../bridges/index.ts";
 import type { Context } from "../../core/context.ts";
 import type { Bump, VersioningData } from "../../models/index.ts";
 
@@ -16,7 +16,7 @@ export type BumpContext = Context & {
   // a commit's bump: versioning.commits.bump, whether released or not
   everyCommit: boolean;
   versioning: VersioningData;
-  git: Git;
+  git: LocalGit;
   outcome: BumpOutcome;
 };
 
