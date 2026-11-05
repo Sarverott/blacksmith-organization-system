@@ -47,3 +47,8 @@ export function inside(root: string, target: string): string | null {
   const prefix = base === "/" ? "/" : `${base}/`;
   return path.startsWith(prefix) ? path.slice(prefix.length) : null;
 }
+
+// NOTE: if we have path-related handler functions then why we still uses like in "../cli.ts" messy parsing
+/*
+const CHECKOUT_ENV = new URL("../.env", import.meta.url);  // things like that can be and should be resolved here 
+*/

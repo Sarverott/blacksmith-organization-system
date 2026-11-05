@@ -4,6 +4,8 @@
 // directory is watched as soon as it appears, and running out of watches is an error.
 import { type FSWatcher, readdirSync, statSync, watch } from "node:fs";
 
+// NOTE: watchers should watch based on models managed elements according to each object's specific needs
+
 import type { Change } from "../core/host.ts";
 
 // Linux gives every user a fixed number of inotify watches; editors watching big trees can take them all

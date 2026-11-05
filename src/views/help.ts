@@ -28,3 +28,5 @@ export function helpText(tools: Tool[], version: string): string {
   }
   return lines.join("\n");
 }
+
+// NOTE: is there way to wrap command pipeline management into more compact coding and less messy?

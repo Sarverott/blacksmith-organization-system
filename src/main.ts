@@ -20,6 +20,9 @@ import {
   versioningOf,
   Workshop,
 } from "./models/_index.ts";
+/*
+import * as Models from "./models/_index.ts"; // cummulated namespacing - make it this way if possible
+*/
 import {
   automerging,
   type BootstrapContext,
@@ -44,7 +47,9 @@ import {
   type WorkshopReport,
   watching,
 } from "./procedures/_index.ts";
-
+/*
+import * as Procedures from "./procedures/_index.ts"; // cummulated namespacing - make it this way if possible
+*/
 export type BOSOptions = { workshop?: string };
 
 export type WatchOptions = {
@@ -55,6 +60,7 @@ export type WatchOptions = {
 };
 
 export class BOS {
+  // NOTE: ah! here it is! that was harder than i suspect to find it
   readonly host: Host;
   readonly options: BOSOptions;
   #workshop: Workshop | null = null;

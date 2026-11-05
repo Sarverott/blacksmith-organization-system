@@ -96,6 +96,18 @@ The agents' skills and the Claude Code plugin are
 [bos-skillset](https://github.com/Sarverott/bos-skillset), which builds on
 this core.
 
+## public repositories of source code with cloned mirrors
+- main source on github
+  - https://github.com/Sarverott/blacksmith-organization-system
+- mirror on gitea
+  - https://gitea.com/Sarverott/blacksmith-organization-system
+- mirror on gitlab
+  - https://gitlab.com/Sarverott/blacksmith-organization-system
+- mirror on bitbucket
+  - https://bitbucket.org/apokryf/blacksmith-organization-system/
+- mirror on sourcehut
+  - https://git.sr.ht/~sarverott/blacksmith-organization-system
+
 ## Where the idea came from
 
 The basic idea was to automate repository control and make order in project

@@ -12,3 +12,5 @@ export function authorsText(outcome: CreditOutcome): string {
     ...outcome.added.map((text) => `  + ${text}`),
   ].join("\n");
 }
+
+// NOTE: looks like something from models - at least there it should be
