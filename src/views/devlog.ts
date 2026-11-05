@@ -14,7 +14,7 @@ export type DevlogState = {
 
 export function stateMarkdown(state: DevlogState): string {
   const phase = (p: Phase) =>
-    `| ${p.number}: ${p.title} | ${p.done}/${p.total} | ${p.complete ? "complete" : "in progress"} |`;
+    `| ${p.number}: ${p.title} | ${p.done}/${p.total} | ${p.complete ? "complete" : p.done ? "in progress" : "not started"} |`;
   const list = (items: string[]) => (items.length ? items.map((item) => `- ${item}`).join("\n") : "None.");
   return `# State of development
 
