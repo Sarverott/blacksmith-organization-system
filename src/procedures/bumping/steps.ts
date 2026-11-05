@@ -17,16 +17,24 @@ export function read(context: BumpContext): void {
   const version = readManifest(context, "package.json")?.version;
   if (!version) throw new Error(`no version in ${join(context.projectPath, "package.json")}`);
   outcome.from = version;
-  outcome.bump = context.versioning.bumps[station] ?? null;
+  outcome.bump = context.everyCommit ? context.versioning.commits.bump : (context.versioning.bumps[station] ?? null);
   if (!outcome.bump) outcome.reason = `nothing bumps on ${station}: ${version} stays`;
+}
+
+// the tags that release the line a bump leaves: patch 1.2.3 → v1.2.3,
+// minor → v1.2.*, major → v1.*
+function lineOf(context: BumpContext, version: string, bump: Bump): string {
+  const [x, y] = version.split(".");
+  const prefix = context.versioning.tagPrefix;
+  return bump === "patch" ? `${prefix}${version}` : bump === "minor" ? `${prefix}${x}.${y}.*` : `${prefix}${x}.*`;
 }
 
 export function check(context: BumpContext): void {
   const { outcome } = context;
-  if (outcome.reason || !outcome.from) return;
-  const tag = `${context.versioning.tagPrefix}${outcome.from}`;
-  if (!context.git.tagExists(tag)) {
-    Object.assign(outcome, { action: "kept", to: outcome.from, reason: `${tag} is not released yet: it stays` });
+  if (outcome.reason || !outcome.from || !outcome.bump || context.everyCommit) return;
+  const line = lineOf(context, outcome.from, outcome.bump);
+  if (context.git.tags(line).length === 0) {
+    Object.assign(outcome, { action: "kept", to: outcome.from, reason: `${line} is not released yet: it stays` });
   }
 }
 

@@ -2,7 +2,8 @@
 # master (opened by loop-revision-bump-checks-pull-request.yml), a person's merge. In order:
 #   1. checks; a version reaching master already released gets the patch (a hotfix)
 #   2. tag v<version> and the GitHub release (skipped when that tag exists)
-#   3. the dev community hears of it (Discord, Telegram)
+#   3. the dev community hears of it (Discord, Telegram); the release gets the package's
+#      file, the release `latest` moves to it, VirusTotal scans its files
 #   4. published, each by its own workflow: npm on npmjs.org and on GitHub Packages
 #      (pre-releases too); a full release only: the container image on Docker Hub and
 #      ghcr.io. In parallel the docs: Read the Docs activates and builds the tag, the
@@ -71,6 +72,38 @@ jobs:
       - uses: actions/checkout@v4
       - uses: go-task/setup-task@v1
       - run: task workflows:notify -- community "${{ needs.release.outputs.tag }}"
+
+  files:
+    needs: release
+    if: needs.release.outputs.tag
+    runs-on: ubuntu-latest
+    environment: publish-env
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ needs.release.outputs.tag }}
+      PRERELEASE: ${{ needs.release.outputs.prerelease }}
+      VIRUSTOTAL_API_KEY: ${{ secrets.VIRUSTOTAL_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ needs.release.outputs.tag }}" }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - uses: go-task/setup-task@v1
+      - run: npm ci
+      - name: The package's file
+        id: pack
+        run: task workflows:pack -- "$RUNNER_TEMP/files"
+      - name: The file into the release
+        run: gh release upload "$TAG" "${{ steps.pack.outputs.file }}" --clobber
+      - name: The release latest, moved here
+        run: >-
+          task workflows:rolling-release -- latest "$TAG" "$PRERELEASE"
+          "The last published release, $TAG: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG - it moves with every release."
+          "${{ steps.pack.outputs.file }}"
+      - name: Every file of the release to VirusTotal
+        run: task workflows:virustotal -- "$TAG"
 
   publish:
     needs: release
@@ -144,7 +177,7 @@ jobs:
       - run: task workflows:wiki -- "${{ needs.release.outputs.tag }}"
 
   social:
-    needs: [release, publish, github-npm, docker-hub, ghcr, readthedocs, wiki]
+    needs: [release, files, publish, github-npm, docker-hub, ghcr, readthedocs, wiki]
     if: ${{ !cancelled() && needs.release.outputs.tag }}
     runs-on: ubuntu-latest
     env:
@@ -156,7 +189,7 @@ jobs:
 
   back:
     # after everything of the release, whatever it ended with; pull development after it
-    needs: [release, community, publish, github-npm, docker-hub, ghcr, readthedocs, wiki, social]
+    needs: [release, community, files, publish, github-npm, docker-hub, ghcr, readthedocs, wiki, social]
     if: ${{ !cancelled() && needs.release.outputs.tag }}
     runs-on: ubuntu-latest
     permissions:
@@ -166,6 +199,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
       - uses: go-task/setup-task@v1
       - name: master back into development
         run: task workflows:merge-into -- origin/master development

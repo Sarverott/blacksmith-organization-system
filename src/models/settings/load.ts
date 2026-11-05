@@ -25,11 +25,26 @@ export function settingsOf(host: Host, projectPath: string): Settings {
 
 export function versioningOf(settings: Settings): VersioningData {
   const own = settings.data.versioning ?? {};
-  const versioning = { ...DEFAULT_VERSIONING, ...own, bumps: { ...DEFAULT_VERSIONING.bumps, ...own.bumps } };
+  const versioning: VersioningData = {
+    ...DEFAULT_VERSIONING,
+    ...own,
+    bumps: { ...DEFAULT_VERSIONING.bumps, ...own.bumps },
+    commits: { ...DEFAULT_VERSIONING.commits, ...own.commits },
+  };
+  if (!BUMPS.includes(versioning.commits.bump)) {
+    throw new Error(
+      `${settings.source}: versioning.commits.bump is "${versioning.commits.bump}", not one of ${BUMPS.join(", ")}`,
+    );
+  }
   for (const [branch, bump] of Object.entries(versioning.bumps)) {
     if (!BUMPS.includes(bump)) {
       throw new Error(`${settings.source}: versioning.bumps.${branch} is "${bump}", not one of ${BUMPS.join(", ")}`);
     }
   }
   return versioning;
+}
+
+// does a branch match one of the patterns ("dev/*": a prefix, else the name)
+export function branchMatches(branch: string, patterns: string[]): boolean {
+  return patterns.some((p) => (p.endsWith("*") ? branch.startsWith(p.slice(0, -1)) : branch === p));
 }

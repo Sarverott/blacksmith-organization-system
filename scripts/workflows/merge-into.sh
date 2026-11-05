@@ -7,6 +7,8 @@ source_ref="${1:?source ref}"
 target="${2:?target branch}"
 
 bot_identity
+# the version of package.json and its lock merges by BOS (.gitattributes)
+git config merge.bos-version.driver 'node src/cli.ts flow merge-version %O %A %B'
 git fetch origin "$target"
 git checkout -B "$target" "origin/$target"
 git merge --no-edit "$source_ref"
