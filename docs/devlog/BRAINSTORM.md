@@ -1,42 +1,49 @@
 # BRAINSTORM: open questions
 
-Questions for the owner, `Q<n>`, each with a *Lean:* (what the agent would
-pick). Answer in `docs/devlog/ORDERS.md` or in the chat; answered questions
-move word for word into `docs/changelog/phase-<n>.md` with their
-**Decision:**.
+Questions for the owner, `## Q<n>. <title>`, each with a *Lean:* (what the
+agent would pick). Answer in [ORDERS.md](ORDERS.md); answered questions move
+word for word into `docs/changelog/phase-<n>.md` with their **Decision:**.
+Q1–Q5 are answered (phase 0 of the changelog).
 
-## Q1. `developement` or `development`?
+## Q6. The forge holds 325 projects checked out on `master` or `main`
 
-BOS repos here use `developement`; gitrecon and Amoorion use `development`.
-The loop config and the workflows need one name (or both as aliases).
+`bos workshop status` on this host: 15 scopes, 334 projects; 325 of them are
+on `master`/`main`, many of them clones of others' or the owner's public
+repositories (e.g. `forge/sarverott/github-repos/*`). The forge's glossary
+says what is in the forge is being worked on, and work happens on
+`development`. So either these clones are not forge material, or the rule is
+too strict for them.
 
-*Lean:* rename to `development` in this repo during phase 0 and accept both
-in the loop engine as aliases, so old repos keep working.
+*Lean:* mirrors and read-only clones belong in `archive/` (glossary: archive
+holds mirrors); the warning stays. A scope can mark a folder as mirrors in its
+`.bos/scope.json` (`"mirrors": ["github-repos"]`) until they are moved.
 
-## Q2. Which repository gets the name `Sarverott/blacksmith-organization-system`?
+## Q7. Which version does the reforged core start from?
 
-The core is built here, but this repo's origin is
-`OLD-VERSIONS_blacksmith-organization-system`, while `bos-skillset` owns the
-canonical name and the npm/GitHub package `blacksmith-organization-system`
-(v1.0.1).
+`package.json` says `0.6.1` (legacy). npm has `blacksmith-organization-system`
+`0.4.2` (latest) and `1.0.0-dev.3` (dev); bos-skillset published `1.0.1` under
+the same name on GitHub Packages. The reforge flips the script (CommonJS →
+TypeScript, new mechanics).
 
-*Lean:* the core takes the canonical name and the npm package; bos-skillset
-becomes `Sarverott/bos-skillset` (the URL already listed in DRAFT.md).
-Renames on GitHub are the owner's to do.
+*Lean:* a flip: `1.0.0` once phase 1 is complete, published to npm as `next`
+until phase 2; bos-skillset publishes under `bos-skillset` from then on.
 
-## Q3. What happens to the legacy `src/`?
+## Q8. Where do scrapnotes of a project go?
 
-*Lean:* tag it (`legacy/v0.6.1`), remove it in the first commit of phase 0;
-keep only the procedure names as glossary/TODO entries.
+gitrecon keeps `docs/devlog/scrapnote-<UNIXUSAT>.md`; the workshop rules put
+the owner's loose notes in `craftbook/scrapnotes/`; this repo has
+`docs/scrapnote-example.md` and an empty `docs/.scrapnotes/`.
 
-## Q4. The `bos.*` subrepositories (models, commands, toolsets, actions, events, factors, interfaces, listeners, methods, controllers)
+*Lean:* notes of a working round on this project: `docs/devlog/scrapnote-<UNIXUSAT>.md`
+(`task devlog:scrapnote`); notes not tied to one project: `craftbook/scrapnotes/`.
+`docs/scrapnote-example.md` moves into the devlog.
 
-Submodules, npm dependencies, or folded into `src/` of the core?
+## Q9. The other local branches of this repo
 
-*Lean:* fold into `src/` while the core is rebuilt (one repo is easier to
-change), split out later only what another project really imports.
+`drafting`, `moderation`, `publishing`, `dev/reforge`, `dev/submodule-gits`
+and the old `revision`, `testing`, `releasing` point at commits of the legacy
+core. `dev/reforge` holds one commit not on GitHub.
 
-## Q5. GRIH: where does a scope keep its version?
-
-*Lean:* a file in the scope directory (e.g. `forge/<scope>/.bos/scope.json`,
-`version: "G.R.I.H"`), bumped by the core when any of its projects bumps.
+*Lean:* keep `revision`, `testing`, `releasing` and move them to `master` when
+the loop starts (phase 2); tag `dev/reforge` as `legacy/reforge` and delete
+the rest locally.
