@@ -1,0 +1,42 @@
+# Work landed on revision (the routine: an agent pushes development to revision when it
+# stops for the owner). Bumps the version as .github/bos.json says (default: minor), but
+# only a released one, and brings the bump back into development: pull it.
+name: revision
+
+on:
+  push:
+    branches: [revision]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: revision
+  cancel-in-progress: false
+
+env:
+  HUSKY: "0"
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: revision, fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - name: Bump, commit, and push to revision and development
+        # pushed with this workflow's token, it starts no other workflow
+        run: |
+          out=$(node src/cli.ts flow bump revision --json)
+          echo "$out"
+          [ "$(jq -r .action <<< "$out")" = bumped ] || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -qam "chore(release): bump $(jq -r '.from + " → " + .to' <<< "$out") (landed on revision)"
+          git push origin HEAD:revision
+          git fetch origin development
+          git checkout -B development origin/development
+          git merge --no-edit revision
+          git push origin development

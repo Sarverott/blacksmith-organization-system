@@ -5,7 +5,7 @@ Opens the pull request of a branch's forward step in the craft loop
 workflow on every push to a station or a contributor's branch; safe to run by
 hand with `--dryRun`.
 
-1. `route`: the forward step from the project's loop (`.bos/loop.json` or the
+1. `route`: the forward step from the project's loop (`.github/bos.json` or the
    default). Nothing to do when the branch is not in the loop, or when
    `autocreate` is off.
 2. `weigh`: ask GitHub what the branch has that its target has not. Nothing

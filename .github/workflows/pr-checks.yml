@@ -1,0 +1,46 @@
+# Every check on a pull request into a station of the loop, then automerge when the
+# loop lets it (.github/bos.json; a pull request into master always waits for a person).
+name: pr-checks
+
+on:
+  pull_request:
+    branches: [master, development, revision, testing, releasing, rejection]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: pull request number (its checks run on this branch's code)
+        type: number
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number || inputs.pr }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    uses: ./.github/workflows/checks.yml
+    with:
+      code: true
+      docs: true
+      package: true
+      commits: ${{ github.event.pull_request.base.sha || '' }}
+
+  automerge:
+    needs: checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - name: Merge if the loop lets it
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number || inputs.pr }}
+        run: node src/cli.ts flow automerge "$PR"

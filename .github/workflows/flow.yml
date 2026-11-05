@@ -1,0 +1,36 @@
+# The full loop (revision → testing → releasing → master): opens the pull request of a
+# branch's forward step (bos flow next-pr). By hand only until the full loop is driven
+# (decisions Q10, Q11); the routine goes the short way development → master.
+name: flow
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: the branch whose forward step is proposed
+        type: string
+        required: true
+      dryRun:
+        description: only say what would be done
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  next-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ inputs.branch }}" }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ inputs.branch }}
+          DRY_RUN: ${{ inputs.dryRun }}
+        run: |
+          if [ "$DRY_RUN" = true ]; then node src/cli.ts flow next-pr "$BRANCH" --dryRun
+          else node src/cli.ts flow next-pr "$BRANCH"; fi

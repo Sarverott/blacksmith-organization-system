@@ -42,13 +42,19 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] Documentation: one audience per README - `README.md` (npm and everywhere), `docs/README.md` (the documentation's index), `.github/README.md` (GitHub)
 - [x] Documentation: `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` for the contributors committee
 - [x] Glossary: `grih` and `craft-loop` (from the legacy `docs/README.md`)
-- [ ] Tag `v1.0.0` and `npm publish --tag next` (Q7; the owner's go-ahead first)
 - [x] The loop as data: stations, directions, `rejection`, contributors, automerge per station (from gitrecon); default in `src/models/loop/data.ts`, a project's own `.bos/loop.json`
 - [x] `bos flow explain` / `next` / `next-pr` / `automerge`, through the GitHub bridge (`Host.run` → `gh`)
-- [ ] `revision`, `testing`, `releasing` on GitHub (they exist only locally, on the legacy commit)
-- [ ] Project versions: a step per commit, a phase when TODO.md completes one
-- [ ] GitHub workflows that only call `bos flow`
-- [ ] `revision`, `testing`, `releasing` moved to `master` when the loop starts (Q9)
+- [x] Settings in `.github/bos.json`: `loop` (replaces `.bos/loop.json`) and `versioning` (bumps per station) (chat 2)
+- [x] `bos flow bump <station>`: the project's version bumped per `versioning`, only when already released (tagged) (chat 2)
+- [x] Checks split: one reusable `checks.yml` (types, lint, tests, build, docs, commits, package); `check.yml` runs only what a push changed; `pr-checks.yml` runs all (chat 3)
+- [x] Workflows of the routine: `revision.yml` (minor bump), `release.yml` (tag, GitHub release, npm, wiki, webhooks, back into development), `flow.yml` (full loop, `workflow_dispatch` only); all with `workflow_dispatch` (Q10, Q11)
+- [x] GitHub wiki: `docs/.gh-wiki` (ignored), `scripts/gh-wiki.py` + `resources/docs-templates/`, `task docs:wiki` (inquiry)
+- [x] AGENTS.md: the routine, and what an agent pushes without asking (chat 1)
+- [x] First run of the routine: `development` pushed, PR `development → master`, `development` pushed to `revision`
+- [x] `scripts/` reduced to what is required: replaced scripts removed (they stay in `legacy/v0.6.1`), the rest listed as sketches to port (inquiry)
+- [ ] Tag `v1.0.0` and npm: by `release.yml` when the first PR to `master` is merged (needs the `npm_token` secret)
+- [ ] The full loop driven (`revision → testing → releasing → master`), `testing`/`releasing` moved to `master` (Q9, Q10: later)
+- [ ] Rulesets (`docs/rulesets/`): meaning [TODO] from the owner
 - [ ] Mirrors: glossary page `archive/.repos-mirrors` (each mirror a sarcophag) (Q6)
 - [ ] Procedure `archiving`: `bos archive mirror <forge path>` → bare clone `archive/.repos-mirrors/<scope>___<project>.git`, dry run first, the forge copy removed only on confirmation (Q6)
 - [ ] Inspecting: a finding for clones in the forge that belong among the mirrors (Q6)
@@ -58,6 +64,6 @@ history: [../changelog/](../changelog/phase-0.md).
 
 - [ ] Containers: one per agent host CLI (Codex, Claude Code), one for the owner
 - [ ] Workmodes: sets of Taskfile tasks with file watchers and git hooks
-- [ ] A git bridge in `hosts/` (status, add, commit), the only door to git
+- [ ] The git bridge (`src/bridges/git.ts`, tags only so far) grows: status, add, commit
 - [ ] Scrapnote vaults: `craftbook/<scope>___<project>/scrapnotes/` as a git repository (Obsidian vault), `<project>/docs/.scrapnotes` its link, ignored by the project (Q8)
 - [ ] Workmode `scrapnotes`: commit every saved note after a quiet moment; `.obsidian/workspace*.json` ignored (Q8)

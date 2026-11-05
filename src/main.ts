@@ -2,19 +2,33 @@
 // the procedures on it. Every face of BOS (CLI, library, later MCP and HTTP) goes
 // through these methods.
 //   const bos = new BOS(new NodeHost());  const report = await bos.inspect();
+import { Git } from "./bridges/git.ts";
 import { GitHub } from "./bridges/github.ts";
 import { createContext } from "./core/context.ts";
 import type { Host } from "./core/host.ts";
 import type { LoopEvent } from "./core/version.ts";
-import { type Loop, loopOf, type Project, projectAround, Workshop } from "./models/_index.ts";
+import {
+  type Loop,
+  loopOfSettings,
+  type Project,
+  projectAround,
+  type Settings,
+  settingsOf,
+  type VersioningData,
+  versioningOf,
+  Workshop,
+} from "./models/_index.ts";
 import {
   automerging,
   type BootstrapContext,
+  type BumpOutcome,
   bootstrapping,
+  bumping,
   emptyReport,
   type FlowOutcome,
   inspecting,
   proposing,
+  unbumped,
   undecided,
   type VersionContext,
   versioning,
@@ -71,10 +85,32 @@ export class BOS {
     return versioning.run({ ...createContext(this.host, { dryRun }), workshop: this.workshop, scope, event });
   }
 
-  // the craft loop of the project around dir (default: the current directory)
-  loop(dir?: string): { project: Project; loop: Loop } {
+  // the settings of the project around dir (default: the current directory): .github/bos.json
+  settings(dir?: string): { project: Project; settings: Settings; loop: Loop; versioning: VersioningData } {
     const project = projectAround(this.host, dir);
-    return { project, loop: loopOf(this.host, project.path) };
+    const settings = settingsOf(this.host, project.path);
+    return { project, settings, loop: loopOfSettings(settings), versioning: versioningOf(settings) };
+  }
+
+  // the craft loop of the project around dir
+  loop(dir?: string): { project: Project; loop: Loop } {
+    const { project, loop } = this.settings(dir);
+    return { project, loop };
+  }
+
+  // bump the project's version for work landing on a station (only a released version moves)
+  async bump(station: string, { dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {}): Promise<BumpOutcome> {
+    const { project, versioning } = this.settings(dir);
+    const git = new Git(this.host, project.path);
+    const context = {
+      ...createContext(this.host, { dryRun }),
+      projectPath: project.path,
+      station,
+      versioning,
+      git,
+      outcome: unbumped(),
+    };
+    return (await bumping.run(context)).outcome;
   }
 
   // open the pull request of a branch's forward step on GitHub

@@ -3,6 +3,7 @@
 //   const bos = new BOS(new NodeHost());
 //   await bos.bootstrap();  const report = await bos.inspect();
 
+export { Git } from "./bridges/git.ts";
 export { type Comparison, GitHub, type PullRequest } from "./bridges/github.ts";
 export { type Context, createContext, createIfMissing, type TraceEntry } from "./core/context.ts";
 export { Element, type ElementClass, type ElementNode } from "./core/element.ts";

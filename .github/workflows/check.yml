@@ -1,34 +1,46 @@
-# The same gate as `task check`, on every push and pull request of the loop's branches.
+# The quick check of a push to development or a contributor's branch: only the parts
+# of checks.yml that what was pushed touches (code, docs). Everything runs on pull
+# requests (pr-checks.yml).
 name: check
 
 on:
   push:
-    branches: [development, "dev/**", revision, testing, releasing, master]
-  pull_request:
+    branches: [development, "dev/**"]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  check:
+  changes:
     runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.what.outputs.code }}
+      docs: ${{ steps.what.outputs.docs }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
+        with: { fetch-depth: 0 }
+      - name: What the push changed
+        id: what
         env:
-          HUSKY: "0"
-      - run: npm run check
-      - run: npm run build
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = 0000000000000000000000000000000000000000 ] \
+            || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            # a new branch, a forced push or a run by hand: everything
+            echo "code=true" >> "$GITHUB_OUTPUT"; echo "docs=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          files=$(git diff --name-only "$BEFORE" HEAD)
+          printf '%s\n' "$files"
+          code=false; docs=false
+          grep -qvE '^(docs/|resources/docs-templates/|scripts/gh-wiki\.py$|[^/]*\.md$|\.github/[^/]*\.md$)' <<< "$files" && code=true
+          grep -qE '^(docs/|README\.md$)' <<< "$files" && docs=true
+          echo "code=$code" >> "$GITHUB_OUTPUT"; echo "docs=$docs" >> "$GITHUB_OUTPUT"
 
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
-      - run: uv run --project docs mkdocs build --strict -f docs/mkdocs.yml
-        env:
-          NO_MKDOCS_2_WARNING: "1"
+  checks:
+    needs: changes
+    if: needs.changes.outputs.code == 'true' || needs.changes.outputs.docs == 'true'
+    uses: ./.github/workflows/checks.yml
+    with:
+      code: ${{ needs.changes.outputs.code == 'true' }}
+      docs: ${{ needs.changes.outputs.docs == 'true' }}

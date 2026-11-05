@@ -46,10 +46,12 @@ The checklist is [TODO.md](TODO.md); the versions are in [ROADMAP.md](ROADMAP.md
 1. **Proof of work.** The core builds the base of a workshop, listens to its
    changes and inspects it as a coherent environment; scopes carry GRIH
    versions; the devlog is read as data.
-2. **The loop as code.** The branch loop as data (`loop.json`: stations,
-   directions, `rejection`, automerge) and its engine (`bos flow`), project
-   versions bumped per step and phase from TODO.md, GitHub workflows that only
-   call the core.
+2. **The loop as code.** The branch loop as data (`.github/bos.json`:
+   stations, directions, `rejection`, automerge, bumps per station) and its
+   engine (`bos flow`); GitHub workflows that only call the core and run the
+   routine: checks on pull requests, a release on every merge into `master`
+   (tag, npm, docs, wiki, webhooks), the short way `development → master`
+   first, the full loop later.
 3. **Workplaces.** `dev/<name>` branches merged into `development`; a
    container per agent host CLI (Codex, Claude Code) and one for the owner;
    workmodes as sets of Taskfile tasks with file watchers and git hooks.
