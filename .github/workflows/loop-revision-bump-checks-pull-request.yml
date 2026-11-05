@@ -3,8 +3,9 @@
 #   1. every check, the commits since master too
 #   2. .github/AUTHORS names every entity of the commits (bos project authors)
 #   3. the version bumped as .github/bos.json says (default: minor), only a released one
-#   4. what 2 and 3 committed goes back into development: pull it
-#   5. the pull request revision → master is opened, or the open one follows; the owner
+#   4. the release `nightly` moves here: an early pre-release with the package's file
+#   5. what 2 and 3 committed goes back into development: pull it
+#   6. the pull request revision → master is opened, or the open one follows; the owner
 #      merges it and loop-master-release-and-publish.yml releases
 # A pull request opened with the workflow's token starts no workflow, so its checks are
 # step 1, linked from its description. Steps: scripts/workflows/ (task workflows:<name>).
@@ -56,7 +57,7 @@ jobs:
       - uses: actions/checkout@v4
         with: { ref: revision, fetch-depth: 0 }
       - uses: actions/setup-node@v4
-        with: { node-version: 24 }
+        with: { node-version: 24, cache: npm }
       - uses: go-task/setup-task@v1
       - name: Every entity of the commits in .github/AUTHORS
         id: authors
@@ -64,6 +65,18 @@ jobs:
       - name: Bump and push to revision
         id: bump
         run: task workflows:bump -- revision "landed on revision"
+      - run: npm ci
+      - name: The package's file
+        id: pack
+        run: task workflows:pack -- "$RUNNER_TEMP/files"
+      - name: The release nightly, moved here
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FILE: ${{ steps.pack.outputs.file }}
+        run: >-
+          task workflows:rolling-release -- nightly HEAD true
+          "Early pre-release of revision: what the next release will hold, before review. It moves with every push to revision and is not on npm; install the .tgz below with npm install <its URL>."
+          "$FILE"
       - name: What was committed here, into development
         if: steps.authors.outputs.changed == 'true' || steps.bump.outputs.bumped == 'true'
         run: task workflows:merge-into -- revision development

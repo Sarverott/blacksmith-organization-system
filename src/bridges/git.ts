@@ -22,6 +22,18 @@ export class Git {
     return this.git(["tag", "--list", tag]) === tag;
   }
 
+  // the tags that match a glob, e.g. v1.2.*
+  tags(pattern: string): string[] {
+    return this.git(["tag", "--list", pattern]).split("\n").filter(Boolean);
+  }
+
+  // a three-way merge of files into ours (git merge-file); true when it has conflicts
+  mergeFile(ours: string, base: string, theirs: string): boolean {
+    const { status, stderr } = this.host.run("git", ["merge-file", ours, base, theirs], { cwd: this.cwd });
+    if (status < 0 || status > 127) throw new Error(`git merge-file: ${stderr.trim()}`);
+    return status > 0;
+  }
+
   // everyone in the history of HEAD, oldest first: author, committer and each
   // Co-authored-by trailer, as "Name <email>" lines (repeated; the caller dedupes)
   identities(): string[] {

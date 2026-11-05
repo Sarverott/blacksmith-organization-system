@@ -12,16 +12,21 @@ export type VersioningData = {
   bumps: Record<string, Bump>;
   // the tag of a released version: <prefix><version>
   tagPrefix: string;
+  // every commit on these branches (a pattern may end with *) bumps the version,
+  // released or not: each commit has its own version (git hook pre-commit)
+  commits: { branches: string[]; bump: Bump };
 };
 
-// the routine of phase 2: landing on revision is a minor bump, reaching
-// master without it a patch ("hotfix"); only a released version is bumped
+// the routine of phase 2: every commit on a contributor's branch is a patch,
+// landing on revision is a minor bump, reaching master without it a patch
+// ("hotfix"); a station bumps only when the version's line is released
 export const DEFAULT_VERSIONING: VersioningData = {
   bumps: { revision: "minor", master: "patch" },
   tagPrefix: "v",
+  commits: { branches: ["dev/*"], bump: "patch" },
 };
 
 export type SettingsData = {
   loop?: Partial<LoopData>;
-  versioning?: Partial<VersioningData>;
+  versioning?: Partial<Omit<VersioningData, "commits">> & { commits?: Partial<VersioningData["commits"]> };
 };

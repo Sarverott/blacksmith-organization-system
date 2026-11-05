@@ -9,6 +9,12 @@
 [![docs](https://readthedocs.org/projects/blacksmith-organization-system/badge/?version=latest)](https://blacksmith-organization-system.readthedocs.io/)
 [![wiki](https://img.shields.io/badge/wiki-GitHub-blue)](https://github.com/Sarverott/blacksmith-organization-system/wiki)
 [![license](https://img.shields.io/github/license/Sarverott/blacksmith-organization-system)](https://github.com/Sarverott/blacksmith-organization-system/blob/master/LICENSE)
+[![bundlephobia](https://img.shields.io/badge/bundlephobia-size-informational)](https://bundlephobia.com/package/blacksmith-organization-system)
+[![socket.dev](https://img.shields.io/badge/socket.dev-supply%20chain-informational)](https://socket.dev/npm/package/blacksmith-organization-system)
+[![Snyk](https://img.shields.io/badge/Snyk-advisor-informational)](https://snyk.io/advisor/npm-package/blacksmith-organization-system)
+[![npmgraph](https://img.shields.io/badge/npmgraph-dependencies-informational)](https://npmgraph.js.org/?q=blacksmith-organization-system)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-release%20files-informational)](https://github.com/Sarverott/blacksmith-organization-system/releases/tag/latest)
+[![nightly](https://img.shields.io/badge/nightly-revision-orange)](https://github.com/Sarverott/blacksmith-organization-system/releases/tag/nightly)
 
 The **core of the Blacksmith Organization System** (BOS): a TypeScript module
 and the `bos` command that build, watch and inspect a programmer's workshop

@@ -23,6 +23,7 @@
   },
   "versioning": {
     "bumps": { "revision": "minor", "master": "patch" },
-    "tagPrefix": "v"
+    "tagPrefix": "v",
+    "commits": { "branches": ["dev/*"], "bump": "patch" }
   }
 }
