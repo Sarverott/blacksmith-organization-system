@@ -1,7 +1,8 @@
 # Publishes the package to npmjs.org: called by release.yml for every release, or run
 # when a person creates a GitHub release. A pre-release goes under the npm tag `next`
-# (decision Q7: until phase 2 is done), a release under `latest`. Needs the repository
-# secret npm_token (an npm automation token); without it, it says so and stops.
+# (decision Q7: until phase 2 is done), a release under `latest`. The token is NPM_TOKEN
+# of the environment publish-env; without it, it says so and stops.
+# Steps: scripts/workflows/publish.sh (task workflows:publish).
 name: publish
 
 on:
@@ -33,21 +34,17 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: publish-env
     env:
-      NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       HUSKY: "0"
     steps:
-      - if: env.NODE_AUTH_TOKEN == ''
-        run: echo "::warning::no npm_token secret - nothing is published"
-      - if: env.NODE_AUTH_TOKEN != ''
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with: { ref: "${{ inputs.tag || github.event.release.tag_name }}" }
-      - if: env.NODE_AUTH_TOKEN != ''
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
-      - if: env.NODE_AUTH_TOKEN != ''
-        run: npm ci
-      - if: env.NODE_AUTH_TOKEN != ''
-        run: npm publish --provenance --tag ${{ (inputs.prerelease || github.event.release.prerelease) && 'next' || 'latest' }}
+      - uses: go-task/setup-task@v1
+      - run: npm ci
+      - run: task workflows:publish -- ${{ (inputs.prerelease || github.event.release.prerelease) && 'next' || 'latest' }}
