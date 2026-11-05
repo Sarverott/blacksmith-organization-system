@@ -429,3 +429,16 @@ cannot be undone per model; c) leaves the choosing in every procedure.
   covers both kinds *(assumed: the secret is an API token; the value is not
   readable)*.
 
+
+## UNIXUSAT=1793922685633 · GitGuardian on PR #10
+
+GitGuardian, newly installed by the owner, checks each pull request. On
+PR #10 it found two "Basic Auth String"s in `tests/workflows.test.ts`
+(commits 1156f7a, 873913a). Both were the test's own fixtures:
+`https://x-token-auth:access-token@bitbucket.org`, a made-up token in an
+expected URL. No real secret was committed. The test now builds that URL
+from its parts, so no `user:token@host` sits in the source. The findings
+stay in those two commits: incident 39725129 is marked a false positive (a
+test value) in GitGuardian's dashboard by the owner. Bitbucket still fails
+to sign in after the username fix, so its token is on the owner's side too
+(TODO).
