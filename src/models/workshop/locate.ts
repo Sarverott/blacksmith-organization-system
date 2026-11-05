@@ -4,10 +4,15 @@ import { basename, dirname, inside, join, normalize } from "../../core/paths.ts"
 
 export const WORKSHOP_DIRNAME = "__WORKSHOP";
 
-export function findAncestorWorkshop(start: string): string | null {
+// $WORKSHOP_RENAME names the workshop directory differently (e.g. ".__WORKSHOP")
+export function workshopName(host: Host): string {
+  return host.env("WORKSHOP_RENAME")?.trim() || WORKSHOP_DIRNAME;
+}
+
+export function findAncestorWorkshop(start: string, name = WORKSHOP_DIRNAME): string | null {
   let dir = normalize(start);
   while (dir !== "/") {
-    if (basename(dir) === WORKSHOP_DIRNAME) return dir;
+    if (basename(dir) === name) return dir;
     dir = dirname(dir);
   }
   return null;
@@ -15,14 +20,24 @@ export function findAncestorWorkshop(start: string): string | null {
 
 export type Located = { root: string; source: string };
 
+// the workshop itself ($BOS_WORKSHOP), or the directory that holds it ($WORKSHOP_ROOT,
+// e.g. a partition kept for tests and demonstrations, so the home workshop stays private)
 export function locateWorkshop(host: Host, explicit?: string): Located {
   const absolute = (path: string) => normalize(path.startsWith("/") ? path : join(host.cwd(), path));
-  const variable = host.env("BOS_WORKSHOP")?.replace(/^~(?=$|\/)/, host.home());
+  const variable = (name: string) =>
+    host
+      .env(name)
+      ?.trim()
+      .replace(/^~(?=$|\/)/, host.home()) || undefined;
+  const name = workshopName(host);
+  const workshop = variable("BOS_WORKSHOP");
+  const root = variable("WORKSHOP_ROOT");
   const rules: [string, () => string | null | undefined][] = [
     ["--workshop option", () => explicit && absolute(explicit)],
-    ["$BOS_WORKSHOP", () => variable && absolute(variable)],
-    ["ancestor of the current directory", () => findAncestorWorkshop(host.cwd())],
-    ["default per user", () => join(host.home(), WORKSHOP_DIRNAME)],
+    ["$BOS_WORKSHOP", () => workshop && absolute(workshop)],
+    ["$WORKSHOP_ROOT", () => root && join(absolute(root), name)],
+    ["ancestor of the current directory", () => findAncestorWorkshop(host.cwd(), name)],
+    ["default per user", () => join(host.home(), name)],
   ];
   for (const [source, rule] of rules) {
     const root = rule();

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // bos <model> <tool> [operands] [--flags]  ·  bos help  ·  bos --version
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 import { inputFor, parseArgs } from "./core/tool.ts";
 import { NodeHost } from "./hosts/node.ts";
@@ -9,6 +9,12 @@ import { findTool, TOOLS } from "./tools/_index.ts";
 import { helpText } from "./views/help.ts";
 
 const VERSION: string = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).version;
+
+// A checkout of the core may carry its own .env (see .env.example): the workshop it is developed
+// against, e.g. WORKSHOP_ROOT on a test partition, so the home workshop stays out of sight.
+// An installed package has none; variables already set in the shell win.
+const CHECKOUT_ENV = new URL("../.env", import.meta.url);
+if (existsSync(CHECKOUT_ENV)) process.loadEnvFile(CHECKOUT_ENV);
 
 async function main(argv: string[]): Promise<number> {
   const { operands, flags } = parseArgs(argv);

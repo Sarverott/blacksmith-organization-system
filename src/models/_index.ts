@@ -17,4 +17,5 @@ export {
   type Place,
   placeOf,
   WORKSHOP_DIRNAME,
+  workshopName,
 } from "./workshop/locate.ts";

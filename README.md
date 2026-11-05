@@ -47,7 +47,14 @@ node src/cli.ts help                       # every tool; --json gives machines t
 
 or the same through Task: `task status`, `task bootstrap`, `task watch`,
 `task devlog:state`. The active workshop is `--workshop=<path>`, else
-`$BOS_WORKSHOP`, else the nearest parent `__WORKSHOP`, else `~/__WORKSHOP`.
+`$BOS_WORKSHOP`, else `$WORKSHOP_ROOT/__WORKSHOP`, else the nearest parent
+`__WORKSHOP`, else `~/__WORKSHOP`; `$WORKSHOP_RENAME` changes the name
+`__WORKSHOP`.
+
+Developing the core, copy `.env.example` to `.env` (not committed) and set
+`WORKSHOP_ROOT` to a place for tests and demonstrations, e.g. a partition:
+a checkout's CLI reads its own `.env`, so it never wanders into the home
+workshop. Variables set in the shell win over `.env`.
 
 As a library:
 

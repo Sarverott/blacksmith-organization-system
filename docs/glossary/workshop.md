@@ -39,8 +39,15 @@ All five are mandatory. BOS creates any missing one at boot.
 
 - A machine can hold several workshops (home plus partitions). They are
   independent: nothing is moved or synced between them unless asked.
-- The active workshop is `$BOS_WORKSHOP` if set, else the nearest parent
-  directory named `__WORKSHOP`, else `~/__WORKSHOP`.
+- The active workshop is the one named by `--workshop`, else `$BOS_WORKSHOP`
+  (the workshop itself), else `$WORKSHOP_ROOT/__WORKSHOP` (the directory that
+  holds it, e.g. a partition), else the nearest parent directory named
+  `__WORKSHOP`, else `~/__WORKSHOP`.
+- `$WORKSHOP_RENAME` gives the workshop directory another name (e.g.
+  `.__WORKSHOP`); every rule above then looks for that name.
+- A development workshop: the core is developed, tested by hand and
+  demonstrated on a workshop of its own (`WORKSHOP_ROOT` in the core's `.env`),
+  so the home workshop is not exposed every time BOS is worked on.
 
 ## Lifecycle
 

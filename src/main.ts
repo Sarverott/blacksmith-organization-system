@@ -37,7 +37,8 @@ export class BOS {
     this.options = options;
   }
 
-  // the active workshop: --workshop, $BOS_WORKSHOP, an ancestor __WORKSHOP, or ~/__WORKSHOP
+  // the active workshop: --workshop, $BOS_WORKSHOP, $WORKSHOP_ROOT/__WORKSHOP, an ancestor __WORKSHOP,
+  // or ~/__WORKSHOP ($WORKSHOP_RENAME changes the name)
   get workshop(): Workshop {
     this.#workshop ??= Workshop.locate(this.host, this.options.workshop);
     return this.#workshop;

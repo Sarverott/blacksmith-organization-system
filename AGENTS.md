@@ -35,6 +35,16 @@ scripts are in `scripts/` as sketches of procedures still to be coded.
 
 `task devlog:state` (or `node src/cli.ts devlog state`) shows where it all stands.
 
+## The development workshop
+
+The core is run, tried and demonstrated on its own workshop, never the home
+one. `.env` (from `.env.example`, not committed) sets `WORKSHOP_ROOT`, now
+`/run/media/sarverott/setternet-A62/` → `/run/media/sarverott/setternet-A62/__WORKSHOP`;
+the CLI of this checkout reads it wherever it is started. Check with
+`node src/cli.ts workshop locate` (it must say `found by: $WORKSHOP_ROOT`)
+before running anything that writes. Without a `.env`, ask the owner instead
+of falling back on `~/__WORKSHOP`.
+
 ## Architecture
 
 ```
@@ -179,8 +189,9 @@ top, dated). People answer in `docs/devlog/`, not here.
 7. **One door to the machine.** Only `hosts/` imports `node:*` (and `cli.ts`
    to start). Outside systems (git remotes, GitHub, Gitea, docker…) will get
    bridges of their own; nowhere else.
-8. **Test against a temporary workshop** (`tests/helpers.ts`), never the real
-   `~/__WORKSHOP`. A fixed bug gets a test.
+8. **Test against a temporary workshop** (`tests/helpers.ts`), try things by
+   hand on the development workshop (`.env`), never on the home
+   `~/__WORKSHOP` unless the owner asks. A fixed bug gets a test.
 9. **Unknowns are `[TODO]`.** Don't invent meanings; mark interpretations
    *(assumed)*; open questions go to BRAINSTORM.md.
 10. **Ask first** before pushing, tagging, publishing (npm, GitHub releases),
