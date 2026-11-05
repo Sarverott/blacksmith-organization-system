@@ -28,33 +28,33 @@ shape, a **workshop**, and keeps that shape by code:
   milestones and their versions (semver `vX.Y.Z` for projects, GRIH
   `vG.R.I.H` for scopes).
 
-This repository is the core, a TypeScript module. The agents' skills and the
-Claude Code plugin are [bos-skillset](https://github.com/Sarverott/bos-skillset),
-which builds on it.
+This is the core: a TypeScript module and the `bos` command.
+
+## Install
+
+Node ≥ 22.18.
+
+```sh
+npm install --global blacksmith-organization-system   # gives the command `bos`
+npx blacksmith-organization-system help               # or without installing
+```
 
 ## Use
 
-Node ≥ 22.18. From a checkout (`npm install`):
-
 ```sh
-node src/cli.ts workshop status            # the whole workshop: areas, scopes, projects, findings
-node src/cli.ts workshop bootstrap --dry-run   # what is missing; without --dry-run, create it
-node src/cli.ts workshop watch --record    # one line per change until Ctrl+C, kept in .BOS/storylines
-node src/cli.ts scope bump <scope> phase   # raise a scope's GRIH version: step, phase, milestone, flip
-node src/cli.ts devlog state               # where this project stands, from docs/devlog/
-node src/cli.ts help                       # every tool; --json gives machines the data
+bos workshop status                 # the whole workshop: areas, scopes, projects, findings
+bos workshop bootstrap --dryRun     # what is missing; without --dryRun, create it
+bos workshop watch --record         # one line per change until Ctrl+C, kept in .BOS/storylines
+bos scope bump <scope> phase        # raise a scope's GRIH version: step, phase, milestone, flip
+bos devlog state                    # where a project stands, from its docs/devlog/
+bos help                            # every tool; --json gives machines the data
 ```
 
-or the same through Task: `task status`, `task bootstrap`, `task watch`,
-`task devlog:state`. The active workshop is `--workshop=<path>`, else
-`$BOS_WORKSHOP`, else `$WORKSHOP_ROOT/__WORKSHOP`, else the nearest parent
-`__WORKSHOP`, else `~/__WORKSHOP`; `$WORKSHOP_RENAME` changes the name
-`__WORKSHOP`.
-
-Developing the core, copy `.env.example` to `.env` (not committed) and set
-`WORKSHOP_ROOT` to a place for tests and demonstrations, e.g. a partition:
-a checkout's CLI reads its own `.env`, so it never wanders into the home
-workshop. Variables set in the shell win over `.env`.
+Which workshop: `--workshop=<path>`, else `$BOS_WORKSHOP`, else
+`$WORKSHOP_ROOT/__WORKSHOP`, else the nearest parent `__WORKSHOP`, else
+`~/__WORKSHOP`. `$WORKSHOP_RENAME` changes the name `__WORKSHOP`.
+`bos workshop locate` says which one and why. Only `bootstrap` and `bump`
+write, and they create only what is missing.
 
 As a library:
 
@@ -67,38 +67,17 @@ const report = await bos.inspect();
 console.log(report.forge.scopes.length, report.findings.length);
 ```
 
-## Inside
+## Documentation
 
-```
-src/
-├── main.ts        the spine: class BOS (bootstrap, inspect, watch, bumpScope)
-├── core/          Host (the one door to the machine), element anatomy, procedure, tool, versions, paths
-├── hosts/         NodeHost; other runtimes later
-├── models/        the glossary as classes: workshop, .BOS parts, forge, scope, project, devlog…
-├── procedures/    bootstrapping, inspecting, watching, versioning: DESCRIPTION.md + one file per step
-├── tools/         what `bos <model> <tool>` runs; the same entries are its help
-├── views/         text for people
-└── cli.ts, index.ts
-```
+https://blacksmith-organization-system.readthedocs.io/: the
+[glossary](https://blacksmith-organization-system.readthedocs.io/en/latest/glossary/)
+(every element of a workshop), the architecture of the core, the devlog and
+the changelog. To work on BOS itself:
+[CONTRIBUTING](https://github.com/Sarverott/blacksmith-organization-system/blob/development/.github/CONTRIBUTING.md).
 
-Meaning comes first: [`docs/glossary/`](docs/glossary/README.md) defines every
-element, one page each. The plan and the talk with the owner are in
-[`docs/devlog/`](docs/devlog/README.md), the history in
-[`docs/changelog/`](docs/changelog/phase-0.md), the rules for agents and
-people in [AGENTS.md](AGENTS.md). Documentation:
-https://blacksmith-organization-system.readthedocs.io/
-
-## Develop
-
-```sh
-task install     # dependencies and git hooks
-task check       # types, lint, tests (= CI)
-task commit      # a conventional commit, guided
-task docs:serve  # the docs at http://127.0.0.1:8000
-```
-
-Work happens on `development` (people and agents on their own `dev/<name>`),
-never on `master`. Tests only touch temporary workshops.
+The agents' skills and the Claude Code plugin are
+[bos-skillset](https://github.com/Sarverott/bos-skillset), which builds on
+this core.
 
 ## Where the idea came from
 
