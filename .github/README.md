@@ -1,9 +1,14 @@
 # blacksmith-organization-system
-[![check](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/check.yml/badge.svg)](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/check.yml)
-[![check](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/check.yml/badge.svg?branch=development)](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/check.yml)
-[![npm](https://img.shields.io/npm/v/blacksmith-organization-system/next?label=npm%40next)](https://www.npmjs.com/package/blacksmith-organization-system)
-[![docs](https://readthedocs.org/projects/blacksmith-organization-system/badge/?version=latest)](https://blacksmith-organization-system.readthedocs.io/)
 
+[![release](https://img.shields.io/github/actions/workflow/status/Sarverott/blacksmith-organization-system/loop-master-release-and-publish.yml?branch=master&label=release)](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/loop-master-release-and-publish.yml?query=branch%3Amaster)
+[![revision](https://img.shields.io/github/actions/workflow/status/Sarverott/blacksmith-organization-system/loop-revision-bump-checks-pull-request.yml?branch=revision&label=revision)](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/loop-revision-bump-checks-pull-request.yml?query=branch%3Arevision)
+[![checks](https://img.shields.io/github/actions/workflow/status/Sarverott/blacksmith-organization-system/checks-on-push-changed-parts.yml?branch=development&label=checks)](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/checks-on-push-changed-parts.yml?query=branch%3Adevelopment)
+[![GitHub release](https://img.shields.io/github/v/release/Sarverott/blacksmith-organization-system?include_prereleases&label=GitHub%20release)](https://github.com/Sarverott/blacksmith-organization-system/releases)
+[![npm@next](https://img.shields.io/npm/v/blacksmith-organization-system/next?label=npm%40next)](https://www.npmjs.com/package/blacksmith-organization-system?activeTab=versions)
+[![node](https://img.shields.io/node/v/blacksmith-organization-system/next)](https://nodejs.org/)
+[![docs](https://readthedocs.org/projects/blacksmith-organization-system/badge/?version=latest)](https://blacksmith-organization-system.readthedocs.io/)
+[![wiki](https://img.shields.io/badge/wiki-GitHub-blue)](https://github.com/Sarverott/blacksmith-organization-system/wiki)
+[![license](https://img.shields.io/github/license/Sarverott/blacksmith-organization-system)](https://github.com/Sarverott/blacksmith-organization-system/blob/master/LICENSE)
 
 The **core of the Blacksmith Organization System** (BOS): a TypeScript module
 and the `bos` command that build, watch and inspect a programmer's workshop
