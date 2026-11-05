@@ -5,7 +5,7 @@ export type LoopStep = { from: string; to: string; automerge: boolean; back: str
 
 export class Loop {
   readonly data: LoopData;
-  // where the data came from: "default" or the path of a .bos/loop.json
+  // where the data came from: "default" or the path of a .github/bos.json
   readonly source: string;
 
   constructor(data: LoopData = DEFAULT_LOOP, source = "default") {

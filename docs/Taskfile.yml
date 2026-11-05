@@ -24,3 +24,10 @@ tasks:
     cmds:
       - uv lock
       - uv export --no-hashes --no-header --no-annotate --no-emit-project -o requirements.txt
+
+  wiki:
+    desc: Write the docs into the GitHub wiki's checkout docs/.gh-wiki (cloned when missing); committing and pushing is yours
+    dir: '{{.TASKFILE_DIR}}/..'
+    cmds:
+      - test -d docs/.gh-wiki/.git || git clone https://github.com/Sarverott/blacksmith-organization-system.wiki.git docs/.gh-wiki
+      - uv run --project docs python scripts/gh-wiki.py

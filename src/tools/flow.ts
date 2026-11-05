@@ -1,6 +1,6 @@
 // bos flow <tool>: the craft loop of the project around the current directory
 import { tool } from "../core/tool.ts";
-import { explainText, outcomeText, stepText } from "../views/flow.ts";
+import { bumpText, explainText, outcomeText, stepText } from "../views/flow.ts";
 
 const dirArg = { name: "dir", type: "string", info: "a path inside the project (default: current directory)" } as const;
 const dryRunArg = { name: "dryRun", type: "boolean", info: "only say what would be done on GitHub" } as const;
@@ -10,11 +10,11 @@ export const flowTools = [
   tool({
     model: "flow",
     name: "explain",
-    info: "the project's craft loop: every forward step, and what merges by itself",
+    info: "the project's craft loop (.github/bos.json): every forward step, what merges by itself, the bumps",
     args: [dirArg],
     run: (bos, input) => {
-      const { loop } = bos.loop(dir(input.dir));
-      return { source: loop.source, steps: loop.steps(), data: loop.data };
+      const { loop, versioning } = bos.settings(dir(input.dir));
+      return { source: loop.source, steps: loop.steps(), data: loop.data, versioning };
     },
     render: explainText,
   }),
@@ -58,5 +58,24 @@ export const flowTools = [
       return bos.automerge(number, { dir: dir(input.dir), dryRun: Boolean(input.dryRun) });
     },
     render: outcomeText,
+  }),
+  tool({
+    model: "flow",
+    name: "bump",
+    info: "bump the project's version for work landing on a station (.github/bos.json versioning); only a released version moves",
+    readOnly: false,
+    args: [
+      {
+        name: "station",
+        type: "string",
+        info: "the branch the work landed on, e.g. revision",
+        positional: true,
+        required: true,
+      },
+      dirArg,
+      { name: "dryRun", type: "boolean", info: "only say what the version would become" },
+    ],
+    run: (bos, input) => bos.bump(String(input.station), { dir: dir(input.dir), dryRun: Boolean(input.dryRun) }),
+    render: bumpText,
   }),
 ];

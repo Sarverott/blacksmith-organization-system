@@ -8,7 +8,7 @@ line through `Host.run`, so tests can script it.
 
 | Bridge | For | Phase |
 | ------ | --- | ----- |
-| git | status, add, commit, branches, bare mirrors (`git clone --mirror`) | 2 (mirrors, Q6), 3 (autocommit of scrapnotes, Q8) |
+| git (`src/bridges/git.ts`) | tags of released versions (`bos flow bump`); later status, add, commit, branches, bare mirrors (`git clone --mirror`) | 2: tags coded; mirrors (Q6), 3 (autocommit of scrapnotes, Q8) |
 | GitHub (`src/bridges/github.ts`, through `gh`) | pull requests of the loop: compare, list, create, view, merge (`bos flow next-pr`, `automerge`) | 2: coded |
 | Gitea | private scope repositories on a self-hosted server | [`TODO`] |
 | docker | a container per agent host CLI and one for the owner | 3 |

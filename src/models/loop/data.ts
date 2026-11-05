@@ -1,5 +1,5 @@
-// The craft loop as data (glossary: craft-loop). A project may replace it with its own
-// <project>/.bos/loop.json; every field is checked by Loop before use.
+// The craft loop as data (glossary: craft-loop). A project may replace any field in the
+// "loop" section of its .github/bos.json; every field is checked by Loop before use.
 
 export type LoopData = {
   // every branch of the loop
@@ -18,7 +18,7 @@ export type LoopData = {
 };
 
 // from gitrecon's .github/bos.config.json, except that releasing → master waits for the
-// owner (the Canon Keeper of the legacy concept) (assumed; BRAINSTORM Q10)
+// owner (the Canon Keeper of the legacy concept) (decision Q10, changelog phase 2)
 export const DEFAULT_LOOP: LoopData = {
   stations: ["master", "development", "revision", "testing", "releasing", "rejection"],
   directions: {

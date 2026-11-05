@@ -12,6 +12,11 @@ Where the core goes, on the version scales of the craft loop. The why is in
 | milestone: a group of phases that changes what BOS can do | X | R |
 | flip: pre-alpha → alpha, a key concept changes | X | G |
 
+For now (phase 2, decision of chat 2) the project's version moves with the
+routine instead: landing on `revision` bumps Y, reaching `master` without it
+bumps Z, set per station in `.github/bos.json` (`versioning`), and only a
+released (tagged) version is bumped (`bos flow bump <station>`).
+
 `bos version bump <version> <event> [--grih]` computes them;
 `bos scope bump <scope> <event>` writes a scope's version into
 `<scope>/.bos/scope.json`.

@@ -1,12 +1,30 @@
-# Publishes the package to npmjs.org when a GitHub release is created: a pre-release
-# under the npm tag `next` (decision Q7: 1.x is `next` until phase 2 is done), a release
-# under `latest`. Needs the repository secret npm_token (an npm automation token).
-# Nothing in the loop creates releases yet (phase 2); a release is the owner's act.
+# Publishes the package to npmjs.org: called by release.yml for every release, or run
+# when a person creates a GitHub release. A pre-release goes under the npm tag `next`
+# (decision Q7: until phase 2 is done), a release under `latest`. Needs the repository
+# secret npm_token (an npm automation token); without it, it says so and stops.
 name: publish
 
 on:
+  workflow_call:
+    inputs:
+      tag:
+        description: the git tag to publish, e.g. v1.0.0
+        type: string
+        required: true
+      prerelease:
+        type: boolean
+        default: true
   release:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: the git tag to publish, e.g. v1.0.0
+        type: string
+        required: true
+      prerelease:
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -15,16 +33,21 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
+      HUSKY: "0"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - if: env.NODE_AUTH_TOKEN == ''
+        run: echo "::warning::no npm_token secret - nothing is published"
+      - if: env.NODE_AUTH_TOKEN != ''
+        uses: actions/checkout@v4
+        with: { ref: "${{ inputs.tag || github.event.release.tag_name }}" }
+      - if: env.NODE_AUTH_TOKEN != ''
+        uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
-        env:
-          HUSKY: "0"
-      - run: npm run check
-      - run: npm publish --provenance --tag ${{ github.event.release.prerelease && 'next' || 'latest' }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
+      - if: env.NODE_AUTH_TOKEN != ''
+        run: npm ci
+      - if: env.NODE_AUTH_TOKEN != ''
+        run: npm publish --provenance --tag ${{ (inputs.prerelease || github.event.release.prerelease) && 'next' || 'latest' }}
