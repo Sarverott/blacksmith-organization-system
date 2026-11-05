@@ -103,6 +103,9 @@ nav:
           - glossary/nestrelm.md
           - glossary/storylines.md
           - glossary/views.md
+      - Loop:
+          - glossary/craft-loop.md
+          - glossary/grih.md
       - Elements:
           - glossary/artefact.md
           - glossary/element-anatomy.md

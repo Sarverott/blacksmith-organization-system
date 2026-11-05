@@ -54,6 +54,13 @@ Internal parts of `.BOS/`:
 | [postroad](postroad.md) | ? | [`TODO`] |
 | [element anatomy](element-anatomy.md) | any | The descriptor files that most elements carry |
 
+### 4. Loop: how work moves and is versioned
+
+| Element | One line |
+| ------- | -------- |
+| [craft loop](craft-loop.md) | The branches every change travels and the events that version it |
+| [GRIH](grih.md) | The version scale of a scope: Generation, Reconstruction, Integration, Hooking |
+
 ## Tree
 
 ```
