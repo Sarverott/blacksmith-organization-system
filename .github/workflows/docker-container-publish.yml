@@ -37,7 +37,7 @@ jobs:
       USERNAME: ${{ vars.DOCKER_HUB_USERNAME || 'sarverott' }}
       REGISTRY: docker.io
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with: { ref: "${{ inputs.tag }}" }
       - uses: go-task/setup-task@v1
       - name: Only a full release, with a token
