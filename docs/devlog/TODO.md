@@ -52,7 +52,11 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] AGENTS.md: the routine, and what an agent pushes without asking (chat 1)
 - [x] First run of the routine: `development` pushed, PR `development → master`, `development` pushed to `revision`
 - [x] `scripts/` reduced to what is required: replaced scripts removed (they stay in `legacy/v0.6.1`), the rest listed as sketches to port (inquiry)
-- [ ] Tag `v1.0.0` and npm: by `release.yml` when the first PR to `master` is merged (needs the `npm_token` secret)
+- [x] Tag `v1.0.0` and GitHub pre-release: by `release.yml` when PR #3 was merged; the wiki synced
+- [x] Publishing secrets from the environment `publish-env` (`NPM_TOKEN`, `READTHEDOCS_API_TOKEN`); Read the Docs activates and builds each release
+- [x] Workflow steps as scripts: `scripts/workflows/*.sh`, run as `task workflows:<name>`
+- [ ] `v1.0.0` on npm under `next` (`npm-publish.yml` by hand with the tag, now that `NPM_TOKEN` exists)
+- [x] The old `reforge` branch deleted on GitHub (all of it in `development`)
 - [ ] The full loop driven (`revision → testing → releasing → master`), `testing`/`releasing` moved to `master` (Q9, Q10: later)
 - [ ] Rulesets (`docs/rulesets/`): meaning [TODO] from the owner
 - [ ] Mirrors: glossary page `archive/.repos-mirrors` (each mirror a sarcophag) (Q6)
@@ -62,8 +66,13 @@ history: [../changelog/](../changelog/phase-0.md).
 
 ## Phase 3: workplaces
 
+- [ ] A Docker image of BOS on Docker Hub (`DOCKER_HUB_TOKEN` in `publish-env`)
 - [ ] Containers: one per agent host CLI (Codex, Claude Code), one for the owner
 - [ ] Workmodes: sets of Taskfile tasks with file watchers and git hooks
 - [ ] The git bridge (`src/bridges/git.ts`, tags only so far) grows: status, add, commit
 - [ ] Scrapnote vaults: `craftbook/<scope>___<project>/scrapnotes/` as a git repository (Obsidian vault), `<project>/docs/.scrapnotes` its link, ignored by the project (Q8)
 - [ ] Workmode `scrapnotes`: commit every saved note after a quiet moment; `.obsidian/workspace*.json` ignored (Q8)
+
+## Later
+
+- [ ] An API reference on Scalar (`SCALAR_API_TOKEN` in `publish-env`), once BOS has an HTTP API ([TODO] phase)

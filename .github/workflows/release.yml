@@ -3,13 +3,14 @@
 #   1. checks; a version reaching master already released gets the patch (a hotfix)
 #   2. tag v<version> and the GitHub release (skipped when that tag exists)
 #   3. the dev community hears of it (Discord, Telegram)
-#   4. npm (npm-publish.yml); in parallel the docs: Read the Docs builds by itself,
-#      the GitHub wiki is synced (scripts/gh-wiki.py)
+#   4. npm (npm-publish.yml); in parallel the docs: Read the Docs activates and builds
+#      the tag, the GitHub wiki is synced
 #   5. social media hear of it
 #   6. master goes back into development, and the listening BOS workshop is called
-# Every outward call runs only when its secret is set: DISCORD_WEBHOOK,
-# TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID, npm_token, WIKI_TOKEN (else this workflow's
-# token), SOCIAL_WEBHOOK, BOS_WORKSHOP_HOOK.
+# Every step that is more than one command is a script in scripts/workflows/, run as
+# `task workflows:<name>` (readable and runnable by hand). Every outward call runs only
+# when its secret is set (docs/architecture/workflows.md lists them); publishing ones
+# come from the environment publish-env.
 name: release
 
 on:
@@ -40,40 +41,21 @@ jobs:
     permissions:
       contents: write
     outputs:
-      tag: ${{ steps.version.outputs.tag }}
+      tag: ${{ steps.release.outputs.tag }}
       prerelease: ${{ env.PRERELEASE }}
     steps:
       - uses: actions/checkout@v4
         with: { ref: master, fetch-depth: 0 }
       - uses: actions/setup-node@v4
         with: { node-version: 24 }
-      - name: The bot signs
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - uses: go-task/setup-task@v1
       - name: Hotfix bump (a released version reaching master)
-        run: |
-          out=$(node src/cli.ts flow bump master --json)
-          echo "$out"
-          [ "$(jq -r .action <<< "$out")" = bumped ] || exit 0
-          git commit -qam "chore(release): bump $(jq -r '.from + " → " + .to' <<< "$out") (hotfix on master)"
-          git push origin HEAD:master
-      - name: Is there a release to make?
-        id: version
-        run: |
-          tag="v$(jq -r .version package.json)"
-          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then echo "$tag is released already"; exit 0; fi
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+        run: task workflows:bump -- master "hotfix on master"
       - name: Tag and GitHub release
-        if: steps.version.outputs.tag
+        id: release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.version.outputs.tag }}
-        run: |
-          git tag -a "$TAG" -m "$TAG"
-          git push origin "$TAG"
-          pre=(); [ "$PRERELEASE" = true ] && pre=(--prerelease)
-          gh release create "$TAG" --title "$TAG" --generate-notes --verify-tag "${pre[@]}"
+        run: task workflows:release -- ${{ env.PRERELEASE == 'true' && '--prerelease' || '' }}
 
   community:
     needs: release
@@ -83,15 +65,10 @@ jobs:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      TEXT: "Blacksmith Organization System ${{ needs.release.outputs.tag }} is out: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ needs.release.outputs.tag }}"
     steps:
-      - if: env.DISCORD_WEBHOOK != ''
-        run: |
-          jq -n --arg t "$TEXT" '{content: $t}' | curl -fsS -H 'Content-Type: application/json' -d @- "$DISCORD_WEBHOOK"
-      - if: env.TELEGRAM_BOT_TOKEN != '' && env.TELEGRAM_CHAT_ID != ''
-        run: |
-          curl -fsS "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
-            --data-urlencode "chat_id=$TELEGRAM_CHAT_ID" --data-urlencode "text=$TEXT"
+      - uses: actions/checkout@v4
+      - uses: go-task/setup-task@v1
+      - run: task workflows:notify -- community "${{ needs.release.outputs.tag }}"
 
   publish:
     needs: release
@@ -105,6 +82,19 @@ jobs:
       contents: read
       id-token: write
 
+  readthedocs:
+    needs: release
+    if: needs.release.outputs.tag
+    runs-on: ubuntu-latest
+    environment: publish-env
+    env:
+      READTHEDOCS_API_TOKEN: ${{ secrets.READTHEDOCS_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: go-task/setup-task@v1
+      - if: env.READTHEDOCS_API_TOKEN != ''
+        run: task workflows:readthedocs -- "${{ needs.release.outputs.tag }}"
+
   wiki:
     needs: release
     if: needs.release.outputs.tag
@@ -113,41 +103,27 @@ jobs:
       contents: write
     env:
       TOKEN: ${{ secrets.WIKI_TOKEN || github.token }}
-      TAG: ${{ needs.release.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
         with: { ref: "${{ needs.release.outputs.tag }}" }
       - uses: astral-sh/setup-uv@v6
-      - run: git clone "https://x-access-token:$TOKEN@github.com/${{ github.repository }}.wiki.git" docs/.gh-wiki
-      - run: uv run --project docs python scripts/gh-wiki.py
-      - name: Commit and push the wiki
-        working-directory: docs/.gh-wiki
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --cached --quiet && exit 0
-          git commit -qm "docs: sync from $TAG"
-          git push
+      - uses: go-task/setup-task@v1
+      - run: task workflows:wiki -- "${{ needs.release.outputs.tag }}"
 
   social:
-    needs: [release, publish, wiki]
+    needs: [release, publish, readthedocs, wiki]
     if: ${{ !cancelled() && needs.release.outputs.tag }}
     runs-on: ubuntu-latest
     env:
       SOCIAL_WEBHOOK: ${{ secrets.SOCIAL_WEBHOOK }}
     steps:
-      # [TODO] which social media: one generic webhook (e.g. an automation service) for now
-      - if: env.SOCIAL_WEBHOOK != ''
-        run: |
-          jq -n --arg r "${{ github.repository }}" --arg t "${{ needs.release.outputs.tag }}" \
-            --arg u "${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ needs.release.outputs.tag }}" \
-            '{event: "release", repository: $r, tag: $t, url: $u}' |
-            curl -fsS -H 'Content-Type: application/json' -d @- "$SOCIAL_WEBHOOK"
+      - uses: actions/checkout@v4
+      - uses: go-task/setup-task@v1
+      - run: task workflows:notify -- social "${{ needs.release.outputs.tag }}"
 
   back:
-    # after everything of the release, whatever it ended with
-    needs: [release, community, publish, wiki, social]
+    # after everything of the release, whatever it ended with; pull development after it
+    needs: [release, community, publish, readthedocs, wiki, social]
     if: ${{ !cancelled() && needs.release.outputs.tag }}
     runs-on: ubuntu-latest
     permissions:
@@ -156,19 +132,9 @@ jobs:
       BOS_WORKSHOP_HOOK: ${{ secrets.BOS_WORKSHOP_HOOK }}
     steps:
       - uses: actions/checkout@v4
-        with: { ref: development, fetch-depth: 0 }
+        with: { fetch-depth: 0 }
+      - uses: go-task/setup-task@v1
       - name: master back into development
-        # pushed with this workflow's token, it starts no workflow; pull development
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git merge --no-edit origin/master
-          git push origin HEAD:development
-      # [TODO] BOS has no network listener yet: the workshop fetches, syncs its branches
-      # and pulls master into development when called
+        run: task workflows:merge-into -- origin/master development
       - name: Call the listening BOS workshop
-        if: env.BOS_WORKSHOP_HOOK != ''
-        run: |
-          jq -n --arg r "${{ github.repository }}" --arg t "${{ needs.release.outputs.tag }}" \
-            '{event: "release", repository: $r, tag: $t, sync: ["master", "development"]}' |
-            curl -fsS -H 'Content-Type: application/json' -d @- "$BOS_WORKSHOP_HOOK"
+        run: task workflows:notify -- workshop "${{ needs.release.outputs.tag }}"

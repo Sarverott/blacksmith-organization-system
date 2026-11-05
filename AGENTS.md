@@ -66,7 +66,8 @@ src/
 ├── cli.ts         bos <model> <tool> [operands] [--flags]; --json, --workshop=
 └── index.ts       library entry
 tests/             vitest, one file per concern; helpers.ts makes temporary workshops
-scripts/           gh-wiki.py (docs → GitHub wiki); legacy shell sketches still to port (reference only)
+scripts/           workflows/ (the steps of .github/workflows, task workflows:<name>), gh-wiki.py (docs → GitHub wiki),
+                   legacy shell sketches still to port (reference only)
 docs/              devlog, changelog, .agents, glossary; MkDocs site (docs/mkdocs.yml, Read the Docs)
 ```
 
@@ -83,6 +84,7 @@ task format         # biome fixes
 task commit         # commitizen
 task docs:build     # MkDocs --strict
 task devlog:state   # docs/devlog/STATE.md
+task workflows:<name> -- <args>   # a step of the GitHub workflows (scripts/workflows/)
 task status | bootstrap | watch   # the core on the active workshop
 ```
 

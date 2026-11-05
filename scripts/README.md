@@ -9,9 +9,12 @@ to typescript").
 | Script | What | Run by |
 | ------ | ---- | ------ |
 | `gh-wiki.py` | the docs into the GitHub wiki's checkout (`docs/.gh-wiki`), with Home, _Sidebar, _Footer from `resources/docs-templates/` | `task docs:wiki`, `release.yml` |
+| `workflows/*.sh` | the steps of the GitHub workflows, one script each (`_common.sh`: strict mode, the bot's identity, outputs); `workflows/Taskfile.yml` names them | `task workflows:<name>`, `.github/workflows/` |
 
-Python on purpose: a build-side tool of the docs, run in the docs' uv project
-next to MkDocs. Everything BOS itself does is TypeScript, in `src/`.
+`gh-wiki.py` is Python on purpose: a build-side tool of the docs, run in the
+docs' uv project next to MkDocs. The workflow steps are shell, taken out of
+the workflow files so each is readable and runnable by hand (owner, phase 2).
+Everything BOS itself does is TypeScript, in `src/`.
 
 ## Sketches still to port
 
