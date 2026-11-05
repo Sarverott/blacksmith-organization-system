@@ -54,12 +54,13 @@ src/
 │                  descriptors → ensure + inspect), procedure.ts (named steps, trace), context.ts
 │                  (createIfMissing), tool.ts (one tool format), version.ts (semver + GRIH), paths.ts
 ├── hosts/         NodeHost (+ watch-tree.ts): the only files that touch node:* (fs, os, child_process)
-├── bridges/       one file per outside system (github.ts: gh), reached only through Host.run
+├── bridges/       one file per outside system (github.ts: gh, git.ts: git), reached only through Host.run
 ├── models/        <model>/class.ts: the glossary as classes (workshop, system = .BOS and its parts,
-│                  devarmory, forge, scope, project, craftbook, archive, devlog, loop)
+│                  devarmory, forge, scope, project, craftbook, archive, devlog, loop, settings = .github/bos.json)
 ├── procedures/    <name>/DESCRIPTION.md + one file per step + _index.ts (the order):
 │                  bootstrapping, inspecting (rules.ts: one function per finding), watching, versioning,
-│                  proposing + automerging (the craft loop on GitHub: bos flow next-pr / automerge)
+│                  proposing + automerging (the craft loop on GitHub: bos flow next-pr / automerge),
+│                  bumping (the project's version per station: bos flow bump)
 ├── tools/         <model>.ts: what `bos <model> <tool>` runs; _index.ts collects them
 ├── views/         text for people (status tree, event line, help, STATE.md)
 ├── cli.ts         bos <model> <tool> [operands] [--flags]; --json, --workshop=

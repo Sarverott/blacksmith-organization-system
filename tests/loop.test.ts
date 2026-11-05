@@ -2,7 +2,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { DEFAULT_LOOP, Loop, loopOf, NodeHost } from "../src/index.ts";
+import { DEFAULT_LOOP, DEFAULT_VERSIONING, Loop, loopOf, NodeHost, settingsOf, versioningOf } from "../src/index.ts";
 import { tempWorkshop, write } from "./helpers.ts";
 
 describe("the craft loop", () => {
@@ -38,15 +38,34 @@ describe("the craft loop", () => {
     );
   });
 
-  it("reads a project's own .bos/loop.json over the default", () => {
+  it("reads the loop section of a project's .github/bos.json over the default", () => {
     const project = join(tempWorkshop(), "p");
+    const file = join(project, ".github/bos.json");
     expect(loopOf(new NodeHost(), project).source).toBe("default");
-    write(join(project, ".bos/loop.json"), JSON.stringify({ automerge: { development: false } }));
+    write(file, JSON.stringify({ versioning: { bumps: { testing: "patch" } } }));
+    expect(loopOf(new NodeHost(), project).source).toBe("default");
+    write(file, JSON.stringify({ loop: { automerge: { development: false } } }));
     const own = loopOf(new NodeHost(), project);
-    expect(own.source).toBe(join(project, ".bos/loop.json"));
+    expect(own.source).toBe(file);
     expect(own.step("development")?.automerge).toBe(false);
     expect(own.step("revision")?.to).toBe("testing");
-    write(join(project, ".bos/loop.json"), "{ nope");
+    write(file, "{ nope");
     expect(() => loopOf(new NodeHost(), project)).toThrow(/is not JSON/);
+  });
+});
+
+describe("versioning settings", () => {
+  it("bumps minor on revision and patch on master unless .github/bos.json says otherwise", () => {
+    const project = join(tempWorkshop(), "p");
+    const host = new NodeHost();
+    expect(versioningOf(settingsOf(host, project))).toEqual(DEFAULT_VERSIONING);
+    write(join(project, ".github/bos.json"), JSON.stringify({ versioning: { bumps: { testing: "patch" } } }));
+    expect(versioningOf(settingsOf(host, project)).bumps).toEqual({
+      revision: "minor",
+      master: "patch",
+      testing: "patch",
+    });
+    write(join(project, ".github/bos.json"), JSON.stringify({ versioning: { bumps: { master: "huge" } } }));
+    expect(() => versioningOf(settingsOf(host, project))).toThrow(/bumps\.master is "huge"/);
   });
 });

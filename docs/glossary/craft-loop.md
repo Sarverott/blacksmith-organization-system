@@ -28,7 +28,7 @@ Every step between stations is a pull request. The loop opens it by itself;
 whether it also merges by itself is a flag per direction (from gitrecon:
 `automerge_loopedPR_<from>-<to>`; here `automerge` per station). The data is
 the default loop (`src/models/loop/data.ts`) or a project's own
-`.bos/loop.json`; the engine is `bos flow`: `explain`, `next <branch>`,
+`.github/bos.json` (section `loop`); the engine is `bos flow`: `explain`, `next <branch>`,
 `next-pr <branch>`, `automerge <pr>`.
 
 ## Events and versions

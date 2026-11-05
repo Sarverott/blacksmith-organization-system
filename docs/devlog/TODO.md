@@ -44,8 +44,8 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] Glossary: `grih` and `craft-loop` (from the legacy `docs/README.md`)
 - [x] The loop as data: stations, directions, `rejection`, contributors, automerge per station (from gitrecon); default in `src/models/loop/data.ts`, a project's own `.bos/loop.json`
 - [x] `bos flow explain` / `next` / `next-pr` / `automerge`, through the GitHub bridge (`Host.run` → `gh`)
-- [ ] Settings in `.github/bos.json`: `loop` (replaces `.bos/loop.json`) and `versioning` (bumps per station) (chat 2)
-- [ ] `bos flow bump <station>`: the project's version bumped per `versioning`, only when already released (tagged) (chat 2)
+- [x] Settings in `.github/bos.json`: `loop` (replaces `.bos/loop.json`) and `versioning` (bumps per station) (chat 2)
+- [x] `bos flow bump <station>`: the project's version bumped per `versioning`, only when already released (tagged) (chat 2)
 - [ ] Checks split: one reusable `checks.yml` (types, lint, tests, build, docs, commits, package); `check.yml` runs only what a push changed; `pr-checks.yml` runs all (chat 3)
 - [ ] Workflows of the routine: `revision.yml` (minor bump), `release.yml` (tag, GitHub release, npm, wiki, webhooks, back into development), `flow.yml` (full loop, `workflow_dispatch` only); all with `workflow_dispatch` (Q10, Q11)
 - [ ] GitHub wiki: `docs/.gh-wiki` (ignored), `scripts/gh-wiki.py` + `resources/docs-templates/`, `task docs:wiki` (inquiry)
@@ -64,6 +64,6 @@ history: [../changelog/](../changelog/phase-0.md).
 
 - [ ] Containers: one per agent host CLI (Codex, Claude Code), one for the owner
 - [ ] Workmodes: sets of Taskfile tasks with file watchers and git hooks
-- [ ] A git bridge in `hosts/` (status, add, commit), the only door to git
+- [ ] The git bridge (`src/bridges/git.ts`, tags only so far) grows: status, add, commit
 - [ ] Scrapnote vaults: `craftbook/<scope>___<project>/scrapnotes/` as a git repository (Obsidian vault), `<project>/docs/.scrapnotes` its link, ignored by the project (Q8)
 - [ ] Workmode `scrapnotes`: commit every saved note after a quiet moment; `.obsidian/workspace*.json` ignored (Q8)

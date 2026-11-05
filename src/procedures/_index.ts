@@ -3,6 +3,7 @@
 
 export { type AutomergeContext, automerging } from "./automerging/_index.ts";
 export { type BootstrapContext, bootstrapping } from "./bootstrapping/_index.ts";
+export { type BumpContext, type BumpOutcome, bumping, unbumped } from "./bumping/_index.ts";
 export {
   emptyReport,
   type Finding,
