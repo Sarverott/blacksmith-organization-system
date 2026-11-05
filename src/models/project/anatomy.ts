@@ -13,5 +13,3 @@ export const ANATOMY: Record<string, string> = {
 
 // Taskfile may also be spelled Taskfile.yaml
 export const ALIASES: Record<string, string[]> = { "Taskfile.yml": ["Taskfile.yaml"] };
-
-// NOTE: it looks fine but we need to unify way we declare things like that

@@ -1,7 +1,8 @@
 // bos devlog <tool>: the devlog of the project around the current directory
+
+import type { BOS } from "../bos.ts";
 import { createContext } from "../core/context.ts";
 import { tool } from "../core/tool.ts";
-import type { BOS } from "../main.ts";
 import { Devlog } from "../models/devlog/class.ts";
 import { projectAround } from "../models/project/around.ts";
 import { type DevlogState, stateMarkdown } from "../views/devlog.ts";

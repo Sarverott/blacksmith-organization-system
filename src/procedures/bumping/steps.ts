@@ -1,6 +1,6 @@
 import { join } from "../../core/paths.ts";
 import { bumpSemver, type LoopEvent } from "../../core/version.ts";
-import type { Bump } from "../../models/_index.ts";
+import type { Bump } from "../../models/index.ts";
 import type { BumpContext } from "./context.ts";
 
 const EVENT_OF: Record<Bump, LoopEvent> = { major: "milestone", minor: "phase", patch: "step" };

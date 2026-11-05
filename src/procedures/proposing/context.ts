@@ -1,6 +1,6 @@
 import type { GitHub } from "../../bridges/github.ts";
 import type { Context } from "../../core/context.ts";
-import type { Loop, LoopStep } from "../../models/_index.ts";
+import type { Loop, LoopStep } from "../../models/index.ts";
 
 export type FlowOutcome = {
   action: "none" | "exists" | "would-open" | "opened" | "would-merge" | "merged";

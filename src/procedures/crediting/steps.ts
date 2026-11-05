@@ -9,7 +9,7 @@ import {
   names,
   parseIdentity,
   readAuthors,
-} from "../../models/_index.ts";
+} from "../../models/index.ts";
 import type { CreditContext } from "./context.ts";
 
 const keyOf = ({ name, email }: Identity) => `${name.toLowerCase()} <${email.toLowerCase()}>`;

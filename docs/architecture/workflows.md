@@ -41,6 +41,7 @@ flowchart LR
 | `github-npm-package-publish.yml` | called by the release; by hand | the package on GitHub Packages as `@sarverott/blacksmith-organization-system` (it takes scoped names only), pre-releases under `next` |
 | `docker-container-publish.yml` | called by a full release; by hand | the image of the `Dockerfile` on Docker Hub: `<version>`, `<major>.<minor>`, `latest` |
 | `github-container-publish.yml` | called by a full release; by hand | the same image on `ghcr.io/sarverott/blacksmith-organization-system` |
+| `mirrors-propagate-and-status-badges.yml` | push to any branch or tag, a deletion, after each loop run, daily, by hand | every branch and tag to each mirror of `.github/bos.json` (`mirrors.to`), deletions too; a status badge per place on the branch `badges` |
 | `loop-next-pull-request-by-hand.yml` | by hand only | `bos flow next-pr <branch>`: the full loop `revision → testing → releasing → master`, not driven yet |
 
 A push made by a workflow with its own token starts no other workflow, so the
@@ -68,6 +69,24 @@ VirusTotal; the release's notes link each report.
 Container images are made only for a full release (not a pre-release); while
 npm is `next` (Q7) there is none. "Stable LTS" is open: BRAINSTORM Q12.
 
+## Mirrors
+
+The source is this GitHub repository; `.github/bos.json` (`mirrors`) lists where it is
+copied: gitea.com, gitlab.com, bitbucket.org, sr.ht. Every branch and tag is pushed
+to each (`--prune`: a branch deleted here goes there too), so a mirror's default
+branch must be one of ours (`master`), not a host's own `main`.
+
+Each place has a badge, a [shields.io endpoint](https://shields.io/badges/endpoint-badge)
+read from the branch `badges` (one commit, force-pushed, never merged):
+`github.com source: 200 OK`, `gitea.com mirror: 200 OK`, `404 NOT_FOUND` when
+the page is missing, `403 FORBIDDEN` when the update failed (or its secret is
+missing), other HTTP statuses as they come.
+
+Each mirror also runs the checks on its own CI, on `master` and `development`:
+`.gitea/workflows/checks.yml` (with it Gitea ignores `.github/workflows/`),
+`.gitlab-ci.yml`, `bitbucket-pipelines.yml`, `.builds/checks.yml` (builds.sr.ht
+needs a paid sourcehut account).
+
 ## Steps
 
 | Task (`scripts/workflows/`) | Does | Used by |
@@ -87,6 +106,8 @@ npm is `next` (Q7) there is none. "Stable LTS" is open: BRAINSTORM Q12.
 | `image-gate` | whether an image is made: a full release and a token | `*-container-publish` |
 | `wiki` | the docs into the GitHub wiki, pushed | `loop-master-…` |
 | `readthedocs` | the tag's version activated and built, `latest` rebuilt | `loop-master-…` |
+| `mirrors` | every branch and tag to each mirror, a badge file per place | `mirrors-…` |
+| `status-badges` | the badge files as the only commit of the branch `badges` | `mirrors-…` |
 | `notify` | `community` (Discord, Telegram), `social`, `workshop` hooks | `loop-master-…` |
 
 ## Secrets
@@ -103,6 +124,10 @@ them declare it.
 | `READTHEDOCS_API_TOKEN` | `publish-env` | Read the Docs: activate and build the tag's version |
 | `DOCKER_HUB_TOKEN` | `publish-env` | Docker Hub: pushing the image (`docker-container-publish.yml`); the user is the variable `DOCKER_HUB_USERNAME`, default `sarverott` *(assumed)* |
 | `SCALAR_API_TOKEN` | `publish-env` | [`TODO`] not used yet: an API reference on Scalar, once BOS has an HTTP API (phase 4) |
+| `MIRROR_GITEA_TOKEN` | `publish-env` | gitea.com: an access token with `write:repository`, pushed as the user `Sarverott` |
+| `MIRROR_GITLAB_TOKEN` | `publish-env` | gitlab.com: a project (or personal) access token with `write_repository`, user `oauth2` |
+| `MIRROR_BITBUCKET_TOKEN` | `publish-env` | bitbucket.org: a repository access token with write, user `x-token-auth` |
+| `MIRROR_SOURCEHUT_SSH_KEY` | `publish-env` | sr.ht: a private SSH key whose public half is in the sourcehut account (sr.ht takes pushes over SSH only) |
 | (none) | | GitHub Packages (npm and ghcr.io) use the workflow's own token |
 | `WIKI_TOKEN` | repository | a token that can push the wiki; without it the workflow's own token is used (it worked for `v1.0.0`) |
 | `DISCORD_WEBHOOK` | repository | a Discord channel's webhook URL: the dev community |

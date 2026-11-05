@@ -1,1 +1,1 @@
-task hooks:commit-msg -- "$1"
+sh .husky/task hooks:commit-msg -- "$1"

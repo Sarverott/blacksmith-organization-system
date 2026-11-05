@@ -9,7 +9,10 @@
       "releasing": ["master", "rejection"],
       "rejection": ["development"]
     },
-    "contributors": { "pattern": "dev/*", "into": "development" },
+    "contributors": {
+      "pattern": "dev/*",
+      "into": "development"
+    },
     "autocreate": true,
     "automerge": {
       "master": false,
@@ -22,8 +25,53 @@
     "release": "master"
   },
   "versioning": {
-    "bumps": { "revision": "minor", "master": "patch" },
+    "bumps": {
+      "revision": "minor",
+      "master": "patch"
+    },
     "tagPrefix": "v",
-    "commits": { "branches": ["dev/*"], "bump": "patch" }
+    "commits": {
+      "branches": ["dev/*"],
+      "bump": "patch"
+    }
+  },
+  "mirrors": {
+    "source": {
+      "host": "github.com",
+      "web": "https://github.com/Sarverott/blacksmith-organization-system"
+    },
+    "to": [
+      {
+        "name": "gitea",
+        "host": "gitea.com",
+        "web": "https://gitea.com/Sarverott/blacksmith-organization-system",
+        "git": "https://gitea.com/Sarverott/blacksmith-organization-system.git",
+        "user": "Sarverott",
+        "secret": "MIRROR_GITEA_TOKEN"
+      },
+      {
+        "name": "gitlab",
+        "host": "gitlab.com",
+        "web": "https://gitlab.com/Sarverott/blacksmith-organization-system",
+        "git": "https://gitlab.com/Sarverott/blacksmith-organization-system.git",
+        "user": "oauth2",
+        "secret": "MIRROR_GITLAB_TOKEN"
+      },
+      {
+        "name": "bitbucket",
+        "host": "bitbucket.org",
+        "web": "https://bitbucket.org/apokryf/blacksmith-organization-system",
+        "git": "https://bitbucket.org/apokryf/blacksmith-organization-system.git",
+        "user": "x-token-auth",
+        "secret": "MIRROR_BITBUCKET_TOKEN"
+      },
+      {
+        "name": "sourcehut",
+        "host": "sr.ht",
+        "web": "https://git.sr.ht/~sarverott/blacksmith-organization-system",
+        "git": "git@git.sr.ht:~sarverott/blacksmith-organization-system",
+        "secret": "MIRROR_SOURCEHUT_SSH_KEY"
+      }
+    ]
   }
 }

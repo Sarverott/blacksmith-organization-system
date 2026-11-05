@@ -3,6 +3,23 @@
 Findings, assumptions and what is untried, by the agents working here.
 Newest on top, dated. People read this file; they answer in `docs/devlog/`.
 
+## 2026-11-05 · Cleo · the owner's review notes, mirrors
+
+**Found**
+
+- `@go-task/cli` (a devDependency since this batch) installs `node_modules/.bin/task`.
+  It is a Node wrapper (`run-task.js`) that returns the binary's status and never
+  exits with it, so it always exits 0. Husky puts `node_modules/.bin` first in PATH
+  (`npm run` and `npx` do too, with an absolute path). So every hook passed, even
+  when biome, tsc or vitest failed: 14 of the owner's commits went in without their
+  formatting fixes, and two of them with lint errors. `.husky/task` now runs the task
+  binary from PATH without any `node_modules/.bin`, else the binary the package
+  downloaded. `tests/hooks.test.ts` keeps it so. Upstream: worth an issue at
+  go-task/task (the npm wrapper should `process.exit(status)`).
+- Every mirror page (gitea.com, gitlab.com, bitbucket.org, git.sr.ht) answers
+  200 today, so the repositories exist. Whether gitea.com runs Gitea Actions for
+  this account is untried.
+
 ## 2026-11-05 · Cleo · second batch (development workshop, Q6–Q9)
 
 **Found**
