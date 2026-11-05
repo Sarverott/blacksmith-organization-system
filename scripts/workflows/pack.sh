@@ -6,5 +6,8 @@ source "$(dirname "$0")/_common.sh"
 into="${1:?directory}"
 
 mkdir -p "$into"
-name=$(npm pack --pack-destination "$into" | tail -1)
-output file "$into/$name"
+npm pack --pack-destination "$into"
+# the name npm gives it; not read from npm's output, which lifecycle scripts share
+file="$into/$(jq -r '.name | sub("^@"; "") | gsub("/"; "-")' package.json)-$(jq -r .version package.json).tgz"
+test -f "$file"
+output file "$file"
