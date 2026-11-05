@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with: { fetch-depth: 0 }
-      - uses: go-task/setup-task@v1
+      - uses: go-task/setup-task@v2
       - name: Every branch and tag to each mirror, a badge each
         env:
           MIRROR_GITEA_TOKEN: ${{ secrets.MIRROR_GITEA_TOKEN }}

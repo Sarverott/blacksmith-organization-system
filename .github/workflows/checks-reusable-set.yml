@@ -80,7 +80,7 @@ jobs:
       - uses: actions/setup-node@v5
         with: { node-version: 24, cache: npm }
       - run: npm ci
-      - uses: go-task/setup-task@v1
+      - uses: go-task/setup-task@v2
       - run: task workflows:package
 
   docs:
@@ -88,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v6
+      - uses: astral-sh/setup-uv@v7
       - run: uv run --project docs mkdocs build --strict -f docs/mkdocs.yml
         env:
           NO_MKDOCS_2_WARNING: "1"
@@ -102,5 +102,5 @@ jobs:
       - uses: actions/setup-node@v5
         with: { node-version: 24, cache: npm }
       - run: npm ci
-      - uses: go-task/setup-task@v1
+      - uses: go-task/setup-task@v2
       - run: task workflows:commits -- "${{ inputs.commits }}"

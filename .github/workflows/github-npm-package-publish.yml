@@ -45,6 +45,6 @@ jobs:
         with:
           node-version: 24
           registry-url: https://npm.pkg.github.com
-      - uses: go-task/setup-task@v1
+      - uses: go-task/setup-task@v2
       - run: npm ci
       - run: task workflows:publish -- github ${{ inputs.prerelease && 'next' || 'latest' }}
