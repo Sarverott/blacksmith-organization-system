@@ -32,10 +32,15 @@ Newest on top, dated. People read this file; they answer in `docs/devlog/`.
 - ORDERS.md and INQUIRIES.md: the owner writes below their `---`; `bos devlog state` reads
   "waiting" from there.
 
+**Done on GitHub**
+
+- `development` pushed (Q1). Deleting `developement` there was refused by the permission
+  check; its head `c7da0df` is contained in `development`, so the owner can delete it safely.
+
 **Untried**
 
-- The CI workflows (`check.yml`, `npm-publish.yml`) have not run on GitHub yet: nothing is
-  pushed. Publishing needs the `npm_token` secret.
+- `check.yml` ran green on GitHub for `development` (run 41997472302, tests + docs).
+  `npm-publish.yml` has not run: no release yet; it needs the `npm_token` secret.
 - `NodeHost.watch` uses `fs.watch` recursive: tested on Linux; macOS and Windows not tried.
 - Read the Docs builds from `master` or the default branch: until `development` reaches
   `master`, the site still shows the old state.
