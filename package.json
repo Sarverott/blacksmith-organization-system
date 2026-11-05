@@ -1,96 +1,74 @@
 {
   "name": "blacksmith-organization-system",
   "version": "0.6.1",
-  "description": "Blacksmith Organization System - manage projects folders and files in your multiple workplaces, on servers and in publication repositories",
-  "main": "src/_index.js",
-  "exports": {
-    ".": "./src/_index.js",
-    "./core/*": "./src/core/*",
-    "./package.json": "./package.json"
-  },
-  "scripts": {
-    "build": "sh ./dev/builder.sh",
-    "deploy": "sh ./dev/deployer.sh",
-    "test": "node _index.js cli --debug",
-    "start": "node src/_index.js"
-  },
-  "repository": "git+https://github.com/Sarverott/blacksmith-organization-system.git",
+  "description": "Blacksmith Organization System (BOS) core: the workshop as code - build its base, listen to its changes, inspect it as one coherent environment",
   "keywords": [
     "bos",
     "blacksmith",
     "organization",
     "system",
-    "manage",
+    "workshop",
+    "forge",
     "projects"
   ],
-  "author": "Sett Sarverott <sett@sarverott.com> (http://sarverott.com)",
-  "license": "MIT",
+  "homepage": "https://github.com/Sarverott/blacksmith-organization-system#readme",
   "bugs": {
     "url": "https://github.com/Sarverott/blacksmith-organization-system/issues"
   },
-  "homepage": "https://github.com/Sarverott/blacksmith-organization-system#readme",
-  "dependencies": {
-    "@actions/core": "^1.11.1",
-    "@discord/embedded-app-sdk": "^1.9.0",
-    "@google/generative-ai": "^0.24.0",
-    "@solana/web3.js": "^1.98.0",
-    "@types/node": "^22.13.12",
-    "babel": "^6.23.0",
-    "carnival-toolbox": "^1.2.4",
-    "discord.js": "^14.18.0",
-    "dockerode": "^4.0.4",
-    "emailjs": "^4.0.3",
-    "express": "^4.21.2",
-    "ftps": "^1.2.0",
-    "googleapis": "^148.0.0",
-    "graphql": "^16.10.0",
-    "graphql-http": "^1.22.4",
-    "isomorphic-git": "^1.30.1",
-    "js-yaml": "^4.1.0",
-    "mailpop3": "^0.1.0",
-    "mysql": "^2.18.1",
-    "netlify": "^13.3.3",
-    "ngrok": "^5.0.0-beta.2",
-    "obsidian": "^1.8.7",
-    "octokit": "^4.1.2",
-    "ollama": "^0.5.14",
-    "openai": "^4.89.0",
-    "opentimestamps": "^0.0.0",
-    "postgres": "^3.4.5",
-    "puppeteer": "^24.4.0",
-    "pyodide": "^0.27.4",
-    "simple-git": "^3.27.0",
-    "snyk": "^1.1296.0",
-    "socket.io": "^4.8.1",
-    "ssh2": "^1.16.0",
-    "tslib": "^2.8.1",
-    "tumblr.js": "^5.0.0",
-    "typescript": "^5.8.2",
-    "vue": "^3.5.12",
-    "xterm": "^5.3.0"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sarverott/blacksmith-organization-system.git"
   },
-  "publishConfig": {
-    "@sarverott:registry": "https://registry.npmjs.org/"
+  "license": "MIT",
+  "author": "Sett Sarverott <sett@sarverott.com> (http://sarverott.com)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "bos": "dist/cli.js"
   },
-  "directories": {
-    "doc": "docs"
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "resources",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "bos": "node src/cli.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "check": "npm run typecheck && npm run lint && npm test",
+    "commit": "cz",
+    "prepare": "husky"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
   },
   "devDependencies": {
-    "@electron-forge/cli": "^7.5.0",
-    "@eslint/js": "^9.13.0",
-    "@quick-start/create-electron": "^1.0.24",
-    "@vitejs/plugin-vue": "^5.1.4",
-    "create-vue": "^3.11.1",
-    "electron": "^33.4.6",
-    "electron-vite": "^2.3.0",
-    "eslint": "^8.57.1",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jest": "^28.8.3",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-promise": "^6.6.0",
-    "eslint-plugin-vue": "^9.29.0",
-    "globals": "^15.11.0",
-    "jest": "^29.7.0"
+    "@biomejs/biome": "2.5.14",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@commitlint/cz-commitlint": "^21.2.3",
+    "@types/node": "^24.0.0",
+    "commitizen": "^4.3.2",
+    "husky": "^9.1.7",
+    "inquirer": "^12.11.1",
+    "typescript": "^5.9.0",
+    "vitest": "^5.0.2"
   }
 }
