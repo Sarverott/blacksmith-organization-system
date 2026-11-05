@@ -103,3 +103,53 @@ your "Lean" sounds good - go ahead
   `moderation`, `publishing`, `dev/submodule-gits` and `dev/reforge` deleted
   locally (all their commits are in tags or on GitHub); `revision`, `testing`,
   `releasing` stay and move to `master` when the loop starts (phase 2).
+
+## UNIXUSAT=1793876512737 · commit 2517177
+
+The owner moved development and its demonstrations to a workshop of their own
+(`.env`: `WORKSHOP_ROOT` on the partition `setternet-A62`), so the home
+workshop is not exposed every time BOS is worked on. Then, in chat: push
+`development`, try to publish; the owner's edits are committed on
+`dev/Sarverott`, one commit per change, with messages written by the agent
+(its assumptions, its view, how it understands what is where and why), and
+merged into `development`; fix the remotes still wrong; documentation is
+needed; phase 2 begins.
+
+The owner's inquiries (`docs/devlog/INQUIRIES.md`), word for word:
+
+````markdown
+# INQUIRIES: work asked for in the owner's own words
+
+Written below the line. Agents turn each inquiry into the plan (VISION,
+ROADMAP, TODO), move it word for word into the changelog, and leave this file
+with its header only.
+
+---
+
+
+
+## files to be reforged 
+> STEPS: read and analize content, update content, upgrade content, create new file in more proper place, remove old file
+- docs/about-bridges.md
+- docs/about-interfaces.md
+- docs/about-models.md
+- docs/scrapnote-example.md
+
+## corrections in these files 
+- README.md 
+    - general purpose, showed on npm, docker and else places like that
+- docs/README.md
+    - documentation index of readthedocs and else
+- .github/README.md
+    - github repository readme notice
+- .github/CODE_OF_CONDUCT.md
+- .github/CONTRIBUTING.md
+````
+
+Plan: the `about-*` pages become `docs/architecture/` (models, interfaces,
+bridges, as the reforged core has them); `scrapnote-example.md` is archived
+here word for word, its ideas already live in the glossary and the rest go to
+the architecture pages; each README gets one audience (README.md: npm and
+everywhere; docs/README.md: the documentation's index; .github/README.md:
+GitHub); CONTRIBUTING.md and CODE_OF_CONDUCT.md written for the contributors
+committee.
