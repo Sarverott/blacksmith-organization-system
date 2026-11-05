@@ -15,8 +15,15 @@ export interface Host {
   writeText(path: string, text: string): void;
   appendText(path: string, text: string): void;
   mkdir(path: string): void;
-  // calls onChange for every change below root until the returned function is called
-  watch(root: string, onChange: (change: Change) => void): () => void;
+  // calls onChange for every change below root until the returned function is called;
+  // onError once when the watcher can no longer listen (it never fails silently);
+  // skip(relative) true: that directory and everything below it is not watched
+  watch(
+    root: string,
+    onChange: (change: Change) => void,
+    onError: (error: Error) => void,
+    skip?: (relative: string) => boolean,
+  ): () => void;
   env(name: string): string | undefined;
   home(): string;
   cwd(): string;

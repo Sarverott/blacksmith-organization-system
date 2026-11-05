@@ -9,7 +9,7 @@ export * as paths from "./core/paths.ts";
 export { Procedure, type Step } from "./core/procedure.ts";
 export { type Arg, type Input, type IO, inputFor, parseArgs, type Tool, tool } from "./core/tool.ts";
 export { bumpGrih, bumpSemver, EVENTS, GRIH_START, isLoopEvent, type LoopEvent } from "./core/version.ts";
-export { NodeHost } from "./hosts/node.ts";
+export { NodeHost, WATCH_LIMIT } from "./hosts/node.ts";
 export { BOS, type BOSOptions, type WatchOptions } from "./main.ts";
 export * from "./models/_index.ts";
 export * from "./procedures/_index.ts";

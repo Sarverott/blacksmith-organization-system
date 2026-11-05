@@ -1,18 +1,12 @@
 // Host for Node.js: the real file system, clock and environment.
-import {
-  appendFileSync,
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  statSync,
-  watch,
-  writeFileSync,
-} from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { homedir, hostname, userInfo } from "node:os";
 import { resolve } from "node:path";
 
 import type { Change, Entry, Host } from "../core/host.ts";
+import { watchTree } from "./watch-tree.ts";
+
+export { WATCH_LIMIT } from "./watch-tree.ts";
 
 export class NodeHost implements Host {
   exists(path: string): boolean {
@@ -58,11 +52,13 @@ export class NodeHost implements Host {
     mkdirSync(path, { recursive: true });
   }
 
-  watch(root: string, onChange: (change: Change) => void): () => void {
-    const watcher = watch(root, { recursive: true }, (kind, filename) => {
-      if (filename) onChange({ path: String(filename), kind: kind === "rename" ? "rename" : "change" });
-    });
-    return () => watcher.close();
+  watch(
+    root: string,
+    onChange: (change: Change) => void,
+    onError: (error: Error) => void,
+    skip: (relative: string) => boolean = () => false,
+  ): () => void {
+    return watchTree(root, { onChange, onError, skip });
   }
 
   env(name: string): string | undefined {

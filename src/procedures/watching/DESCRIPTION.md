@@ -9,7 +9,9 @@ the scope and project) and when (UNIXUSAT).
    `node_modules/`, BOS's own `.BOS/storylines/` (so recording never feeds
    itself), and repeats of one path within `quietMs`.
 2. `wait`: keep listening until `context.signal` aborts (Ctrl+C in the CLI),
-   then stop the watcher.
+   then stop the watcher. If the host's watcher fails (e.g. Linux has no
+   inotify watches left because an editor holds them all), the wait ends and
+   the procedure fails with that error: a watch never goes deaf silently.
 
 With `record`, every event is also appended to
 `.BOS/storylines/logs/workshop.jsonl`. This is the base the later workmodes

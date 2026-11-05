@@ -18,4 +18,7 @@ export type WatchContext = Context & {
   record: boolean;
   quietMs: number;
   stop?: () => void;
+  // set when the watcher fails; wake ends the wait early
+  failure?: Error;
+  wake?: () => void;
 };
