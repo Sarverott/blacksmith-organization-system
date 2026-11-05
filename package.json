@@ -1,16 +1,8 @@
 {
   "name": "blacksmith-organization-system",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "description": "Blacksmith Organization System (BOS) core: the workshop as code - build its base, listen to its changes, inspect it as one coherent environment",
-  "keywords": [
-    "bos",
-    "blacksmith",
-    "organization",
-    "system",
-    "workshop",
-    "forge",
-    "projects"
-  ],
+  "keywords": ["bos", "blacksmith", "organization", "system", "workshop", "forge", "projects"],
   "homepage": "https://github.com/Sarverott/blacksmith-organization-system#readme",
   "bugs": {
     "url": "https://github.com/Sarverott/blacksmith-organization-system/issues"
@@ -34,12 +26,7 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist",
-    "resources",
-    "README.md",
-    "LICENSE"
-  ],
+  "files": ["dist", "resources", "README.md", "LICENSE"],
   "engines": {
     "node": ">=22.18"
   },
