@@ -66,7 +66,7 @@ src/
 ├── cli.ts         bos <model> <tool> [operands] [--flags]; --json, --workshop=
 └── index.ts       library entry
 tests/             vitest, one file per concern; helpers.ts makes temporary workshops
-scripts/           legacy shell sketches (reference only)
+scripts/           gh-wiki.py (docs → GitHub wiki); legacy shell sketches still to port (reference only)
 docs/              devlog, changelog, .agents, glossary; MkDocs site (docs/mkdocs.yml, Read the Docs)
 ```
 
