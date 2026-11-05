@@ -12,14 +12,20 @@ export function settingsFile(projectPath: string): string {
 export function settingsOf(host: Host, projectPath: string): Settings {
   const file = settingsFile(projectPath);
   const text = host.readText(file);
-  if (text === null) return { source: "default", data: {} };
+  if (text === null) {
+    return { source: "default", data: {} };
+  }
   let data: unknown;
   try {
     data = JSON.parse(text);
   } catch (error) {
-    throw new Error(`${file} is not JSON: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `${file} is not JSON: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
-  if (typeof data !== "object" || data === null || Array.isArray(data)) throw new Error(`${file} is not an object`);
+  if (typeof data !== "object" || data === null || Array.isArray(data)) {
+    throw new Error(`${file} is not an object`);
+  }
   return { source: file, data: data as SettingsData };
 }
 
@@ -38,7 +44,9 @@ export function versioningOf(settings: Settings): VersioningData {
   }
   for (const [branch, bump] of Object.entries(versioning.bumps)) {
     if (!BUMPS.includes(bump)) {
-      throw new Error(`${settings.source}: versioning.bumps.${branch} is "${bump}", not one of ${BUMPS.join(", ")}`);
+      throw new Error(
+        `${settings.source}: versioning.bumps.${branch} is "${bump}", not one of ${BUMPS.join(", ")}`,
+      );
     }
   }
   return versioning;

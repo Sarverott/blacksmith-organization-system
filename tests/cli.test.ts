@@ -5,11 +5,14 @@ import { describe, expect, it } from "vitest";
 
 import { tempWorkshop } from "./helpers.ts";
 
-const bos = (...args: string[]) => spawnSync(process.execPath, ["src/cli.ts", ...args], { encoding: "utf8" });
+const bos = (...args: string[]) =>
+  spawnSync(process.execPath, ["src/cli.ts", ...args], { encoding: "utf8" });
 
 describe("bos (cli)", () => {
   it("prints its version and help", () => {
-    expect(bos("--version").stdout.trim()).toBe(JSON.parse(readFileSync("package.json", "utf8")).version);
+    expect(bos("--version").stdout.trim()).toBe(
+      JSON.parse(readFileSync("package.json", "utf8")).version,
+    );
     expect(bos("help").stdout).toContain("bos workshop status");
   });
 
@@ -17,7 +20,9 @@ describe("bos (cli)", () => {
     const root = tempWorkshop();
     expect(bos("workshop", "bootstrap", `--workshop=${root}`).status).toBe(0);
     const status = bos("workshop", "status", `--workshop=${root}`, "--json");
-    expect(JSON.parse(status.stdout).findings.filter((f: { level: string }) => f.level === "error")).toEqual([]);
+    expect(
+      JSON.parse(status.stdout).findings.filter((f: { level: string }) => f.level === "error"),
+    ).toEqual([]);
   });
 
   it("fails with a message on a wrong call", () => {

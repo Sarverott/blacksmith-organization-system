@@ -18,7 +18,12 @@ export class Procedure<C extends Context = Context> {
       const started = context.host.now();
       try {
         await step.run(context);
-        context.trace.push({ procedure: this.name, step: step.name, ok: true, ms: context.host.now() - started });
+        context.trace.push({
+          procedure: this.name,
+          step: step.name,
+          ok: true,
+          ms: context.host.now() - started,
+        });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         context.trace.push({ procedure: this.name, step: step.name, ok: false, error: message });

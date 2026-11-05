@@ -20,7 +20,9 @@ class ScriptedGitHub extends NodeHost {
     const line = args.join(" ");
     this.calls.push(`${command} ${line}`);
     const found = this.script.find(([key]) => line.startsWith(key));
-    if (!found) return { status: 1, stdout: "", stderr: `unscripted: ${line}` };
+    if (!found) {
+      return { status: 1, stdout: "", stderr: `unscripted: ${line}` };
+    }
     const reply = found[1];
     return { status: 0, stdout: typeof reply === "string" ? reply : reply(args), stderr: "" };
   }
@@ -35,7 +37,10 @@ function project(): string {
 const compare = (aheadBy: number, ...commits: [number, string][]) =>
   JSON.stringify({
     ahead_by: aheadBy,
-    commits: commits.map(([parents, message]) => ({ parents: Array(parents).fill({}), commit: { message } })),
+    commits: commits.map(([parents, message]) => ({
+      parents: Array(parents).fill({}),
+      commit: { message },
+    })),
   });
 
 describe("flow: proposing", () => {
@@ -58,20 +63,31 @@ describe("flow: proposing", () => {
       ["pr list", "[]"],
     ]);
     const outcome = await new BOS(host).propose("dev/Cleo", { dir: project(), dryRun: true });
-    expect(outcome).toMatchObject({ action: "would-open", step: { to: "development", automerge: false } });
+    expect(outcome).toMatchObject({
+      action: "would-open",
+      step: { to: "development", automerge: false },
+    });
     expect(host.calls.some((call) => call.includes("pr create"))).toBe(false);
   });
 
   it("proposes nothing new, only bumps and merges, or an open one again", async () => {
-    const empty = await new BOS(new ScriptedGitHub([["api", compare(0)]])).propose("revision", { dir: project() });
+    const empty = await new BOS(new ScriptedGitHub([["api", compare(0)]])).propose("revision", {
+      dir: project(),
+    });
     expect(empty.reason).toMatch(/nothing new/);
-    const bumps = new ScriptedGitHub([["api", compare(2, [2, "Merge"], [1, "chore(release): 1.0.1"])]]);
-    expect((await new BOS(bumps).propose("testing", { dir: project() })).reason).toMatch(/only merges/);
+    const bumps = new ScriptedGitHub([
+      ["api", compare(2, [2, "Merge"], [1, "chore(release): 1.0.1"])],
+    ]);
+    expect((await new BOS(bumps).propose("testing", { dir: project() })).reason).toMatch(
+      /only merges/,
+    );
     const back = new ScriptedGitHub([
       ["api", compare(1, [1, "chore(release): 1.0.1"])],
       ["pr list", "[]"],
     ]);
-    expect((await new BOS(back).propose("master", { dir: project(), dryRun: true })).action).toBe("would-open");
+    expect((await new BOS(back).propose("master", { dir: project(), dryRun: true })).action).toBe(
+      "would-open",
+    );
     const open = new ScriptedGitHub([
       ["api", compare(1, [1, "feat: z"])],
       ["pr list", '[{"number":3}]'],
@@ -84,7 +100,9 @@ describe("flow: proposing", () => {
 
   it("leaves branches outside the loop alone, without asking GitHub", async () => {
     const host = new ScriptedGitHub([]);
-    expect((await new BOS(host).propose("feature/x", { dir: project() })).reason).toMatch(/not part of the loop/);
+    expect((await new BOS(host).propose("feature/x", { dir: project() })).reason).toMatch(
+      /not part of the loop/,
+    );
     expect(host.calls).toEqual([]);
   });
 });
@@ -105,7 +123,9 @@ describe("flow: automerging", () => {
       ["pr view", view("revision", "testing")],
       ["pr merge", ""],
     ]);
-    expect(await new BOS(host).automerge(5, { dir: project() })).toMatchObject({ action: "merged" });
+    expect(await new BOS(host).automerge(5, { dir: project() })).toMatchObject({
+      action: "merged",
+    });
     expect(host.calls).toContain("gh pr merge 5 --merge");
   });
 

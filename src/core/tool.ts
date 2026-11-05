@@ -38,7 +38,10 @@ export function tool<R>(
 }
 
 // "--dry-run --workshop=/x a b" → flags { dryRun: true, workshop: "/x" }, operands [a, b]
-export function parseArgs(argv: string[]): { operands: string[]; flags: Record<string, string | boolean> } {
+export function parseArgs(argv: string[]): {
+  operands: string[];
+  flags: Record<string, string | boolean>;
+} {
   const flags: Record<string, string | boolean> = {};
   const operands: string[] = [];
   for (const arg of argv) {
@@ -53,24 +56,41 @@ export function parseArgs(argv: string[]): { operands: string[]; flags: Record<s
 }
 
 // operands and flags → the tool's input, checked against its args
-export function inputFor(entry: Tool, operands: string[], flags: Record<string, string | boolean>): Input {
+export function inputFor(
+  entry: Tool,
+  operands: string[],
+  flags: Record<string, string | boolean>,
+): Input {
   const input: Input = {};
   const positional = entry.args.filter((arg) => arg.positional);
   positional.forEach((arg, index) => {
-    if (operands[index] !== undefined) input[arg.name] = operands[index];
+    if (operands[index] !== undefined) {
+      input[arg.name] = operands[index];
+    }
   });
-  if (operands.length > positional.length)
+  if (operands.length > positional.length) {
     throw new Error(
       `too many operands for ${entry.model} ${entry.name}: ${operands.slice(positional.length).join(" ")}`,
     );
+  }
   for (const arg of entry.args) {
     const value = flags[arg.name];
-    if (value === undefined) continue;
-    if (arg.type === "boolean") input[arg.name] = value === true || value === "true";
-    else if (value === true) throw new Error(`--${arg.name} needs a value: --${arg.name}=<${arg.name}>`);
-    else input[arg.name] = value;
+    if (value === undefined) {
+      continue;
+    }
+    if (arg.type === "boolean") {
+      input[arg.name] = value === true || value === "true";
+    } else if (value === true) {
+      throw new Error(`--${arg.name} needs a value: --${arg.name}=<${arg.name}>`);
+    } else {
+      input[arg.name] = value;
+    }
   }
-  const missing = entry.args.filter((arg) => arg.required && input[arg.name] === undefined).map((arg) => arg.name);
-  if (missing.length) throw new Error(`${entry.model} ${entry.name} needs: ${missing.join(", ")}`);
+  const missing = entry.args
+    .filter((arg) => arg.required && input[arg.name] === undefined)
+    .map((arg) => arg.name);
+  if (missing.length) {
+    throw new Error(`${entry.model} ${entry.name} needs: ${missing.join(", ")}`);
+  }
   return input;
 }

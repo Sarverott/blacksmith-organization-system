@@ -11,7 +11,9 @@ import { gitRepo, tempWorkshop, write } from "./helpers.ts";
 function project(commits: { by: string; trailers?: string[] }[], authors?: string): string {
   const dir = join(tempWorkshop(), "p");
   gitRepo(dir);
-  if (authors !== undefined) write(join(dir, ".github", "AUTHORS"), authors);
+  if (authors !== undefined) {
+    write(join(dir, ".github", "AUTHORS"), authors);
+  }
   for (const { by, trailers = [] } of commits) {
     const [, name = "", email = ""] = by.match(/^(.*) <(.*)>$/) ?? [];
     const message = ["chore: step", trailers.join("\n")].filter(Boolean).join("\n\n");
@@ -32,7 +34,9 @@ const authors = (dir: string) => readFileSync(join(dir, ".github", "AUTHORS"), "
 
 describe("authors: entries", () => {
   it("reads every kind of entry, spaces or tabs, and writes it with tabs", () => {
-    const full = parseEntry(`Sarverott   "Sett Sarverott A.A.B."   <sett@sarverott.com>  (https://sett.sarverott.com)`);
+    const full = parseEntry(
+      `Sarverott   "Sett Sarverott A.A.B."   <sett@sarverott.com>  (https://sett.sarverott.com)`,
+    );
     expect(full).toEqual({
       nickname: "Sarverott",
       identity: "Sett Sarverott A.A.B.",

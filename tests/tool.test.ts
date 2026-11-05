@@ -12,13 +12,19 @@ describe("tools", () => {
 
   it("fills the input from operands and checks it", () => {
     const bump = findTool("scope", "bump");
-    expect(inputFor(bump, ["s", "phase"], { dryRun: true })).toEqual({ scope: "s", event: "phase", dryRun: true });
+    expect(inputFor(bump, ["s", "phase"], { dryRun: true })).toEqual({
+      scope: "s",
+      event: "phase",
+      dryRun: true,
+    });
     expect(() => inputFor(bump, ["s"], {})).toThrow(/needs: event/);
     expect(() => inputFor(bump, ["s", "phase", "extra"], {})).toThrow(/too many operands/);
   });
 
   it("names what exists when a tool is unknown", () => {
-    expect(() => findTool("nope", "x")).toThrow(/models: workshop, scope, devlog, flow, project, version/);
+    expect(() => findTool("nope", "x")).toThrow(
+      /models: workshop, scope, devlog, flow, project, version/,
+    );
     expect(() => findTool("workshop", "x")).toThrow(/tools: locate, status, bootstrap, watch/);
   });
 });

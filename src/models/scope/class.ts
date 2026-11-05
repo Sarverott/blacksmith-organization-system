@@ -26,12 +26,19 @@ export class Scope extends Element {
   projects(): Project[] {
     const found: Project[] = [];
     const walk = (dir: string, depth: number) => {
-      if (depth > Scope.maxDepth) return;
+      if (depth > Scope.maxDepth) {
+        return;
+      }
       for (const entry of this.host.list(dir)) {
-        if (!entry.directory || entry.name.startsWith(".") || SKIPPED.has(entry.name)) continue;
+        if (!entry.directory || entry.name.startsWith(".") || SKIPPED.has(entry.name)) {
+          continue;
+        }
         const path = `${dir}/${entry.name}`;
-        if (isRepository(this.host, path)) found.push(new Project(this.host, path, this));
-        else walk(path, depth + 1);
+        if (isRepository(this.host, path)) {
+          found.push(new Project(this.host, path, this));
+        } else {
+          walk(path, depth + 1);
+        }
       }
     };
     walk(this.path, 1);
@@ -51,7 +58,9 @@ export class Scope extends Element {
     const data = this.data() ?? {};
     const from = data.version ?? null;
     const to = bumpGrih(from ?? GRIH_START, event);
-    if (!context.dryRun) this.host.mkdir(this.file(".bos"));
+    if (!context.dryRun) {
+      this.host.mkdir(this.file(".bos"));
+    }
     this.writeJSON(SCOPE_FILE, { ...data, version: to }, context);
     return { from, to };
   }

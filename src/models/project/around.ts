@@ -7,7 +7,11 @@ import { isRepository } from "./git.ts";
 export function projectAround(host: Host, dir?: string): Project {
   const start = normalize(dir ? (dir.startsWith("/") ? dir : join(host.cwd(), dir)) : host.cwd());
   for (let at = start; ; at = dirname(at)) {
-    if (isRepository(host, at)) return new Project(host, at);
-    if (at === "/") throw new Error(`${start} is not inside a git repository`);
+    if (isRepository(host, at)) {
+      return new Project(host, at);
+    }
+    if (at === "/") {
+      throw new Error(`${start} is not inside a git repository`);
+    }
   }
 }

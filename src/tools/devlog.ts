@@ -6,7 +6,11 @@ import { Devlog } from "../models/devlog/class.ts";
 import { projectAround } from "../models/project/around.ts";
 import { type DevlogState, stateMarkdown } from "../views/devlog.ts";
 
-const dirArg = { name: "dir", type: "string", info: "a path inside the project (default: current directory)" } as const;
+const dirArg = {
+  name: "dir",
+  type: "string",
+  info: "a path inside the project (default: current directory)",
+} as const;
 
 function readState(bos: BOS, dir?: string): DevlogState {
   const project = projectAround(bos.host, dir);
@@ -29,7 +33,10 @@ export const devlogTools = [
     model: "devlog",
     name: "state",
     info: "where the project stands: phases of TODO.md, open questions and proposals, waiting orders",
-    args: [dirArg, { name: "write", type: "boolean", info: "write docs/devlog/STATE.md instead of printing" }],
+    args: [
+      dirArg,
+      { name: "write", type: "boolean", info: "write docs/devlog/STATE.md instead of printing" },
+    ],
     run: (bos, input) => {
       const state = readState(bos, input.dir as string | undefined);
       if (input.write) {
@@ -41,6 +48,7 @@ export const devlogTools = [
       }
       return { state, written: [] as string[] };
     },
-    render: (result) => (result.written.length ? `wrote ${result.written.join(", ")}` : stateMarkdown(result.state)),
+    render: (result) =>
+      result.written.length ? `wrote ${result.written.join(", ")}` : stateMarkdown(result.state),
   }),
 ];

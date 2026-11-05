@@ -19,8 +19,11 @@ export function isLoopEvent(value: string): value is LoopEvent {
 function parse(version: string, count: number, scheme: string): number[] {
   const parts = version.replace(/^v/, "").split(".");
   const numbers = parts.map(Number);
-  if (parts.length !== count || numbers.some((n) => !Number.isInteger(n) || n < 0))
-    throw new Error(`"${version}" is not a ${scheme} version (${count} whole numbers joined by dots)`);
+  if (parts.length !== count || numbers.some((n) => !Number.isInteger(n) || n < 0)) {
+    throw new Error(
+      `"${version}" is not a ${scheme} version (${count} whole numbers joined by dots)`,
+    );
+  }
   return numbers;
 }
 
@@ -45,7 +48,11 @@ export function bumpGrih(version: string, event: LoopEvent): string {
 // <0, 0, >0 like a sort comparator: "1.10.0" is after "1.9.3"
 export function compareSemver(a: string, b: string): number {
   const [x, y] = [parse(a, 3, "semver"), parse(b, 3, "semver")];
-  for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return (x[i] ?? 0) - (y[i] ?? 0);
+  for (let i = 0; i < 3; i++) {
+    if (x[i] !== y[i]) {
+      return (x[i] ?? 0) - (y[i] ?? 0);
+    }
+  }
   return 0;
 }
 

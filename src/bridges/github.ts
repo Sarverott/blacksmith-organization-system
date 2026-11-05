@@ -2,7 +2,13 @@
 import type { Host } from "../core/host.ts";
 
 export type Comparison = { aheadBy: number; commits: { parents: number; message: string }[] };
-export type PullRequest = { number: number; state: string; base: string; head: string; crossRepository: boolean };
+export type PullRequest = {
+  number: number;
+  state: string;
+  base: string;
+  head: string;
+  crossRepository: boolean;
+};
 
 export class GitHub {
   readonly host: Host;
@@ -16,7 +22,9 @@ export class GitHub {
 
   gh(args: string[]): string {
     const { status, stdout, stderr } = this.host.run("gh", args, { cwd: this.cwd });
-    if (status !== 0) throw new Error(`gh ${args.slice(0, 2).join(" ")}: ${(stderr || stdout).trim()}`);
+    if (status !== 0) {
+      throw new Error(`gh ${args.slice(0, 2).join(" ")}: ${(stderr || stdout).trim()}`);
+    }
     return stdout.trim();
   }
 
@@ -34,10 +42,10 @@ export class GitHub {
 
   // what head has that base has not
   compare(base: string, head: string): Comparison {
-    const raw = this.json<{ ahead_by: number; commits: { parents: unknown[]; commit: { message: string } }[] }>([
-      "api",
-      `repos/${this.repository()}/compare/${base}...${head}`,
-    ]);
+    const raw = this.json<{
+      ahead_by: number;
+      commits: { parents: unknown[]; commit: { message: string } }[];
+    }>(["api", `repos/${this.repository()}/compare/${base}...${head}`]);
     return {
       aheadBy: raw.ahead_by,
       commits: raw.commits.map((c) => ({ parents: c.parents.length, message: c.commit.message })),
@@ -62,9 +70,22 @@ export class GitHub {
   }
 
   createPullRequest(head: string, base: string, title: string, body: string): number {
-    const url = this.gh(["pr", "create", "--head", head, "--base", base, "--title", title, "--body", body]);
+    const url = this.gh([
+      "pr",
+      "create",
+      "--head",
+      head,
+      "--base",
+      base,
+      "--title",
+      title,
+      "--body",
+      body,
+    ]);
     const number = Number(url.replace(/\/+$/, "").split("/").pop());
-    if (!Number.isInteger(number)) throw new Error(`gh pr create: no pull request number in "${url}"`);
+    if (!Number.isInteger(number)) {
+      throw new Error(`gh pr create: no pull request number in "${url}"`);
+    }
     return number;
   }
 
@@ -75,7 +96,13 @@ export class GitHub {
       baseRefName: string;
       headRefName: string;
       isCrossRepository: boolean;
-    }>(["pr", "view", String(number), "--json", "number,state,baseRefName,headRefName,isCrossRepository"]);
+    }>([
+      "pr",
+      "view",
+      String(number),
+      "--json",
+      "number,state,baseRefName,headRefName,isCrossRepository",
+    ]);
     return {
       number: raw.number,
       state: raw.state,

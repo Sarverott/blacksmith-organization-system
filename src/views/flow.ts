@@ -8,7 +8,12 @@ export function stepText(step: LoopStep): string {
   return `${step.from.padEnd(14)} → ${step.to.padEnd(12)} ${merge}${back}`;
 }
 
-export type Explained = { source: string; steps: LoopStep[]; data: LoopData; versioning: VersioningData };
+export type Explained = {
+  source: string;
+  steps: LoopStep[];
+  data: LoopData;
+  versioning: VersioningData;
+};
 
 export function explainText({ source, steps, data, versioning }: Explained): string {
   const { contributors, autocreate, release } = data;

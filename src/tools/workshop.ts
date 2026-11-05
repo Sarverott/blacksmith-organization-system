@@ -36,7 +36,11 @@ export const workshopTools = [
     name: "watch",
     info: "listen to changes in the workshop until Ctrl+C; one line per change",
     args: [
-      { name: "record", type: "boolean", info: "also append every change to .BOS/storylines/logs/workshop.jsonl" },
+      {
+        name: "record",
+        type: "boolean",
+        info: "also append every change to .BOS/storylines/logs/workshop.jsonl",
+      },
       { name: "json", type: "boolean", info: "one JSON object per line" },
     ],
     run: async (bos, input, io) => {

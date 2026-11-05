@@ -13,7 +13,9 @@ export class Git {
 
   git(args: string[]): string {
     const { status, stdout, stderr } = this.host.run("git", args, { cwd: this.cwd });
-    if (status !== 0) throw new Error(`git ${args.slice(0, 2).join(" ")}: ${(stderr || stdout).trim()}`);
+    if (status !== 0) {
+      throw new Error(`git ${args.slice(0, 2).join(" ")}: ${(stderr || stdout).trim()}`);
+    }
     return stdout.trim();
   }
 
@@ -29,8 +31,12 @@ export class Git {
 
   // a three-way merge of files into ours (git merge-file); true when it has conflicts
   mergeFile(ours: string, base: string, theirs: string): boolean {
-    const { status, stderr } = this.host.run("git", ["merge-file", ours, base, theirs], { cwd: this.cwd });
-    if (status < 0 || status > 127) throw new Error(`git merge-file: ${stderr.trim()}`);
+    const { status, stderr } = this.host.run("git", ["merge-file", ours, base, theirs], {
+      cwd: this.cwd,
+    });
+    if (status < 0 || status > 127) {
+      throw new Error(`git merge-file: ${stderr.trim()}`);
+    }
     return status > 0;
   }
 
@@ -38,9 +44,13 @@ export class Git {
   // Co-authored-by trailer, as "Name <email>" lines (repeated; the caller dedupes)
   identities(): string[] {
     const format = "%an <%ae>%n%cn <%ce>%n%(trailers:key=Co-authored-by,valueonly,separator=%x0A)";
-    const { status, stdout } = this.host.run("git", ["log", "--reverse", `--format=${format}`], { cwd: this.cwd });
+    const { status, stdout } = this.host.run("git", ["log", "--reverse", `--format=${format}`], {
+      cwd: this.cwd,
+    });
     // a repository without commits has nobody yet
-    if (status !== 0) return [];
+    if (status !== 0) {
+      return [];
+    }
     return stdout.split("\n").filter((line) => line.trim());
   }
 }

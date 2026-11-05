@@ -3,7 +3,13 @@
 // which phase is complete (a Y / I bump), which questions are open, what waits.
 import { Element } from "../../core/element.ts";
 
-export type Phase = { number: number; title: string; done: number; total: number; complete: boolean };
+export type Phase = {
+  number: number;
+  title: string;
+  done: number;
+  total: number;
+  complete: boolean;
+};
 
 export const DEVLOG_FILES = [
   "README.md",
@@ -30,29 +36,43 @@ export class Devlog extends Element {
     for (const line of this.text("TODO.md").split("\n")) {
       const heading = line.match(/^## Phase (\d+): (.+?)\s*$/);
       if (heading) {
-        phases.push({ number: Number(heading[1]), title: heading[2] ?? "", done: 0, total: 0, complete: false });
+        phases.push({
+          number: Number(heading[1]),
+          title: heading[2] ?? "",
+          done: 0,
+          total: 0,
+          complete: false,
+        });
         continue;
       }
       const item = line.match(/^\s*- \[( |x|X)\]/);
       const current = phases[phases.length - 1];
       if (item && current) {
         current.total++;
-        if (item[1] !== " ") current.done++;
+        if (item[1] !== " ") {
+          current.done++;
+        }
       }
     }
-    for (const phase of phases) phase.complete = phase.total > 0 && phase.done === phase.total;
+    for (const phase of phases) {
+      phase.complete = phase.total > 0 && phase.done === phase.total;
+    }
     return phases;
   }
 
   // "## Q<n>. <title>" of BRAINSTORM.md
   questions(): string[] {
-    return [...this.text("BRAINSTORM.md").matchAll(/^## (Q\d+)\.\s*(.*)$/gm)].map((m) => `${m[1]}: ${m[2]}`);
+    return [...this.text("BRAINSTORM.md").matchAll(/^## (Q\d+)\.\s*(.*)$/gm)].map(
+      (m) => `${m[1]}: ${m[2]}`,
+    );
   }
 
   // "### PP<n> beg" of PROPOSALS.md, with its title line
   proposals(): string[] {
     return [
-      ...this.text("PROPOSALS.md").matchAll(/^### (PP\d+) beg\s*$(?:[\s\S]*?label\/topic\/name\/title:\s*(.*)$)?/gm),
+      ...this.text("PROPOSALS.md").matchAll(
+        /^### (PP\d+) beg\s*$(?:[\s\S]*?label\/topic\/name\/title:\s*(.*)$)?/gm,
+      ),
     ].map((m) => `${m[1]}${m[2] ? `: ${m[2]}` : ""}`);
   }
 

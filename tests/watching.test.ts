@@ -21,13 +21,17 @@ describe("watching", () => {
     await bos.bootstrap();
     gitRepo(join(root, "forge/scope/group/app"));
     write(join(root, "forge/scope/group/app/src/a.ts"));
-    expect(classify(bos.workshop, { path: "forge/scope/group/app/src/a.ts", kind: "change" })).toMatchObject({
+    expect(
+      classify(bos.workshop, { path: "forge/scope/group/app/src/a.ts", kind: "change" }),
+    ).toMatchObject({
       area: "forge",
       scope: "scope",
       project: "group/app",
       inner: "src/a.ts",
     });
-    expect(classify(bos.workshop, { path: "craftbook/scrapnotes/n.md", kind: "rename" })).toMatchObject({
+    expect(
+      classify(bos.workshop, { path: "craftbook/scrapnotes/n.md", kind: "rename" }),
+    ).toMatchObject({
       area: "craftbook",
       scope: null,
       inner: "scrapnotes/n.md",
@@ -42,7 +46,12 @@ describe("watching", () => {
     write(join(root, "forge/s/p/file.txt"), "a");
     const events: WorkshopEvent[] = [];
     const stop = new AbortController();
-    const running = bos.watch({ signal: stop.signal, record: true, quietMs: 0, onEvent: (e) => events.push(e) });
+    const running = bos.watch({
+      signal: stop.signal,
+      record: true,
+      quietMs: 0,
+      onEvent: (e) => events.push(e),
+    });
     // held from the start: a watch that fails at once must not be an unhandled rejection
     const failure = running.then(
       () => null,
@@ -50,24 +59,36 @@ describe("watching", () => {
     );
     await sleep(200);
     appendFileSync(join(root, "forge/s/p/file.txt"), "b");
-    for (let i = 0; i < 40 && !events.length; i++) await sleep(50);
+    for (let i = 0; i < 40 && !events.length; i++) {
+      await sleep(50);
+    }
     // a directory made while listening is listened to as well
     write(join(root, "forge/s/p/new/deep.txt"));
     await sleep(100);
     appendFileSync(join(root, "forge/s/p/new/deep.txt"), "c");
-    for (let i = 0; i < 40 && !events.some((e) => e.inner === "new/deep.txt"); i++) await sleep(50);
+    for (let i = 0; i < 40 && !events.some((e) => e.inner === "new/deep.txt"); i++) {
+      await sleep(50);
+    }
     stop.abort();
     const error = await failure;
     // the machine, not the code: Linux is out of inotify watches (an editor holds them)
-    if (error?.message.includes(WATCH_LIMIT)) return test.skip(WATCH_LIMIT);
-    if (error) throw error;
+    if (error?.message.includes(WATCH_LIMIT)) {
+      return test.skip(WATCH_LIMIT);
+    }
+    if (error) {
+      throw error;
+    }
     expect(events[0]).toMatchObject({ area: "forge", scope: "s", project: "p", inner: "file.txt" });
     expect(events.some((e) => e.inner === "new/deep.txt")).toBe(true);
   });
 
   it("fails instead of going deaf when the watcher breaks", async () => {
     class BrokenWatch extends NodeHost {
-      override watch(_root: string, _onChange: unknown, onError: (error: Error) => void): () => void {
+      override watch(
+        _root: string,
+        _onChange: unknown,
+        onError: (error: Error) => void,
+      ): () => void {
         setTimeout(() => onError(new Error("watcher broke")), 10);
         return () => {};
       }
@@ -75,14 +96,16 @@ describe("watching", () => {
     const root = tempWorkshop();
     await bosFor(root).bootstrap();
     const bos = new BOS(new BrokenWatch(), { workshop: root });
-    await expect(bos.watch({ signal: new AbortController().signal, onEvent: () => {} })).rejects.toThrow(
-      /watcher broke/,
-    );
+    await expect(
+      bos.watch({ signal: new AbortController().signal, onEvent: () => {} }),
+    ).rejects.toThrow(/watcher broke/);
   });
 
   it("refuses a workshop that does not exist", async () => {
     const stop = new AbortController();
     stop.abort();
-    await expect(bosFor(tempWorkshop()).watch({ signal: stop.signal, onEvent: () => {} })).rejects.toThrow(/bootstrap/);
+    await expect(
+      bosFor(tempWorkshop()).watch({ signal: stop.signal, onEvent: () => {} }),
+    ).rejects.toThrow(/bootstrap/);
   });
 });

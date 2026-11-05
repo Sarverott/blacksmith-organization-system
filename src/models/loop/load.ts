@@ -6,7 +6,9 @@ import { DEFAULT_LOOP } from "./data.ts";
 
 export function loopOfSettings(settings: Settings): Loop {
   const own = settings.data.loop;
-  if (!own) return new Loop();
+  if (!own) {
+    return new Loop();
+  }
   // fields left out keep the default
   return new Loop({ ...DEFAULT_LOOP, ...own }, settings.source);
 }

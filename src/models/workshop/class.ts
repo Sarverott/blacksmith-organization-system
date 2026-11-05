@@ -19,7 +19,12 @@ export class Workshop extends Element {
 
   readonly located: Located | null;
 
-  constructor(host: Host, path: string, parent: Element | null = null, located: Located | null = null) {
+  constructor(
+    host: Host,
+    path: string,
+    parent: Element | null = null,
+    located: Located | null = null,
+  ) {
     super(host, path, parent);
     this.located = located;
   }

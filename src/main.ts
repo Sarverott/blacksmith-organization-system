@@ -78,26 +78,56 @@ export class BOS {
 
   // the whole workshop as one coherent environment, with findings; reads only
   async inspect(): Promise<WorkshopReport> {
-    const context = { ...createContext(this.host), workshop: this.workshop, report: emptyReport(this.workshop) };
+    const context = {
+      ...createContext(this.host),
+      workshop: this.workshop,
+      report: emptyReport(this.workshop),
+    };
     return (await inspecting.run(context)).report;
   }
 
   // listen to every change in the workshop until options.signal aborts
   async watch({ signal, onEvent, record = false, quietMs = 250 }: WatchOptions): Promise<void> {
-    await watching.run({ ...createContext(this.host), workshop: this.workshop, signal, onEvent, record, quietMs });
+    await watching.run({
+      ...createContext(this.host),
+      workshop: this.workshop,
+      signal,
+      onEvent,
+      record,
+      quietMs,
+    });
   }
 
   // raise a scope's GRIH version for one loop event
-  async bumpScope(name: string, event: LoopEvent, { dryRun = false } = {}): Promise<VersionContext> {
+  async bumpScope(
+    name: string,
+    event: LoopEvent,
+    { dryRun = false } = {},
+  ): Promise<VersionContext> {
     const scope = this.workshop.forge.scope(name);
-    return versioning.run({ ...createContext(this.host, { dryRun }), workshop: this.workshop, scope, event });
+    return versioning.run({
+      ...createContext(this.host, { dryRun }),
+      workshop: this.workshop,
+      scope,
+      event,
+    });
   }
 
   // the settings of the project around dir (default: the current directory): .github/bos.json
-  settings(dir?: string): { project: Project; settings: Settings; loop: Loop; versioning: VersioningData } {
+  settings(dir?: string): {
+    project: Project;
+    settings: Settings;
+    loop: Loop;
+    versioning: VersioningData;
+  } {
     const project = projectAround(this.host, dir);
     const settings = settingsOf(this.host, project.path);
-    return { project, settings, loop: loopOfSettings(settings), versioning: versioningOf(settings) };
+    return {
+      project,
+      settings,
+      loop: loopOfSettings(settings),
+      versioning: versioningOf(settings),
+    };
   }
 
   // the craft loop of the project around dir
@@ -107,7 +137,10 @@ export class BOS {
   }
 
   // bump the project's version for work landing on a station (once the line it leaves is released)
-  async bump(station: string, { dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {}): Promise<BumpOutcome> {
+  async bump(
+    station: string,
+    { dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {},
+  ): Promise<BumpOutcome> {
     const { project, versioning } = this.settings(dir);
     const git = new Git(this.host, project.path);
     const context = {
@@ -124,12 +157,21 @@ export class BOS {
 
   // the bump of one commit on a contributor's branch (versioning.commits): every
   // commit has its own version; other branches bump nothing here
-  async bumpCommit({ dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {}): Promise<BumpOutcome> {
+  async bumpCommit({
+    dir,
+    dryRun = false,
+  }: {
+    dir?: string;
+    dryRun?: boolean;
+  } = {}): Promise<BumpOutcome> {
     const { project, versioning } = this.settings(dir);
     const branch = project.report().git?.branch ?? null;
     if (!branch || !branchMatches(branch, versioning.commits.branches)) {
       const where = branch ?? "a detached HEAD";
-      return { ...unbumped(), reason: `${where} is not one of ${versioning.commits.branches.join(", ")}: no bump` };
+      return {
+        ...unbumped(),
+        reason: `${where} is not one of ${versioning.commits.branches.join(", ")}: no bump`,
+      };
     }
     const context = {
       ...createContext(this.host, { dryRun }),
@@ -163,7 +205,13 @@ export class BOS {
   }
 
   // name everyone of the project's commits in its .github/AUTHORS
-  async authors({ dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {}): Promise<CreditOutcome> {
+  async authors({
+    dir,
+    dryRun = false,
+  }: {
+    dir?: string;
+    dryRun?: boolean;
+  } = {}): Promise<CreditOutcome> {
     const { project } = this.loop(dir);
     const file = authorsFile(project.path);
     const context = {
@@ -184,7 +232,13 @@ export class BOS {
   ): Promise<FlowOutcome> {
     const { project, loop } = this.loop(dir);
     const github = new GitHub(this.host, project.path);
-    const context = { ...createContext(this.host, { dryRun }), loop, github, branch, outcome: undecided() };
+    const context = {
+      ...createContext(this.host, { dryRun }),
+      loop,
+      github,
+      branch,
+      outcome: undecided(),
+    };
     return (await proposing.run(context)).outcome;
   }
 
@@ -195,7 +249,13 @@ export class BOS {
   ): Promise<FlowOutcome> {
     const { project, loop } = this.loop(dir);
     const github = new GitHub(this.host, project.path);
-    const context = { ...createContext(this.host, { dryRun }), loop, github, number, outcome: undecided() };
+    const context = {
+      ...createContext(this.host, { dryRun }),
+      loop,
+      github,
+      number,
+      outcome: undecided(),
+    };
     return (await automerging.run(context)).outcome;
   }
 
