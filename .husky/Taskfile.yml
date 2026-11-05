@@ -6,13 +6,32 @@ version: '3'
 
 tasks:
   pre-commit:
-    desc: Format and lint what is staged (fixes go back into the commit), then typecheck and test
+    desc: The commit's own version (dev/* bumps the patch), format and lint what is staged (fixes go back into the commit), then typecheck and test
     dir: '{{.TASKFILE_DIR}}/..'
     cmds:
+      - task: merge-driver
+      - task: bump-commit
       - npx biome check --write --staged --no-errors-on-unmatched
       - git update-index --again
       - npx tsc --noEmit
       - npx vitest run --silent
+
+  bump-commit:
+    desc: 'On a dev/* branch every commit has its own version: the patch bumped and staged (.github/bos.json versioning.commits)'
+    dir: '{{.TASKFILE_DIR}}/..'
+    # HUSKY=0: nothing started from here may run the hooks again (the owner, phase 2);
+    # the bump only writes the files, it never commits
+    env: { HUSKY: "0" }
+    cmds:
+      - node src/cli.ts flow bump-commit
+      - git add package.json package-lock.json
+
+  merge-driver:
+    desc: Register in this clone the merge driver .gitattributes names (merge=bos-version)
+    dir: '{{.TASKFILE_DIR}}/..'
+    cmds:
+      - git config merge.bos-version.name 'BOS - the higher version, then a three-way merge'
+      - git config merge.bos-version.driver 'node src/cli.ts flow merge-version %O %A %B'
 
   commit-msg:
     desc: 'Reject messages that are not conventional commits, e.g. task hooks:commit-msg -- .git/COMMIT_EDITMSG'

@@ -20,7 +20,8 @@ export function explainText({ source, steps, data, versioning }: Explained): str
     `  ${contributors.pattern.padEnd(14)} → ${contributors.into.padEnd(12)} a person merges`,
     "",
     `pull requests of forward steps are opened ${autocreate ? "by the loop" : "by people (autocreate is off)"}; releases on ${release}`,
-    `version bumps: ${bumps.join(", ") || "none"}; only a released (${versioning.tagPrefix}<version>) version moves`,
+    `version bumps: ${bumps.join(", ") || "none"}, each once the line it leaves is released (${versioning.tagPrefix}<line>)`,
+    `every commit on ${versioning.commits.branches.join(", ")}: ${versioning.commits.bump}`,
   ].join("\n");
 }
 

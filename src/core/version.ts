@@ -42,4 +42,11 @@ export function bumpGrih(version: string, event: LoopEvent): string {
   return raise(parse(version, 4, "GRIH"), GRIH_DIGIT[event]);
 }
 
+// <0, 0, >0 like a sort comparator: "1.10.0" is after "1.9.3"
+export function compareSemver(a: string, b: string): number {
+  const [x, y] = [parse(a, 3, "semver"), parse(b, 3, "semver")];
+  for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return (x[i] ?? 0) - (y[i] ?? 0);
+  return 0;
+}
+
 export const GRIH_START = "0.0.0.0";

@@ -9,6 +9,7 @@ import type { Host } from "./core/host.ts";
 import type { LoopEvent } from "./core/version.ts";
 import {
   authorsFile,
+  branchMatches,
   type Loop,
   loopOfSettings,
   type Project,
@@ -31,9 +32,12 @@ import {
   type FlowOutcome,
   inspecting,
   proposing,
+  type ReconcileOutcome,
+  reconciling,
   unbumped,
   uncredited,
   undecided,
+  unreconciled,
   type VersionContext,
   versioning,
   type WorkshopEvent,
@@ -102,7 +106,7 @@ export class BOS {
     return { project, loop };
   }
 
-  // bump the project's version for work landing on a station (only a released version moves)
+  // bump the project's version for work landing on a station (once the line it leaves is released)
   async bump(station: string, { dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {}): Promise<BumpOutcome> {
     const { project, versioning } = this.settings(dir);
     const git = new Git(this.host, project.path);
@@ -110,11 +114,52 @@ export class BOS {
       ...createContext(this.host, { dryRun }),
       projectPath: project.path,
       station,
+      everyCommit: false,
       versioning,
       git,
       outcome: unbumped(),
     };
     return (await bumping.run(context)).outcome;
+  }
+
+  // the bump of one commit on a contributor's branch (versioning.commits): every
+  // commit has its own version; other branches bump nothing here
+  async bumpCommit({ dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {}): Promise<BumpOutcome> {
+    const { project, versioning } = this.settings(dir);
+    const branch = project.report().git?.branch ?? null;
+    if (!branch || !branchMatches(branch, versioning.commits.branches)) {
+      const where = branch ?? "a detached HEAD";
+      return { ...unbumped(), reason: `${where} is not one of ${versioning.commits.branches.join(", ")}: no bump` };
+    }
+    const context = {
+      ...createContext(this.host, { dryRun }),
+      projectPath: project.path,
+      station: branch,
+      everyCommit: true,
+      versioning,
+      git: new Git(this.host, project.path),
+      outcome: unbumped(),
+    };
+    return (await bumping.run(context)).outcome;
+  }
+
+  // git's merge driver for package.json / package-lock.json: the higher version on
+  // every side, then a usual three-way merge into ours
+  async mergeVersion(
+    base: string,
+    ours: string,
+    theirs: string,
+    { dir }: { dir?: string } = {},
+  ): Promise<ReconcileOutcome> {
+    const { project } = this.loop(dir);
+    const context = {
+      ...createContext(this.host),
+      git: new Git(this.host, project.path),
+      files: { base, ours, theirs },
+      texts: { base: "", ours: "", theirs: "" },
+      outcome: unreconciled(),
+    };
+    return (await reconciling.run(context)).outcome;
   }
 
   // name everyone of the project's commits in its .github/AUTHORS

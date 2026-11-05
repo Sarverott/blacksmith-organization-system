@@ -62,7 +62,7 @@ export const flowTools = [
   tool({
     model: "flow",
     name: "bump",
-    info: "bump the project's version for work landing on a station (.github/bos.json versioning); only a released version moves",
+    info: "bump the project's version for work landing on a station (.github/bos.json versioning); only once the line it leaves is released",
     readOnly: false,
     args: [
       {
@@ -77,5 +77,35 @@ export const flowTools = [
     ],
     run: (bos, input) => bos.bump(String(input.station), { dir: dir(input.dir), dryRun: Boolean(input.dryRun) }),
     render: bumpText,
+  }),
+  tool({
+    model: "flow",
+    name: "bump-commit",
+    info: "bump the version for one commit on a contributor's branch (versioning.commits; the pre-commit hook runs it)",
+    readOnly: false,
+    args: [dirArg, { name: "dryRun", type: "boolean", info: "only say what the version would become" }],
+    run: (bos, input) => bos.bumpCommit({ dir: dir(input.dir), dryRun: Boolean(input.dryRun) }),
+    render: bumpText,
+  }),
+  tool({
+    model: "flow",
+    name: "merge-version",
+    info: "git merge driver of package.json and its lock: the higher version on every side, then a three-way merge",
+    readOnly: false,
+    args: [
+      { name: "base", type: "string", info: "the common ancestor's file (%O)", positional: true, required: true },
+      { name: "ours", type: "string", info: "our file, the result goes here (%A)", positional: true, required: true },
+      { name: "theirs", type: "string", info: "their file (%B)", positional: true, required: true },
+      dirArg,
+    ],
+    run: async (bos, input) => {
+      const outcome = await bos.mergeVersion(String(input.base), String(input.ours), String(input.theirs), {
+        dir: dir(input.dir),
+      });
+      // a conflict must fail the driver, so git leaves the file conflicted
+      if (outcome.action === "conflict") throw new Error(`conflicts besides the version (${outcome.version})`);
+      return outcome;
+    },
+    render: (outcome) => `merged; version ${outcome.version ?? "none"}`,
   }),
 ];

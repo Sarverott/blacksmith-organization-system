@@ -13,6 +13,8 @@ export type BumpOutcome = {
 export type BumpContext = Context & {
   projectPath: string;
   station: string;
+  // a commit's bump: versioning.commits.bump, whether released or not
+  everyCommit: boolean;
   versioning: VersioningData;
   git: Git;
   outcome: BumpOutcome;

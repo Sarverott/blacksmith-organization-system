@@ -142,8 +142,12 @@ gitGraph
 | the script flips: pre-alpha → alpha, a key concept changes | X | G |
 
 `core/version.ts` computes them; a scope keeps its version in
-`<scope>/.bos/scope.json` (decision Q5). Wiring the bumps to commits and
-TODO.md phases is phase 2.
+`<scope>/.bos/scope.json` (decision Q5). The project's version follows the
+routine (phase 2): **every commit on `dev/<name>` bumps Z** by itself (the
+pre-commit hook stages `package.json` and its lock with the commit),
+`revision` bumps Y, a hotfix on `master` Z; when two branches meet, the
+version merges by the higher one (`.gitattributes`, `task
+hooks:merge-driver`). Wiring the bumps to TODO.md phases is still to come.
 
 ## The routine
 
@@ -154,7 +158,8 @@ loop through `revision → testing → releasing` comes later):
    merged and pushed to `origin/development` at any time.
 2. When the agent stops and needs the owner: merge `dev/<name>` into
    `development` (`--no-ff`), push it, and push `development` to
-   `revision`. The agent opens no pull request.
+   `revision`. The agent opens no pull request; the release `nightly`
+   follows `revision`.
 3. On GitHub, `loop-revision-bump-checks-pull-request.yml` runs every check,
    names new entities in `.github/AUTHORS`, bumps the minor version if the
    current one is released already, pushes what it committed to `revision`

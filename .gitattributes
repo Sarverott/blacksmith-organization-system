@@ -1,0 +1,6 @@
+# Every commit on a dev/* branch bumps the patch (pre-commit hook), so the version
+# differs whenever two branches meet: BOS merges it (the higher wins, the rest merges
+# as usual). The driver is registered by `task hooks:merge-driver` (every pre-commit)
+# and by the workflows' merges; without it git merges these files as text.
+package.json merge=bos-version
+package-lock.json merge=bos-version
