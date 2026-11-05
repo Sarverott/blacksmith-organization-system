@@ -19,7 +19,7 @@ on:
         type: boolean
         default: false
       commits:
-        description: "commit messages from this commit (exclusive) to HEAD; empty: not checked"
+        description: "commit messages from this commit (exclusive) to HEAD, never older than commitlint; empty: not checked"
         type: string
         default: ""
   workflow_dispatch:
@@ -105,4 +105,11 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 24, cache: npm }
       - run: npm ci
-      - run: npx commitlint --from "${{ inputs.commits }}" --to HEAD --verbose
+      - name: commitlint, from the base or from where commitlint came in, whichever is later
+        env:
+          BASE: ${{ inputs.commits }}
+        run: |
+          from="$BASE"
+          since=$(git log --diff-filter=A --format=%H -1 -- 'commitlint.config.*')
+          if [ -n "$since" ] && ! git merge-base --is-ancestor "$since" "$BASE"; then from="$since"; fi
+          npx commitlint --from "$from" --to HEAD --verbose
