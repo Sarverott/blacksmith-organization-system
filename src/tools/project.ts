@@ -1,6 +1,6 @@
 // bos project <tool>: the project around the current directory
 import { tool } from "../core/tool.ts";
-import { authorsText } from "../views/project.ts";
+import { creditText } from "../views/crediting.ts";
 
 export const projectTools = [
   tool({
@@ -18,6 +18,6 @@ export const projectTools = [
     ],
     run: (bos, input) =>
       bos.authors({ dir: input.dir as string | undefined, dryRun: Boolean(input.dryRun) }),
-    render: authorsText,
+    render: creditText,
   }),
 ];
