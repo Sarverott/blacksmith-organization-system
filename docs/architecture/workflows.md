@@ -125,8 +125,8 @@ them declare it.
 | `DOCKER_HUB_TOKEN` | `publish-env` | Docker Hub: pushing the image (`docker-container-publish.yml`); the user is the variable `DOCKER_HUB_USERNAME`, default `sarverott` *(assumed)* |
 | `SCALAR_API_TOKEN` | `publish-env` | [`TODO`] not used yet: an API reference on Scalar, once BOS has an HTTP API (phase 4) |
 | `MIRROR_GITEA_TOKEN` | `publish-env` | gitea.com: an access token with `write:repository`, pushed as the user `Sarverott` |
-| `MIRROR_GITLAB_TOKEN` | `publish-env` | gitlab.com: a project (or personal) access token with `write_repository`, user `oauth2` |
-| `MIRROR_BITBUCKET_TOKEN` | `publish-env` | bitbucket.org: a repository access token with write, user `x-token-auth` |
+| `MIRROR_GITLAB_TOKEN` | `publish-env` | gitlab.com: a project (or personal) access token with `write_repository` - a fine-grained one needs the project permission *Code: Push* - user `oauth2` |
+| `MIRROR_BITBUCKET_TOKEN` | `publish-env` | bitbucket.org: a repository access token with write (user `x-token-auth`), or an Atlassian API token `ATATT…` with `write:repository:bitbucket` (user `x-bitbucket-api-token-auth`, chosen by the prefix) |
 | `MIRROR_SOURCEHUT_SSH_KEY` | `publish-env` | sr.ht: a private SSH key whose public half is in the sourcehut account (sr.ht takes pushes over SSH only) |
 | (none) | | GitHub Packages (npm and ghcr.io) use the workflow's own token |
 | `WIKI_TOKEN` | repository | a token that can push the wiki; without it the workflow's own token is used (it worked for `v1.0.0`) |

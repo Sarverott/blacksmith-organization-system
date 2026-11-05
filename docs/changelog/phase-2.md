@@ -414,3 +414,18 @@ cannot be undone per model; c) leaves the choosing in every procedure.
   `revision` to newer versions. `pull-request.sh` now edits them on each
   run; a test runs it with a scripted `gh`.
 
+## UNIXUSAT=1793922544411 · the mirrors' first run with secrets
+
+- **gitea.com, sr.ht:** every branch and tag pushed, 200 OK. builds.sr.ht
+  refuses the build jobs without a paid account, as expected.
+- **gitlab.com:** 403. GitLab says the token is a fine-grained personal
+  access token without the project permission *Code: Push*. The owner
+  changes that.
+- **bitbucket.org:** authentication failed. An Atlassian API token
+  (`ATATT…`) signs in to git as `x-bitbucket-api-token-auth`, and only an
+  access token signs in as `x-token-auth`
+  ([Atlassian](https://support.atlassian.com/bitbucket-cloud/docs/using-api-tokens/)).
+  `mirrors.sh` now chooses the username by the token's prefix; a test
+  covers both kinds *(assumed: the secret is an API token; the value is not
+  readable)*.
+
