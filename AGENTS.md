@@ -53,11 +53,13 @@ src/
 ├── core/          host.ts (the one door to the machine), element.ts (anatomy: dirname, children,
 │                  descriptors → ensure + inspect), procedure.ts (named steps, trace), context.ts
 │                  (createIfMissing), tool.ts (one tool format), version.ts (semver + GRIH), paths.ts
-├── hosts/node.ts  NodeHost: the only file that touches node:fs / node:os
+├── hosts/         NodeHost (+ watch-tree.ts): the only files that touch node:* (fs, os, child_process)
+├── bridges/       one file per outside system (github.ts: gh), reached only through Host.run
 ├── models/        <model>/class.ts: the glossary as classes (workshop, system = .BOS and its parts,
-│                  devarmory, forge, scope, project, craftbook, archive, devlog)
+│                  devarmory, forge, scope, project, craftbook, archive, devlog, loop)
 ├── procedures/    <name>/DESCRIPTION.md + one file per step + _index.ts (the order):
-│                  bootstrapping, inspecting (rules.ts: one function per finding), watching, versioning
+│                  bootstrapping, inspecting (rules.ts: one function per finding), watching, versioning,
+│                  proposing + automerging (the craft loop on GitHub: bos flow next-pr / automerge)
 ├── tools/         <model>.ts: what `bos <model> <tool>` runs; _index.ts collects them
 ├── views/         text for people (status tree, event line, help, STATE.md)
 ├── cli.ts         bos <model> <tool> [operands] [--flags]; --json, --workshop=
@@ -121,7 +123,10 @@ gitGraph
   `dev/Cleo` (Claude Code), `dev/<codex-name>`… An agent works **only** on its
   own `dev/<name>` branch and merges it into `development` when a batch is done.
 - `revision` → `testing` → `releasing` → `master`; a stage that fails goes to
-  `rejection`, which returns to `development` *(phase 2, from gitrecon)*.
+  `rejection`, which returns to `development` (from gitrecon). The loop is
+  data (`src/models/loop/data.ts`, a project's own `.bos/loop.json`);
+  `bos flow explain` shows it, `bos flow next-pr` / `automerge` move it on
+  GitHub (phase 2: the workflows that call them are next).
 
 ### Steps, phases, milestones, versions
 
@@ -193,8 +198,9 @@ top, dated). People answer in `docs/devlog/`, not here.
    `createIfMissing` or an explicit, dry-run-aware step; a dry run plans
    exactly what the real run does.
 7. **One door to the machine.** Only `hosts/` imports `node:*` (and `cli.ts`
-   to start). Outside systems (git remotes, GitHub, Gitea, docker…) will get
-   bridges of their own; nowhere else.
+   to start). Outside systems (GitHub, git, Gitea, docker…) are reached only
+   by their bridge in `src/bridges/`, which runs their command line through
+   `Host.run`; tests script that `run`.
 8. **Test against a temporary workshop** (`tests/helpers.ts`), try things by
    hand on the development workshop (`.env`), never on the home
    `~/__WORKSHOP` unless the owner asks. A fixed bug gets a test.

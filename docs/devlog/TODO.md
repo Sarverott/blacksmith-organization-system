@@ -39,12 +39,13 @@ history: [../changelog/](../changelog/phase-0.md).
 
 - [x] Documentation: `docs/architecture/` (models, interfaces, bridges) from the `about-*` pages, which are removed
 - [x] Documentation: `docs/scrapnote-example.md` archived in the changelog, its ideas placed, the file removed
-- [ ] Documentation: one audience per README - `README.md` (npm and everywhere), `docs/README.md` (the documentation's index), `.github/README.md` (GitHub)
-- [ ] Documentation: `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` for the contributors committee
+- [x] Documentation: one audience per README - `README.md` (npm and everywhere), `docs/README.md` (the documentation's index), `.github/README.md` (GitHub)
+- [x] Documentation: `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` for the contributors committee
 - [x] Glossary: `grih` and `craft-loop` (from the legacy `docs/README.md`)
 - [ ] Tag `v1.0.0` and `npm publish --tag next` (Q7; the owner's go-ahead first)
-- [ ] `resources/loop.json`: stations, directions, `rejection`, automerge flags (from gitrecon)
-- [ ] `bos flow explain` / `next-pr` / `automerge`
+- [x] The loop as data: stations, directions, `rejection`, contributors, automerge per station (from gitrecon); default in `src/models/loop/data.ts`, a project's own `.bos/loop.json`
+- [x] `bos flow explain` / `next` / `next-pr` / `automerge`, through the GitHub bridge (`Host.run` → `gh`)
+- [ ] `revision`, `testing`, `releasing` on GitHub (they exist only locally, on the legacy commit)
 - [ ] Project versions: a step per commit, a phase when TODO.md completes one
 - [ ] GitHub workflows that only call `bos flow`
 - [ ] `revision`, `testing`, `releasing` moved to `master` when the loop starts (Q9)

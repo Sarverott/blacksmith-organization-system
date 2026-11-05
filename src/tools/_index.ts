@@ -1,11 +1,12 @@
 // Every tool of the core, in the order `bos help` shows them.
 import type { Tool } from "../core/tool.ts";
 import { devlogTools } from "./devlog.ts";
+import { flowTools } from "./flow.ts";
 import { scopeTools } from "./scope.ts";
 import { versionTools } from "./version.ts";
 import { workshopTools } from "./workshop.ts";
 
-export const TOOLS: Tool[] = [...workshopTools, ...scopeTools, ...devlogTools, ...versionTools];
+export const TOOLS: Tool[] = [...workshopTools, ...scopeTools, ...devlogTools, ...flowTools, ...versionTools];
 
 export function findTool(model: string | undefined, name: string | undefined): Tool {
   const entry = TOOLS.find((t) => t.model === model && t.name === name);

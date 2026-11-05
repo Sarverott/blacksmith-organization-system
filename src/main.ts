@@ -2,15 +2,20 @@
 // the procedures on it. Every face of BOS (CLI, library, later MCP and HTTP) goes
 // through these methods.
 //   const bos = new BOS(new NodeHost());  const report = await bos.inspect();
+import { GitHub } from "./bridges/github.ts";
 import { createContext } from "./core/context.ts";
 import type { Host } from "./core/host.ts";
 import type { LoopEvent } from "./core/version.ts";
-import { Workshop } from "./models/_index.ts";
+import { type Loop, loopOf, type Project, projectAround, Workshop } from "./models/_index.ts";
 import {
+  automerging,
   type BootstrapContext,
   bootstrapping,
   emptyReport,
+  type FlowOutcome,
   inspecting,
+  proposing,
+  undecided,
   type VersionContext,
   versioning,
   type WorkshopEvent,
@@ -64,6 +69,34 @@ export class BOS {
   async bumpScope(name: string, event: LoopEvent, { dryRun = false } = {}): Promise<VersionContext> {
     const scope = this.workshop.forge.scope(name);
     return versioning.run({ ...createContext(this.host, { dryRun }), workshop: this.workshop, scope, event });
+  }
+
+  // the craft loop of the project around dir (default: the current directory)
+  loop(dir?: string): { project: Project; loop: Loop } {
+    const project = projectAround(this.host, dir);
+    return { project, loop: loopOf(this.host, project.path) };
+  }
+
+  // open the pull request of a branch's forward step on GitHub
+  async propose(
+    branch: string,
+    { dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {},
+  ): Promise<FlowOutcome> {
+    const { project, loop } = this.loop(dir);
+    const github = new GitHub(this.host, project.path);
+    const context = { ...createContext(this.host, { dryRun }), loop, github, branch, outcome: undecided() };
+    return (await proposing.run(context)).outcome;
+  }
+
+  // merge a loop pull request when the loop allows it
+  async automerge(
+    number: number,
+    { dir, dryRun = false }: { dir?: string; dryRun?: boolean } = {},
+  ): Promise<FlowOutcome> {
+    const { project, loop } = this.loop(dir);
+    const github = new GitHub(this.host, project.path);
+    const context = { ...createContext(this.host, { dryRun }), loop, github, number, outcome: undecided() };
+    return (await automerging.run(context)).outcome;
   }
 
   toString(): string {

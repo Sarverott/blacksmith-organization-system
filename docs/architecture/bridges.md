@@ -3,13 +3,13 @@
 Bridges connect BOS with other systems: APIs, programs extended to talk to
 BOS, and tools wrapped as procedures. A bridge is the only place where its
 system is touched, as `src/hosts/` is the only door to the machine
-(AGENTS.md rule 7). None is coded yet; the first ones come with the loop
-(phase 2) and the workplaces (phase 3).
+(AGENTS.md rule 7): a bridge in `src/bridges/` runs the system's own command
+line through `Host.run`, so tests can script it.
 
 | Bridge | For | Phase |
 | ------ | --- | ----- |
 | git | status, add, commit, branches, bare mirrors (`git clone --mirror`) | 2 (mirrors, Q6), 3 (autocommit of scrapnotes, Q8) |
-| GitHub | pull requests and releases of the loop (`bos flow`), workflows | 2 |
+| GitHub (`src/bridges/github.ts`, through `gh`) | pull requests of the loop: compare, list, create, view, merge (`bos flow next-pr`, `automerge`) | 2: coded |
 | Gitea | private scope repositories on a self-hosted server | [`TODO`] |
 | docker | a container per agent host CLI and one for the owner | 3 |
 | setternet | the network of the owner's hosts and their roles | [`TODO`] |

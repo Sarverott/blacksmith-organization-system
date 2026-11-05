@@ -7,6 +7,9 @@ export type Entry = { name: string; directory: boolean };
 // what changed under a watched root: path relative to that root
 export type Change = { path: string; kind: "change" | "rename" };
 
+// what a command left behind; status 127 when it could not be started
+export type RunResult = { status: number; stdout: string; stderr: string };
+
 export interface Host {
   exists(path: string): boolean;
   isDirectory(path: string): boolean;
@@ -24,6 +27,8 @@ export interface Host {
     onError: (error: Error) => void,
     skip?: (relative: string) => boolean,
   ): () => void;
+  // run a program and wait for it; only bridges (src/bridges/) call this
+  run(command: string, args: string[], options?: { cwd?: string }): RunResult;
   env(name: string): string | undefined;
   home(): string;
   cwd(): string;
