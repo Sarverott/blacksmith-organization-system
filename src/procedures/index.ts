@@ -18,7 +18,9 @@ export {
   type ScopeReport,
   type WorkshopReport,
 } from "./inspecting/_index.ts";
+export { type JudgeContext, judging } from "./judging/_index.ts";
 export { type FlowOutcome, type ProposeContext, proposing, undecided } from "./proposing/_index.ts";
+export { type RecallContext, recalling } from "./recalling/_index.ts";
 export {
   type ReconcileContext,
   type ReconcileOutcome,

@@ -7,6 +7,7 @@ import { createContext } from "./core/context.ts";
 import { Element } from "./core/element.ts";
 import type { Host } from "./core/host.ts";
 import { type Allocators, DEFAULT_ALLOCATORS, OMNIS_FILE } from "./core/omnis.ts";
+import type { Case } from "./core/ruling.ts";
 import type { LoopEvent } from "./core/version.ts";
 import * as Models from "./models/index.ts";
 import * as Procedures from "./procedures/index.ts";
@@ -244,6 +245,50 @@ export class BOS {
       outcome: Procedures.unsealed(`${project.path}/${OMNIS_FILE}`),
     };
     return (await Procedures.sealing.run(context)).outcome;
+  }
+
+  // the almanac of the project around dir (docs/almanac/), then the universal one of the core
+  almanac(dir?: string): Models.Almanac {
+    return Models.almanacOf(this.host, this.#around(dir));
+  }
+
+  // the project around dir, or dir itself outside a repository (the universal almanac still holds)
+  #around(dir?: string): string {
+    try {
+      return Models.projectAround(this.host, dir).path;
+    } catch {
+      return dir ?? this.host.cwd();
+    }
+  }
+
+  // does a case break a rule of the almanac: in words ("Cleo pushes to master"), JSON, or fields
+  async judge(
+    description: string | Case,
+    { dir }: { dir?: string } = {},
+  ): Promise<Procedures.JudgeContext> {
+    return Procedures.judging.run({
+      ...createContext(this.host),
+      projectPath: this.#around(dir),
+      description,
+      almanac: { places: [], rulesets: [], chains: [] },
+      case: {},
+      judgement: null,
+    });
+  }
+
+  // the chains of events met before that hold these events, and what usually comes next
+  async recall(
+    events: string[],
+    { dir }: { dir?: string } = {},
+  ): Promise<Procedures.RecallContext> {
+    return Procedures.recalling.run({
+      ...createContext(this.host),
+      projectPath: this.#around(dir),
+      events,
+      almanac: { places: [], rulesets: [], chains: [] },
+      prediction: null,
+      chains: [],
+    });
   }
 
   // open the pull request of a branch's forward step on GitHub

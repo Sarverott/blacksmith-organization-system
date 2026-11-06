@@ -1,0 +1,90 @@
+{
+  "about": "Situations met while forging the core (phase 2), each a chain of events up to its cataclysm, with the solution that got past it.",
+  "chains": [
+    {
+      "id": "lint-fails-on-bumped-package-json",
+      "events": ["commit", "hook:bump-version", "push:revision", "checks:lint-failed"],
+      "cataclysm": "checks:lint-failed",
+      "solution": "The bump wrote package.json with its arrays expanded and biome wanted them on one line: biome formats every package.json expanded (an override), and a test pins it.",
+      "seen": ["phase 2: the release of v1.4.x"]
+    },
+    {
+      "id": "draft-snippets-fail-lint",
+      "events": ["commit", "hook:bump-version", "file:unformatted-draft", "checks:lint-failed"],
+      "cataclysm": "checks:lint-failed",
+      "solution": "A draft of the owner is kept as written: its directory is left out of biome (examples/00-draft-snippets).",
+      "seen": ["2026-11-06: the draft snippets"]
+    },
+    {
+      "id": "open-pull-request-keeps-old-title",
+      "events": [
+        "push:revision",
+        "workflow:bump-minor",
+        "pull-request:open-already",
+        "pull-request:stale-title"
+      ],
+      "cataclysm": "pull-request:stale-title",
+      "solution": "The open pull request follows its branch: scripts/workflows/pull-request.sh edits its title and description to the version it releases now.",
+      "seen": ["PR #9 (v1.4.9, released v1.4.10)"]
+    },
+    {
+      "id": "secret-scanner-flags-test-fixture",
+      "events": [
+        "commit:fixture-with-credentials-url",
+        "push:revision",
+        "pull-request:open",
+        "gitguardian:flagged"
+      ],
+      "cataclysm": "gitguardian:flagged",
+      "solution": "Tests build user:token@host URLs from parts, so no literal sits in the source.",
+      "seen": ["phase 2: mirrors.sh tests"]
+    },
+    {
+      "id": "mirror-token-refused",
+      "events": ["push:development", "mirrors:sync", "mirrors:403"],
+      "cataclysm": "mirrors:403",
+      "solution": "The owner renews the token in the publish-env environment; the mirrors step continues on error, so the run and the work go on.",
+      "seen": ["phase 2: gitlab, bitbucket (run 42139753049 all 200 after)"]
+    },
+    {
+      "id": "push-rejected-after-bot-bump",
+      "events": ["push:revision", "workflow:bump-commit", "push:development", "push:rejected"],
+      "cataclysm": "push:rejected",
+      "solution": "The workflow pushed its bump to development: fetch, merge origin/development (the version merge driver takes the higher), push again. Pull development before every batch.",
+      "seen": ["phase 2, several batches", "2026-11-06: PR #11 merged meanwhile"]
+    },
+    {
+      "id": "bot-pull-request-waits-for-approval",
+      "events": ["push:revision", "workflow:opens-pull-request", "checks:action-required"],
+      "cataclysm": "checks:action-required",
+      "solution": "Checks of a pull request opened by github-actions[bot] wait: the owner presses Approve and run, or the next push to revision runs them.",
+      "seen": ["PR #11 (run 42140002829)"]
+    },
+    {
+      "id": "commit-header-too-long",
+      "events": ["commit", "hook:bump-version", "commitlint:header-too-long"],
+      "cataclysm": "commitlint:header-too-long",
+      "solution": "Shorten the header to 100 characters. The bump and the staged files stay staged: check git show --stat of the next commit, so nothing of the failed one rides along.",
+      "seen": ["2026-11-06: taking in the almanac and Q16 (folded into the next commit, redone)"]
+    },
+    {
+      "id": "npm-installs-the-legacy-release",
+      "events": ["npm:install", "npm:latest-is-legacy", "installed:0.4.2"],
+      "cataclysm": "installed:0.4.2",
+      "solution": "npm's latest is still the legacy 0.4.2 (decision Q7): install blacksmith-organization-system@next, or ask for ^1.0.0.",
+      "seen": ["2026-11-06: examples/00-draft-snippets/scrapnotes.md"]
+    },
+    {
+      "id": "workshop-option-on-a-partition-root",
+      "events": [
+        "library:new-bos",
+        "option:workshop-not-named-__WORKSHOP",
+        "bootstrap",
+        "workshop:second-beside-__WORKSHOP"
+      ],
+      "cataclysm": "workshop:second-beside-__WORKSHOP",
+      "solution": "A --workshop (or { workshop }) not named __WORKSHOP is the directory that holds one, like $WORKSHOP_ROOT.",
+      "seen": ["2026-11-06 05:11: the draft snippets on setternet-A62"]
+    }
+  ]
+}

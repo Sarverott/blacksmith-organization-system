@@ -1,0 +1,10 @@
+{
+  "ruleset": "blacksmith-organization-system",
+  "about": "Who is who in this repository: the contributors committee. Its rules are the universal ones (resources/almanac/rulesets/).",
+  "roles": {
+    "owner": ["Sarverott", "Sett"],
+    "agent": ["Cleo", "Claude*", "Codex*", "Gemini*", "Copilot*", "Cursor*", "Aider*"],
+    "bot": ["github-actions*", "*[bot]", "dependabot*"]
+  },
+  "rules": []
+}

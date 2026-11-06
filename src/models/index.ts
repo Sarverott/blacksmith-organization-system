@@ -1,4 +1,11 @@
 // Every model of the workshop, one directory each (glossary as classes).
+export {
+  type Almanac,
+  almanacOf,
+  PACKAGE_ALMANAC,
+  PROJECT_ALMANAC,
+  readAlmanac,
+} from "./almanac/load.ts";
 export { Archive } from "./archive/class.ts";
 export {
   type AuthorEntry,
