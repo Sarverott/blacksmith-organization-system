@@ -53,6 +53,22 @@ export class LocalGit extends Git {
     return status === 0 ? stdout.trim() || null : null;
   }
 
+  // a new repository here, its first branch named (development: where work happens)
+  init(branch = "development"): void {
+    this.git(["init", "--quiet", "--initial-branch", branch, "."]);
+  }
+
+  // a clone of url into target (relative to this directory, or absolute)
+  clone(url: string, target: string): void {
+    this.git(["clone", "--quiet", url, target]);
+  }
+
+  // a value of git config (user.name…), null when it is not set
+  config(key: string): string | null {
+    const { status, stdout } = this.host.run("git", ["config", "--get", key], { cwd: this.cwd });
+    return status === 0 ? stdout.trim() || null : null;
+  }
+
   // a bare mirror of source at target (git clone --mirror): every ref, the remotes' too
   cloneMirror(source: string, target: string): void {
     this.git(["clone", "--quiet", "--mirror", source, target]);

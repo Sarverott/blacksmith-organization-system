@@ -21,7 +21,10 @@ makes syncing between scattered work stations simple.
 ## Where
 
 `forge/<scope>/`, e.g. `forge/blacksmith-organization-system/`.
-Created with `new-scope <name>`.
+Created with `bos scope create <scope>` (`a/b` nests): the directory,
+`.bos/scope.json` (its GRIH version, from `0.0.0.0`), its `throwbox/` and its
+VS Code workspace file `<scope>.code-workspace`, which lists its projects
+(BOS adds the folders it lacks and leaves the rest as written).
 
 ## Lifecycle
 

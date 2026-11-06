@@ -222,6 +222,46 @@ export class BOS {
     return (await Procedures.crediting.run(context)).outcome;
   }
 
+  // a scope of the forge, a project in one (seeded with the standard anatomy; on one that
+  // exists only what is missing), or a clone brought into one (glossary: scope, project)
+  async create(
+    kind: Procedures.CreateKind,
+    target: string,
+    {
+      scope = "",
+      name = "",
+      seed = false,
+      dryRun = false,
+    }: { scope?: string; name?: string; seed?: boolean; dryRun?: boolean } = {},
+  ): Promise<Procedures.CreateOutcome> {
+    let scopeName = scope;
+    let projectName = name;
+    if (kind === "scope") {
+      scopeName = target;
+    } else if (kind === "project") {
+      const at = target.lastIndexOf("/");
+      if (at < 1) {
+        throw new Error(`a project is <scope>/<project>: "${target}"`);
+      }
+      scopeName = target.slice(0, at);
+      projectName = target.slice(at + 1);
+    }
+    const author =
+      new LocalGit(this.host, this.workshop.forge.path).config("user.name") ?? this.host.user();
+    const context = {
+      ...createContext(this.host, { dryRun }),
+      forge: this.workshop.forge,
+      scopeName,
+      name: projectName,
+      seed,
+      author,
+      year: String(new Date(this.host.now()).getFullYear()),
+      outcome: Procedures.uncreated(kind, kind === "import" ? target : null),
+    };
+    const done = await Procedures.creating.run(context);
+    return { ...done.outcome, changes: done.changes };
+  }
+
   // a daemon of the workshop (ollama…): start / run (in the foreground) / stop / reload /
   // rotate its log / status, through its supervisor (glossary: daemon)
   async daemon(

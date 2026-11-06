@@ -1,0 +1,8 @@
+# Updates arrive where work is done: the development branch.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly

@@ -26,6 +26,7 @@ export * as paths from "./core/paths.ts";
 export * from "./core/procedure.ts";
 export * from "./core/ruling.ts";
 export * from "./core/serialize.ts";
+export * from "./core/template.ts";
 export * from "./core/tool.ts";
 export * from "./core/version.ts";
 
