@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-// bos <model> <tool> [operands] [--flags]  ·  bos help  ·  bos --version
+// bos <model> <tool> [operands] [--flags]  ·  bos help  ·  bos --version  ·  bos (a REPL)
 // One command per run: read the arguments, run the tool on BOS, print what it returned.
+// Without a command in a terminal (or with --repl): a REPL, each line one <model> <tool>.
+import { createInterface } from "node:readline";
 import { BOS } from "./bos.ts";
 import { JsonFile } from "./core/json-file.ts";
 import { packagePath } from "./core/paths.ts";
-import { type Input, inputFor, parseArgs, type Tool } from "./core/tool.ts";
+import { type Input, inputFor, parseArgs, splitLine, type Tool } from "./core/tool.ts";
 import { NodeHost } from "./hosts/node.ts";
 import { findTool, TOOLS } from "./tools/_index.ts";
 import { helpText } from "./views/help.ts";
@@ -42,9 +44,10 @@ function print(entry: Tool, result: unknown, input: Input, json: boolean): void 
   }
 }
 
-async function main(argv: string[]): Promise<number> {
+// one command: bos <model> <tool> [operands] [--flags]
+async function command(argv: string[], signal: AbortSignal): Promise<number> {
   const { operands, flags } = parseArgs(argv);
-  const { workshop, json, ...toolFlags } = flags;
+  const { workshop, json, repl: _repl, ...toolFlags } = flags;
   const [model, name, ...rest] = operands;
 
   if (flags.version) {
@@ -63,17 +66,60 @@ async function main(argv: string[]): Promise<number> {
   }
   const input = inputFor(entry, rest, toolFlags);
   const bos = new BOS(host, { workshop: typeof workshop === "string" ? workshop : undefined });
+  const result = await entry.run(bos, input, { print: (line) => console.log(line), signal });
+  print(entry, result, input, Boolean(json));
+  return 0;
+}
 
+const failure = (error: unknown) =>
+  `bos: ${error instanceof Error ? error.message : String(error)}`;
+
+// the REPL: each line is one command, with the flags bos was started with (--workshop=…);
+// a failed command says why and the next line comes; exit, quit or Ctrl+D ends it.
+// Ctrl+C stops the running tool (bos workshop watch), at the prompt it ends the REPL.
+async function repl(startFlags: string[]): Promise<number> {
+  const terminal = Boolean(process.stdin.isTTY);
+  const lines = createInterface({ input: process.stdin, output: process.stdout, terminal });
+  if (terminal) {
+    console.log(`bos ${manifest.data.version}: <model> <tool> [operands] [--flags], help, exit`);
+  }
+  const prompt = () => terminal && lines.prompt();
+  lines.setPrompt("bos> ");
+  let running: AbortController | null = null;
+  lines.on("SIGINT", () => (running ? running.abort() : lines.close()));
+  let failed = 0;
+  prompt();
+  for await (const line of lines) {
+    const argv = splitLine(line);
+    if (argv[0] === "exit" || argv[0] === "quit") {
+      break;
+    }
+    if (argv.length) {
+      running = new AbortController();
+      try {
+        await command([...argv, ...startFlags], running.signal);
+      } catch (error) {
+        failed++;
+        console.error(failure(error));
+      }
+      running = null;
+    }
+    prompt();
+  }
+  lines.close();
+  // piped lines (bos --repl < commands): the exit code says whether any of them failed
+  return failed ? 1 : 0;
+}
+
+async function main(argv: string[]): Promise<number> {
+  const { operands, flags } = parseArgs(argv);
+  if (flags.repl || (!operands.length && !flags.version && process.stdin.isTTY)) {
+    return repl(argv.filter((arg) => arg.startsWith("--") && arg !== "--repl"));
+  }
   // Ctrl+C stops a long tool (bos workshop watch) cleanly instead of killing it
   const stop = new AbortController();
   process.once("SIGINT", () => stop.abort());
-
-  const result = await entry.run(bos, input, {
-    print: (line) => console.log(line),
-    signal: stop.signal,
-  });
-  print(entry, result, input, Boolean(json));
-  return 0;
+  return command(argv, stop.signal);
 }
 
 loadCheckoutEnv();
@@ -82,7 +128,7 @@ main(process.argv.slice(2)).then(
     process.exitCode = code;
   },
   (error: unknown) => {
-    console.error(`bos: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(failure(error));
     process.exitCode = 1;
   },
 );

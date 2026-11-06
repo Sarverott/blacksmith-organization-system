@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { findTool, inputFor, parseArgs } from "../src/index.ts";
+import { findTool, inputFor, parseArgs, splitLine } from "../src/index.ts";
 
 describe("tools", () => {
   it("parses operands and flags", () => {
@@ -26,5 +26,23 @@ describe("tools", () => {
       /models: workshop, scope, devlog, flow, project, version/,
     );
     expect(() => findTool("workshop", "x")).toThrow(/tools: locate, status, bootstrap, watch/);
+  });
+});
+
+describe("splitLine (the REPL)", () => {
+  it("splits a line as a shell would, quotes holding an argument together", () => {
+    expect(splitLine(`almanac judge "Cleo pushes to master" --dir=.`)).toEqual([
+      "almanac",
+      "judge",
+      "Cleo pushes to master",
+      "--dir=.",
+    ]);
+    expect(splitLine(`  flow  explain 'a b' "say \\"hi\\""  `)).toEqual([
+      "flow",
+      "explain",
+      "a b",
+      'say "hi"',
+    ]);
+    expect(splitLine("   ")).toEqual([]);
   });
 });
