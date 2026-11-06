@@ -48,6 +48,9 @@ export class BOS {
   #workshop: Models.Workshop | null = null;
 
   constructor(host: Host, options: BOSOptions = {}) {
+    if (!host) {
+      throw new TypeError("new BOS(host): give it the machine, e.g. new BOS(new NodeHost())");
+    }
     this.host = host;
     this.options = options;
   }

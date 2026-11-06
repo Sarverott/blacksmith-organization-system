@@ -43,6 +43,10 @@ All five are mandatory. BOS creates any missing one at boot.
   (the workshop itself), else `$WORKSHOP_ROOT/__WORKSHOP` (the directory that
   holds it, e.g. a partition), else the nearest parent directory named
   `__WORKSHOP`, else `~/__WORKSHOP`.
+- A workshop is a directory named `__WORKSHOP`: a `--workshop` (or the
+  library's `{ workshop }`) or `$BOS_WORKSHOP` with another name is taken as
+  the directory that holds it, like `$WORKSHOP_ROOT`. So a partition root
+  never becomes a second workshop beside its own `__WORKSHOP`.
 - `$WORKSHOP_RENAME` gives the workshop directory another name (e.g.
   `.__WORKSHOP`); every rule above then looks for that name.
 - A development workshop: the core is developed, tested by hand and
