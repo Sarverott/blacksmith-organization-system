@@ -6,7 +6,8 @@
 The wiki is flat: docs/glossary/grih.md becomes the page glossary-grih, a
 folder's README.md the page named after the folder (docs/README.md is Home).
 Links between docs pages become wiki links, Obsidian [[links]] too; links to
-anything else point at the file in the repository. Home, _Sidebar and _Footer
+anything else point at the file in the repository. The rulesets' pages are generated
+from their JSON as MkDocs does (docs/_mkdocs/almanac.py). Home, _Sidebar and _Footer
 are rendered from resources/docs-templates/ (the sidebar from the MkDocs
 nav). Pages written last time and gone from the docs are removed (listed in
 the wiki's .bos-wiki.json); pages written by hand in the wiki are left alone.
@@ -23,9 +24,13 @@ import re
 from pathlib import Path
 from string import Template
 
+import sys
+
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "docs" / "_mkdocs"))
+from almanac import ruleset_pages  # noqa: E402  (the pages MkDocs generates, Q18)
 LINK = re.compile(r"(?<!!)\[([^\]]*)\]\(([^)\s]+)(\s+\"[^\"]*\")?\)")
 WIKILINK = re.compile(r"\[\[([^\]|#]+)(#[^\]|]*)?(?:\|([^\]]+))?\]\]")
 FENCE = re.compile(r"^(```|~~~)")
@@ -49,21 +54,21 @@ def page_name(source: str) -> str:
     return path.lstrip(".").replace("/", "-")
 
 
-def heading(path: Path) -> str:
+def heading(path: Path, text: str | None = None) -> str:
     """the page's first # heading, without what follows a colon."""
-    for line in path.read_text().splitlines():
+    for line in (text if text is not None else path.read_text()).splitlines():
         if line.startswith("# "):
             return line[2:].split(":")[0].strip()
     return path.stem
 
 
-def nav_pages(nav, docs: Path, depth=0):
+def nav_pages(nav, docs: Path, depth=0, generated=None):
     """the MkDocs nav → (sidebar lines, every page in it); Home is not listed."""
     lines, pages = [], []
     for item in nav or []:
         title, value = next(iter(item.items())) if isinstance(item, dict) else (None, item)
         if isinstance(value, list):
-            sub_lines, sub_pages = nav_pages(value, docs, depth + 1)
+            sub_lines, sub_pages = nav_pages(value, docs, depth + 1, generated)
             lines.append(f"{'  ' * depth}- **{title}**")
             lines += sub_lines
             pages += sub_pages
@@ -71,7 +76,7 @@ def nav_pages(nav, docs: Path, depth=0):
             pages.append(value)
             if page_name(value) == "Home":
                 continue
-            label = title or heading(docs / value)
+            label = title or heading(docs / value, (generated or {}).get(value))
             lines.append(f"{'  ' * depth}- [{label}]({page_name(value)})")
     return lines, pages
 
@@ -121,13 +126,15 @@ def main() -> None:
     values = {"repo": repo, "docs": site, "version": version}
     templates = ROOT / "resources" / "docs-templates"
 
-    nav, pages = nav_pages(config["nav"], docs)
+    generated = ruleset_pages(ROOT, repo)
+    nav, pages = nav_pages(config["nav"], docs, generated=generated)
     page_set = set(pages)
     by_stem = {posixpath.splitext(posixpath.basename(p))[0].lower(): p for p in pages}
 
     written = {}
     for source in pages:
-        text = rewrite((docs / source).read_text(), source, page_set, by_stem, repo)
+        original = generated[source] if source in generated else (docs / source).read_text()
+        text = rewrite(original, source, page_set, by_stem, repo)
         name = page_name(source)
         if name == "Home":
             text = Template((templates / "Home.md").read_text()).substitute(values, content=text.rstrip())
