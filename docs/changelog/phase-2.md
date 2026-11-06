@@ -355,3 +355,90 @@ schema.
   exports `bridges/index.ts`. The empty files of the other kinds stay empty.
   How a bridge is applied to a model: BRAINSTORM Q14.
 
+## UNIXUSAT=1793922422342 · commit f129ec9
+
+v1.4.10 released and published (PR #9, which was still titled v1.4.9). The
+owner placed the four mirror secrets in `publish-env` and answered Q14.
+
+### Orders
+
+````text
+## Q14
+hard choice...
+maybe option C with defining the craft presets? every element can had ".craft/" with bos config with "bos.json", "setup.yaml", ".omnis.toml" with blind checksum halo table, "meta.ini" with metadata informations and other files and things used by BOS environments like type of model or implementing bridges functionality at particular place etc.
+sounds good? 
+you can play with mixing with option A you propose there
+````
+
+The question, as it was asked:
+
+````text
+## Q14. How a bridge is applied to a model
+
+The owner (`src/bridges/README.md`): "bridges should be applicable to models
+and depending on how behaviour is defined of each model class it acts
+otherwise", and in `git-integration/index.ts`: "plugins that can be applied
+to various models to extend their capabilities, propably as interfaces".
+Today a procedure makes the bridge it needs (`new LocalGit(host,
+project.path)` in `bos.ts`); no model knows its bridges.
+
+- a) Composition: a model lists the bridges it takes (`static bridges =
+  [LocalGit, GitHub]`) and gets one of each on demand (`project.bridge(GitHub)`),
+  made with its host and its path.
+- b) Mixins: `class Project extends withGit(Element)`; the bridge's methods
+  become the model's own.
+- c) Interfaces only: a model declares it *is* a git repository or a
+  publishable package (TypeScript `implements`), and the procedures pick the
+  bridges by that.
+
+*Lean:* a). It fits Q13's decision (structure declared on the class, the
+shared shape in `Element`), keeps a model's own methods apart from an outside
+system's, and a test can hand a model scripted bridges. b) mixes the two and
+cannot be undone per model; c) leaves the choosing in every procedure.
+````
+
+- **Decision (Q14):** c), mixed with a). A model's class declares what it
+  is and the bridges it takes by default (a). A place can say otherwise in
+  its own `.craft/` folder of presets: `bos.json` (BOS's settings of that
+  element, including its model type and its bridges), `setup.yaml`,
+  `.omnis.toml`, `meta.ini` and other files that BOS environments use.
+  Procedures pick bridges by what the element declares (c). With Q13, `Element`
+  reads both: the class first, then `.craft/`. What `.craft/` replaces (`.bos/`,
+  `.github/bos.json`), the four formats and `.omnis.toml` are open as Q15.
+  To be coded (TODO).
+
+### Found and fixed
+
+- **The title of a followed pull request:** an open `revision → master`
+  kept the title and description it was opened with while it followed
+  `revision` to newer versions. `pull-request.sh` now edits them on each
+  run; a test runs it with a scripted `gh`.
+
+## UNIXUSAT=1793922544411 · the mirrors' first run with secrets
+
+- **gitea.com, sr.ht:** every branch and tag pushed, 200 OK. builds.sr.ht
+  refuses the build jobs without a paid account, as expected.
+- **gitlab.com:** 403. GitLab says the token is a fine-grained personal
+  access token without the project permission *Code: Push*. The owner
+  changes that.
+- **bitbucket.org:** authentication failed. An Atlassian API token
+  (`ATATT…`) signs in to git as `x-bitbucket-api-token-auth`, and only an
+  access token signs in as `x-token-auth`
+  ([Atlassian](https://support.atlassian.com/bitbucket-cloud/docs/using-api-tokens/)).
+  `mirrors.sh` now chooses the username by the token's prefix; a test
+  covers both kinds *(assumed: the secret is an API token; the value is not
+  readable)*.
+
+
+## UNIXUSAT=1793922685633 · GitGuardian on PR #10
+
+GitGuardian, newly installed by the owner, checks each pull request. On
+PR #10 it found two "Basic Auth String"s in `tests/workflows.test.ts`
+(commits 1156f7a, 873913a). Both were the test's own fixtures:
+`https://x-token-auth:access-token@bitbucket.org`, a made-up token in an
+expected URL. No real secret was committed. The test now builds that URL
+from its parts, so no `user:token@host` sits in the source. The findings
+stay in those two commits: incident 39725129 is marked a false positive (a
+test value) in GitGuardian's dashboard by the owner. Bitbucket still fails
+to sign in after the username fix, so its token is on the owner's side too
+(TODO).
