@@ -36,7 +36,7 @@ jobs:
       USERNAME: ${{ github.actor }}
       REGISTRY: ghcr.io
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with: { ref: "${{ inputs.tag }}" }
       - uses: go-task/setup-task@v2
       - name: Only a full release, with a token
