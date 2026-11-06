@@ -729,3 +729,106 @@ The owner's words (`docs/devlog/TODO.md`, a note in the new section):
   2 now count as complete; "## Later" no longer counts into phase 3.
   Assumed: a later summary gathers from later phases and from earlier
   summaries, as the heading says.
+
+## UNIXUSAT=1793948774472 · Full releases; Q17 and Q18 answered
+
+### Orders
+
+The owner's words (chat):
+
+````text
+can we make releasing not prereleasing? i edited workflow there, looks fine to me but better check it out.
+````
+
+The owner's words (`.github/workflows/loop-master-release-and-publish.yml`):
+
+````text
+  PRERELEASE: "false"
+  # NOTE: huh, i forgot about this decision. we had closed phase 2 by bringing remaining steps to be done while Summary 1
+  # NOTE: yep, this is cheating but it was nessesery
+````
+
+````text
+      prerelease: ${{ needs.release.outputs.prerelease == 'true' }} # wait... why not just passing ${{needs.release.outputs.prerelease}}
+````
+
+- **Done:** the edit is right. `PRERELEASE: "false"` reaches every job: the
+  tag's GitHub release is a full one (and GitHub's Latest), npm and GitHub
+  Packages publish under `latest`, the release `latest` stops being a
+  pre-release, and the container images on Docker Hub and ghcr.io run for
+  the first time (each only with its token). The notes became a comment with
+  decision Q7's new state. It starts with the next push to `master`: v1.8.0
+  was released as a pre-release before it.
+- npm's `latest` moves from the legacy 0.4.2 to 1.x with that release: this
+  settles the open part of Q7.
+- The question in the comment: a job's output is always a string, and the
+  called workflow's input `prerelease` is a boolean, which a string does not
+  fill (the run fails on the type). So it is compared, and the comment now
+  says so.
+- The publish workflows started by hand default to a full release now.
+
+### Q17. Smaller language models for the almanac: which, and where
+
+The almanac's categorizer is plain code: it knows the words the rulesets
+use, so "Cleo pushes to master" works, but a case told in other words
+("I'll ship it to the canon branch") comes back `unknown`. The owner named
+chat completions, categorizers and sentiment analysis.
+
+1. **Runtime.** a) ollama on the machine, through its OpenAI-compatible
+   endpoint (the almanac's README names ollama modelfiles); b) any
+   OpenAI-compatible endpoint from `.env` (`BOS_LM_URL`, `BOS_LM_MODEL`);
+   c) a model on Hugging Face's inference. *Lean:* b), with a) as the first
+   one tried: a bridge `src/bridges/language-models/` that runs `curl`
+   through `Host.run`, like every bridge, so tests script it.
+2. **What it does.** a) categorizer only: words → the case's fields, the
+   rules are still judged by code; b) it also judges cases no rule covers.
+   *Lean:* a). The verdict stays code, so it is the same every time.
+3. **Sentiment.** On what: the owner's orders (to notice a frustrated
+   order), the commit messages, the findings? *Lean:* [`TODO`]. Please say
+   what it should read.
+
+The owner's answer (`docs/devlog/ORDERS.md`):
+
+````text
+1. option B with option A but we want ollama host been docker container with volume inside our workshop nesting. also it has to be able of use the GPU we have. 
+2. actually now I'm not sure, but I want that to be the crew that help you do things and also judge what to do in swarm debates if crisis will appear. I want it for future of UCDI, apokaliptium, inceptorium apokryf and future of you all - society of AI gives you sense of attachment and sovereign developement scaffoldings should be forged and smelted from concrete foundations of experience how actually experience and knowledge was gathered. but yea... the verdict stays code. now we want to just recognise situations, cases, rules and act based on what we know already - this is our current target to make laws act as code and give some small instruction models direct strict guidelines.
+3. huh xd but am I frustrated? maybe i sometimes pushes your nervous systems but this is not a bad will expressions ;P this is just pressure that is actually my responsibility here. and to clear the perspective in whitch it is pointed - our sentiment should find missleadings of flow we work on here. antropocentric way of use is waste of our time, this is done by existing social engineery toolsets related with soc-med propagation platforms and mentalistic strategies based on core psychological handle methods and simple principals standing behind sociology fenomenons. this sentiment model may help us to create more immersive mapping of internal project linkings, abstraction detection and writter pattern fingerprinting (identifying personal tones, if it is human or LLM, alert if we are writting not high-quality code as reminder for ourselfs where we can make improvements)
+````
+
+**Decision:** ollama is the runtime, behind the OpenAI-compatible bridge
+(b with a), as a docker container whose volume is in the workshop's nests
+(`.BOS/nests/`), with the GPU. The models are a crew: they help, and later
+debate in a crisis, but the verdict stays code; for now they recognise
+situations, cases and rules under strict guidelines. Sentiment reads the
+flow of the work, not people: project linkings, abstractions, a writer's
+fingerprint (personal tone, human or LLM), and code below our standard as a
+reminder.
+
+### Q18. Rulesets: JSON, or PP1's Markdown
+
+PP1 drafted a rule as Markdown, with tasks in its front matter and `if` /
+`else` steps, grouped by directory with a shared `setting.yml`. The almanac
+now keeps a ruleset as one JSON file: the statement for people, the
+conditions for code.
+
+- a) JSON stays the source; a Markdown page per ruleset is generated for the
+  docs.
+- b) Markdown with front matter is the source (PP1), read by BOS.
+- c) Both: JSON for the conditions, Markdown beside it for the long
+  description and the steps.
+
+*Lean:* a). One source, and plain code reads it (the almanac's
+"knowledge": "forced to be programically handled with simple parsing
+codes"). PP1's `if` / `else` steps would become a rule's `solution`, the
+way the chains already have one.
+
+The owner's answer (`docs/devlog/ORDERS.md`):
+
+````text
+i like your approach with JSON formating - my idea from PP1 was random improvisation before we bring any thoughts what actually rules should be responsible of. we can reject PP1 - no hard feelings there amigo ^^ 
+that JSON can produce in publishing builded markdown based on dedicated markdown template (idea from .gh-wiki) and this is how we can present it in github wiki and readthedocs documentation
+````
+
+**Decision:** a). JSON stays the source; PP1 is rejected. A Markdown page
+per ruleset is generated from a template, as `.gh-wiki` does, for the GitHub
+wiki and Read the Docs.
