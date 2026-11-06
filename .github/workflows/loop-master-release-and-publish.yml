@@ -3,7 +3,7 @@
 #   1. checks; a version reaching master already released gets the patch (a hotfix)
 #   2. tag v<version> and the GitHub release (skipped when that tag exists)
 #   3. the dev community hears of it (Discord, Telegram); the release gets the package's
-#      file, the release `latest` moves to it, VirusTotal scans its files
+#      file, the release `latest` moves to it
 #   4. published, each by its own workflow: npm on npmjs.org and on GitHub Packages
 #      (pre-releases too); a full release only: the container image on Docker Hub and
 #      ghcr.io. In parallel the docs: Read the Docs activates and builds the tag, the
@@ -86,7 +86,6 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       TAG: ${{ needs.release.outputs.tag }}
       PRERELEASE: ${{ needs.release.outputs.prerelease }}
-      VIRUSTOTAL_API_KEY: ${{ secrets.VIRUSTOTAL_API_KEY }}
     steps:
       - uses: actions/checkout@v5
         with: { ref: "${{ needs.release.outputs.tag }}" }
@@ -104,8 +103,6 @@ jobs:
           task workflows:rolling-release -- latest "$TAG" "$PRERELEASE"
           "The last published release, $TAG: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG - it moves with every release."
           "${{ steps.pack.outputs.file }}"
-      - name: Every file of the release to VirusTotal
-        run: task workflows:virustotal -- "$TAG"
 
   publish:
     needs: release

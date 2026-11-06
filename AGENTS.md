@@ -55,8 +55,10 @@ src/
 │                  descriptors → ensure + inspect; an Emitter: "created"), emitter.ts (on/once/off/emit),
 │                  procedure.ts (named steps, trace), context.ts (createIfMissing), tool.ts (one tool
 │                  format), version.ts (semver + GRIH), paths.ts (+ packagePath), json-file.ts, serialize.ts,
-│                  omnis.ts (.omnis.toml), ruling.ts + patterning.ts (the almanac: rules judged, chains recalled)
-├── hosts/         NodeHost (+ watch-tree.ts): the only files that touch node:* (fs, os, child_process)
+│                  omnis.ts (.omnis.toml) + ignore.ts (.gitignore read by BOS), ruling.ts + patterning.ts (the
+│                  almanac: rules judged, chains recalled), daemon.ts (services, contexts, restart policy)
+├── hosts/         NodeHost (+ watch-tree.ts): the only files that touch node:* (fs, os, child_process);
+│                  daemon/: the supervisor of a daemon (child processes, signals, monitor threads)
 ├── bridges/       a folder per kind of outside system, every bridge a Bridge (base.ts: its command through
 │                  Host.run); git-integration/: Git → LocalGit, RemoteGit → GitHub, Gitea, GitLab…
 ├── models/        <model>/class.ts: the glossary as classes (workshop, system = .BOS and its parts,
@@ -66,7 +68,8 @@ src/
 │                  bootstrapping, inspecting (rules.ts: one function per finding), watching, versioning,
 │                  proposing + automerging (the craft loop on GitHub: bos flow next-pr / automerge),
 │                  bumping (the project's version per station: bos flow bump), sealing (.bos/.omnis.toml),
-│                  judging + recalling (the almanac: bos almanac judge / recall)
+│                  judging + recalling (the almanac: bos almanac judge / recall), archiving (bos archive
+│                  mirror), daemonizing (bos daemon start / stop…: ollama serve and other daemons)
 ├── tools/         <model>.ts: what `bos <model> <tool>` runs; _index.ts collects them
 ├── views/         text for people (status tree, event line, help, STATE.md)
 ├── cli.ts         bos <model> <tool> [operands] [--flags]; --json, --workshop=
@@ -74,7 +77,7 @@ src/
 tests/             vitest, one file per concern; helpers.ts makes temporary workshops
 Dockerfile         the bos command as a container image (the publish workflows; phase 3: workplaces)
 scripts/           workflows/ (the steps of .github/workflows, task workflows:<name>), gh-wiki.py (docs → GitHub wiki),
-                   legacy shell sketches still to port (reference only)
+                   devtools/ (ollama-serve.sh: bos daemon … ollama), legacy shell sketches still to port (reference only)
 docs/              devlog, changelog, .agents, glossary; MkDocs site (docs/mkdocs.yml, Read the Docs)
 ```
 

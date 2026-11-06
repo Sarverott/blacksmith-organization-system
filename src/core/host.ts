@@ -1,6 +1,7 @@
 // The one door between the core and the machine it runs on. Models and procedures
 // touch files, clocks and the environment only through a Host, so the same core can
 // run on Node (hosts/node.ts) today and on other runtimes later.
+import type { DaemonFiles } from "./daemon.ts";
 
 export type Entry = { name: string; directory: boolean };
 
@@ -35,6 +36,12 @@ export interface Host {
     onError: (error: Error) => void,
     skip?: (relative: string) => boolean,
   ): () => void;
+  // run BOS's supervisor of a daemon (src/hosts/daemon/) on these files: detached, its pid
+  // returned at once; foreground: attached to this terminal, its exit code when it ends
+  supervise(files: DaemonFiles, options?: { foreground?: boolean }): number;
+  // send a signal to a process ("SIGTERM", "SIGHUP"…; 0 only asks whether it lives);
+  // false when there is no such process
+  signal(pid: number, signal: string | 0): boolean;
   // run a program and wait for it; only bridges (src/bridges/) call this
   run(command: string, args: string[], options?: { cwd?: string }): RunResult;
   env(name: string): string | undefined;

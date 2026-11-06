@@ -880,3 +880,44 @@ it turns out that previously bos-skillset claims name we want to use so collisio
   development workshop: a clone of the core in `forge/test/` went to
   `archive/.repos-mirrors/test___core-clone.git` (left there as the example).
   The home workshop's clones wait for the owner's order.
+
+## UNIXUSAT=1793970000000 · Daemons, ollama serve; the forge's elements made; VirusTotal rejected
+
+### Orders
+
+The owner's words (chat):
+
+````text
+write script for ollama serve in scripts/devtools/ollama-serve.sh and daemon controll with cluster of threads, multi-process signal managing and context sharing or separation of subprocess with monitor the logs etc. - that should be part of source code, it can be made in node.js vanilla packages. i see there project creating - this is what i miss all that time, creating elements of all parts in workshop, import stuff from diffrent areas like github and else, handling the ttystories of history states of shells that needed to be combined into splitting trees of command stories and command usage to become source of knowledge for bos. we don't have virustotal api access, sorry, we need to reject that one now. further more we have success in bos environment wild transplantation xd - check "bos-skillset" and the story there. that creation and managing all models, especially for forge was that thing whitch i miss here, so i wait for upcomming results there.
+````
+
+- **Done, daemons:** `src/core/daemon.ts` (service, contexts, restart
+  policy), `src/hosts/daemon/` (a detached supervisor: a cluster of
+  instances as child processes, shared or separate environment and process
+  group, restarts with backoff and a limit, every line logged into
+  `.BOS/storylines/daemons/`, a pool of monitor threads flagging alerts, a
+  ready URL; TERM/INT stop, HUP restart, USR1 rotate, USR2 state), `bos daemon
+  <tool>`, `resources/daemons/ollama.json` and
+  `scripts/devtools/ollama-serve.sh`. Tried on the development workshop:
+  CUDA on the RTX 3060 found, ready, restarted, stopped with exit 0. In
+  separate context ollama saw no models in `~/.ollama` ("total blobs: 0"):
+  where the models live is set by `OLLAMA_MODELS` (it is inherited) or the
+  workshop's own `.BOS/setup/daemons/ollama.json`. Serving calls no model;
+  the House decides which may be called.
+- **Done, the forge's elements:** `bos scope create`, `bos project create`,
+  `bos project import` (procedure `creating`). Tried on the development
+  workshop: `forge/test/anvil` made, `gh:Sarverott/bos-skillset` imported in
+  a dry run.
+- **Planned (TODO, phase 3):** every area's elements, importing whole
+  accounts and other places, ttystories (both forms seen: BOS's
+  `<ms>\t<dir>\t<command>` lines and `history` dumps; secrets must be
+  redacted before anything learns from them), daemons with the workshop.
+- **Decision (VirusTotal):** rejected, no API access; the scan step, its
+  script and the badges are gone.
+- **bos-skillset:** it depends on the core (`^1.11.0`) and another agent,
+  Joker, works there by the same integration round (dev branch, owner's
+  edits one commit each, merge `--no-ff`): the transplant took. Its rule 6
+  (the House) is kept: serving ollama calls no model.
+- The owner's `dependabot.yml` and draft example 02 are on `dev/Sarverott`;
+  biome had reformatted the draft on commit, so it is restored as written and
+  left out of biome like 00.

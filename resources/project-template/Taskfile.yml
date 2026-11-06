@@ -1,0 +1,10 @@
+# https://taskfile.dev - the procedures of {{name}}
+version: "3"
+
+tasks:
+  default:
+    cmds: [task --list]
+
+  check:
+    desc: every check (the pre-commit hook and CI run the same)
+    cmds: ['echo "[TODO] checks of {{name}}"']

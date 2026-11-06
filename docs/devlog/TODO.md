@@ -66,7 +66,7 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] Q12: every full release is stable (images); an LTS line once two majors live side by side
 - [x] A version per commit on `dev/*` (pre-commit hook, `bos flow bump-commit`); versions merge by the higher (`bos flow merge-version`, `.gitattributes`); a station bumps once its line is released (inquiry)
 - [x] Releases that move: `nightly` (revision), `latest` (every release), each with the package's `.tgz` (inquiry)
-- [x] Package reports in every README (bundlephobia, socket.dev, Snyk, npmgraph); release files to VirusTotal (inquiry)
+- [x] Package reports in every README (bundlephobia, socket.dev, Snyk, npmgraph); release files to VirusTotal (inquiry; rejected in Summary 1: no API access)
 - [x] Mirrors of the source: gitea.com, gitlab.com, bitbucket.org, sr.ht, every branch and tag, a status badge per place, the checks on each mirror's CI (inquiry)
 - [x] The four mirror secrets in `publish-env`: `MIRROR_GITEA_TOKEN`, `MIRROR_GITLAB_TOKEN`, `MIRROR_BITBUCKET_TOKEN`, `MIRROR_SOURCEHUT_SSH_KEY` (the owner)
 - [x] First run with them: gitea.com and sr.ht take every branch and tag (200 OK); a Bitbucket API token (`ATATT…`) signs in as `x-bitbucket-api-token-auth` (found)
@@ -96,7 +96,7 @@ history: [../changelog/](../changelog/phase-0.md).
     - [ ] Chains learned by BOS itself, from storylines and the commit history (cataclistics: "where in commits history it appears") (inquiry)
     - [ ] The almanac's other sections read by code: roles (agent profiles, ollama modelfiles), scenarios, simulations (inquiry)
     - [ ] A bare new project starts with the same flow: `bos project init` seeds the anatomy, the almanac, hooks, `.github/bos.json` and the workflows (inquiry)
-    - [ ] `VIRUSTOTAL_API_KEY` in `publish-env` (the owner; v1.9.0 was not scanned: "no VIRUSTOTAL_API_KEY")
+    - [x] ~~`VIRUSTOTAL_API_KEY` in `publish-env`~~ rejected by the owner: no VirusTotal API access; the scan, its script and badges removed
     - [x] ghcr.io takes the image: the package `ghcr.io/sarverott/blacksmith-organization-system` exists already (tags `dev`, `1.0.0-dev.3`, pushed before this repository published), so the workflow's token, with `packages: write`, is denied `write_package` until the package grants this repository *Write* in "Manage Actions access"; then re-run the job `ghcr` of run 42179570633 (the owner; found on v1.9.0; the package bos-skillset once claimed deleted, `1.10.0` there since)
     - [x] `bos` without a command, in a terminal: a REPL (readline), each line one `<model> <tool>`; `bos --repl` reads piped lines (review)
     - [ ] Watching by the models: each element declares what of it is watched, instead of one tree watcher (review)
@@ -121,10 +121,18 @@ history: [../changelog/](../changelog/phase-0.md).
 ## Phase 3: workplaces 
 
 - [x] A Docker image of BOS (`Dockerfile`; Docker Hub and ghcr.io, done in phase 2)
-- [ ] The first image, with the first full release; then its badge in the READMEs
+- [x] The first image, with the first full release: v1.10.0 on Docker Hub and ghcr.io (after the package bos-skillset once claimed was deleted)
+- [ ] The image's badge in the READMEs
 - [ ] Containers: one per agent host CLI (Codex, Claude Code), one for the owner
 - [ ] Contexts that isolate: procedures run in `node:vm` contexts, WASI, child processes or a cluster (review: "this all can be used now")
 - [ ] Workmodes: sets of Taskfile tasks with file watchers and git hooks
+- [x] Daemons: `bos daemon start | run | stop | reload | rotate | status | logs`, a supervisor with a cluster of instances, shared or separate contexts, signals and monitor threads; `scripts/devtools/ollama-serve.sh` (inquiry)
+- [ ] ollama in a docker container with the GPU: the NVIDIA Container Toolkit on the machine (the owner), then a service run as a container (Q17)
+- [ ] Daemons started and stopped with the workshop (`bos open`, `bos close`)
+- [x] The forge's elements made by BOS: `bos scope create`, `bos project create` (the standard anatomy from `resources/project-template/`; on an existing project only what is missing), `bos project import` (gh:owner/repo, any git URL, a path) (inquiry)
+- [ ] Every area's elements made by BOS: craftbook (craftsets, recipes, scrapnote vaults), devarmory (a tool with its manifest entry), archive (sarcophags), `.BOS` (setup, nests) (inquiry)
+- [ ] Importing from other places: a whole account or organisation of GitHub, GitLab, Gitea, Bitbucket into a scope; archives and notes into the craftbook (inquiry)
+- [ ] Ttystories: the shells' histories (`.BOS/storylines/ttystories/`: `<ms>\t<dir>\t<command>`; `history` dumps) combined, split into trees of command stories by directory, session and time, secrets redacted; command usage counted; stories become chains of the almanac's patterning, a source of knowledge for BOS (inquiry)
 - [ ] The git bridge (`LocalGit` in `src/bridges/git-integration/`, tags only so far) grows: status, add, commit
 - [ ] Scrapnote vaults: `craftbook/<scope>___<project>/scrapnotes/` as a git repository (Obsidian vault), `<project>/docs/.scrapnotes` its link, ignored by the project (Q8)
 - [ ] Workmode `scrapnotes`: commit every saved note after a quiet moment; `.obsidian/workspace*.json` ignored (Q8)

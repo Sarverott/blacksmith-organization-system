@@ -21,6 +21,7 @@ export {
 } from "./authors/entry.ts";
 export { type AuthorsLine, authorsFile, authorsText, readAuthors } from "./authors/file.ts";
 export { Craftbook, Scrapnotes } from "./craftbook/class.ts";
+export { Daemons, PACKAGE_DAEMONS } from "./daemon/class.ts";
 export { Devarmory } from "./devarmory/class.ts";
 export { DEVLOG_FILES, Devlog, type Phase } from "./devlog/class.ts";
 export { Forge } from "./forge/class.ts";

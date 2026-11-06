@@ -16,6 +16,7 @@ export * from "./bridges/index.ts";
 // the parts everything is made of (src/core/)
 export * from "./core/context.ts";
 export * from "./core/element.ts";
+export * from "./core/daemon.ts";
 export * from "./core/emitter.ts";
 export * from "./core/ignore.ts";
 export * from "./core/json-file.ts";
@@ -25,6 +26,7 @@ export * as paths from "./core/paths.ts";
 export * from "./core/procedure.ts";
 export * from "./core/ruling.ts";
 export * from "./core/serialize.ts";
+export * from "./core/template.ts";
 export * from "./core/tool.ts";
 export * from "./core/version.ts";
 
