@@ -54,7 +54,8 @@ src/
 ├── core/          host.ts (the one door to the machine), element.ts (anatomy: dirname, children,
 │                  descriptors → ensure + inspect; an Emitter: "created"), emitter.ts (on/once/off/emit),
 │                  procedure.ts (named steps, trace), context.ts (createIfMissing), tool.ts (one tool
-│                  format), version.ts (semver + GRIH), paths.ts (+ packagePath), json-file.ts, serialize.ts
+│                  format), version.ts (semver + GRIH), paths.ts (+ packagePath), json-file.ts, serialize.ts,
+│                  omnis.ts (.omnis.toml, a draft)
 ├── hosts/         NodeHost (+ watch-tree.ts): the only files that touch node:* (fs, os, child_process)
 ├── bridges/       a folder per kind of outside system, every bridge a Bridge (base.ts: its command through
 │                  Host.run); git-integration/: Git → LocalGit, RemoteGit → GitHub, Gitea, GitLab…

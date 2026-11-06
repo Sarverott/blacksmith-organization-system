@@ -442,3 +442,118 @@ stay in those two commits: incident 39725129 is marked a false positive (a
 test value) in GitGuardian's dashboard by the owner. Bitbucket still fails
 to sign in after the username fix, so its token is on the owner's side too
 (TODO).
+
+## UNIXUSAT=1793926214760 · commit 012bddb
+
+The owner renewed the GitLab and Bitbucket tokens, asked that the mirrors
+sync on a push to `development` without interrupting the work and never
+publish from a mirror, and answered Q15.
+
+### Orders
+
+The owner's words (chat):
+
+````text
+ready here, I updated gitlab and bitbucket tokens because of errors were thrown there. try to make mirror updating do not interrupt our work - that should be syncing on push to development on github. no publishing on readthedocs or other places by mirrors, only mirror stuff can be running there (gitea and others can release own releasing builds). further work will be made later when we make detailed integrations of each prlatform adaptations.
+````
+
+- **Decision (mirrors):** the mirrors workflow runs on a push to
+  `development` and by hand, nothing else. Every branch and tag still goes
+  with each sync. A failed mirror shows `403 FORBIDDEN` on its badge and
+  logs an error, but the run passes. The mirrors' CI files run only checks
+  and say so. Releases on a mirror's own platform come with that platform's
+  integration, later.
+
+````text
+## Q15
+
+i think that i am wrong - let's keep ".bos/" instead of new one ".craft/"
+so ".bos/" replaces ".craft/" idea
+
+.omnis.toml should contain entries of several weak hashes of file content labeled with even weaker checksuming 3 or more pseudohashes 
+this allows us to make broken hashes and reduced tables of indexing symbol strings with collidings at diffrent input had same output to work as triangulum - linking between cryptographic coordinates similarly to using triangulation
+for example
+```js
+// a12y makes from word input "authenticity" returned output "a12y"
+// ` a12y("authenticity") == "a12y" ` is true
+// we ignore all files begins and ends with non-letter char
+// we also ignore all mentioned by every .gitignore inside this model
+// directories does not counts, other variations in fs like pipelines, blockdevices and link types also
+// only files
+key = [
+    crc32(relative_filepath),
+    a12y(filename),
+    adler32(relative_filepath)
+]
+// only hashes that has confirmed rainbow tables collisions proof of vurnability 
+value = [
+    sha1(rawfile),
+    md5(rawfile),
+    weakhashalgorithm(rawfile)
+]
+// example content of  
+console.log(`
+[moriatur]
+UNIXUSAT = ${Date.now()}
+[hallows]
+${base32encode(key.join(""))} = "${base32encode(value.join(""))}"
+`)
+
+```
+
+rest files there can be reconsidered
+
+for example if dir have ".bos/scope.json" and is top layer inside forge it can have vscode workspace file that is lounched when we open scope. inside scope repositories are default threated as projects
+
+this concepts should be drafted and later on it can be redefined in future updates
+````
+
+The question, as it was asked:
+
+````text
+## Q15. `.craft/`: what it replaces, and what `.omnis.toml` is
+
+The owner's answer to Q14 gives each element a `.craft/` folder of presets:
+`bos.json`, `setup.yaml`, `.omnis.toml` "with blind checksum halo table",
+`meta.ini`, and the model's type and bridges. Three things are open:
+
+1. **What it replaces.** BOS already keeps a place's settings in two other
+   spots: a scope's version in `<scope>/.bos/scope.json` (Q5), and a
+   project's loop and versioning in `.github/bos.json`.
+   - a) `.craft/` replaces both. `.bos/scope.json` becomes
+     `.craft/bos.json`. A project's `.github/bos.json` moves to
+     `.craft/bos.json`, and the workflows read it there.
+   - b) `.craft/` replaces `.bos/` only. `.github/bos.json` stays, because
+     it belongs to the GitHub workflows of that one repository.
+   - c) Both stay, and `.craft/bos.json` names them.
+
+   *Lean:* a). One place per element is the point of Q13. The workflows can
+   read any path.
+2. **Four formats** (JSON, YAML, TOML, INI): does each file have its own
+   reader on purpose (`setup.yaml` for people to write, `meta.ini` for other
+   tools), or can BOS's own files share one format? *Lean:* what BOS writes
+   is `bos.json`, with a JSON Schema in `<model>/descriptors/` (Q13). The
+   other files are read only where an outside tool needs that format.
+3. **`.omnis.toml`, "blind checksum halo table":** [`TODO`]. *Assumed so
+   far:* a table of the checksums of the element's files, as the devarmory
+   manifest has. It would be "blind" because it holds only hashes, not names
+   or content, so it can be shared or mirrored without showing what it
+   guards. The "halo" would be the element and what is around it. Please say
+   what it is.
+````
+
+- **Decision (Q15):** `.bos/` stays; there is no `.craft/`. An element's presets
+  go in its `.bos/`; the files other than `bos.json` are to be reconsidered.
+  A project's `.github/bos.json` stays where it is: the answer does not move
+  it. `.omnis.toml` is drafted as the owner describes it
+  (`docs/glossary/omnis.md`, `src/core/omnis.ts`, `Host.digest`,
+  `LocalGit.files()`). It is not written anywhere yet. Two points of the
+  description are taken as written and raised in Q16:
+  - `a12y("authenticity") == "a12y"` counts the whole length, while the usual
+    numeronym gives a10y;
+  - base32 is used without its `=` padding, because a bare TOML key cannot
+    hold `=`.
+
+  The third content hash is crc32 for now *(assumed)*. A scope's VS Code
+  workspace is in TODO.
+

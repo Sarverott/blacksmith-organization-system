@@ -18,6 +18,7 @@ export * from "./core/context.ts";
 export * from "./core/element.ts";
 export * from "./core/emitter.ts";
 export * from "./core/json-file.ts";
+export * from "./core/omnis.ts";
 export * as paths from "./core/paths.ts";
 export * from "./core/procedure.ts";
 export * from "./core/serialize.ts";
