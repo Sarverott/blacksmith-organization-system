@@ -22,6 +22,8 @@ fast-changing forge.
 
 - [sarcophags](sarcophag.md): encrypted containers, one bare repository each
 - [exhibits](exhibit.md)
+- [repos mirrors](repos-mirrors.md): `archive/.repos-mirrors/<scope>___<project>.git`, the
+  read-only clones moved out of the forge as bare mirrors (`bos archive mirror`, Q6)
 - mirror packs: `archive/<pack>/<repo>`, filled from `.BOS/data/<pack>.gitlist` by `pull-archive`
 
 ## Lifecycle

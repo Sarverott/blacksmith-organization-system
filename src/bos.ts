@@ -7,6 +7,7 @@ import { createContext } from "./core/context.ts";
 import { Element } from "./core/element.ts";
 import type { Host } from "./core/host.ts";
 import { type Allocators, DEFAULT_ALLOCATORS, OMNIS_FILE } from "./core/omnis.ts";
+import { join } from "./core/paths.ts";
 import type { Case } from "./core/ruling.ts";
 import type { LoopEvent } from "./core/version.ts";
 import * as Models from "./models/index.ts";
@@ -221,7 +222,25 @@ export class BOS {
     return (await Procedures.crediting.run(context)).outcome;
   }
 
-  // the project's halo (.bos/.omnis.toml) now, against the sealed one; seal: true writes it
+  // a read-only clone of the forge → a bare mirror in archive/.repos-mirrors/ (decision Q6);
+  // confirm: true also removes the forge copy, when nothing of it would be lost
+  async archiveMirror(
+    path: string,
+    { confirm = false, dryRun = false }: { confirm?: boolean; dryRun?: boolean } = {},
+  ): Promise<Procedures.ArchiveOutcome> {
+    const project = path.startsWith("/") ? path : join(this.host.cwd(), path);
+    const context = {
+      ...createContext(this.host, { dryRun }),
+      workshopForge: this.workshop.forge.path,
+      archive: this.workshop.archive,
+      confirm,
+      outcome: Procedures.unarchived(project),
+    };
+    return (await Procedures.archiving.run(context)).outcome;
+  }
+
+  // a model's halo (.bos/.omnis.toml) now, against the sealed one; seal: true writes it. The
+  // model is the project around dir, or dir itself outside a repository (an area, Q16)
   async omnis({
     dir,
     seal = false,
@@ -233,16 +252,15 @@ export class BOS {
     dryRun?: boolean;
     allocators?: Allocators;
   } = {}): Promise<Procedures.SealOutcome> {
-    const { project } = this.loop(dir);
+    const root = this.#around(dir);
     const context = {
       ...createContext(this.host, { dryRun }),
-      projectPath: project.path,
-      git: new LocalGit(this.host, project.path),
+      projectPath: root,
       allocators,
       seal,
       sealed: null,
       halo: [],
-      outcome: Procedures.unsealed(`${project.path}/${OMNIS_FILE}`),
+      outcome: Procedures.unsealed(`${root}/${OMNIS_FILE}`),
     };
     return (await Procedures.sealing.run(context)).outcome;
   }

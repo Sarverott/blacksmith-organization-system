@@ -6,7 +6,7 @@ export {
   PROJECT_ALMANAC,
   readAlmanac,
 } from "./almanac/load.ts";
-export { Archive } from "./archive/class.ts";
+export { Archive, mirrorName, REPOS_MIRRORS } from "./archive/class.ts";
 export {
   type AuthorEntry,
   type AuthorKind,

@@ -42,6 +42,10 @@ export class Workshop extends Element {
     return this.child(Forge);
   }
 
+  get archive(): Archive {
+    return this.child(Archive);
+  }
+
   // the five areas as elements (.BOS, devarmory, forge, craftbook, archive)
   get areas(): Element[] {
     return this.childElements();
