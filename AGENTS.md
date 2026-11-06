@@ -55,16 +55,18 @@ src/
 │                  descriptors → ensure + inspect; an Emitter: "created"), emitter.ts (on/once/off/emit),
 │                  procedure.ts (named steps, trace), context.ts (createIfMissing), tool.ts (one tool
 │                  format), version.ts (semver + GRIH), paths.ts (+ packagePath), json-file.ts, serialize.ts,
-│                  omnis.ts (.omnis.toml, a draft)
+│                  omnis.ts (.omnis.toml), ruling.ts + patterning.ts (the almanac: rules judged, chains recalled)
 ├── hosts/         NodeHost (+ watch-tree.ts): the only files that touch node:* (fs, os, child_process)
 ├── bridges/       a folder per kind of outside system, every bridge a Bridge (base.ts: its command through
 │                  Host.run); git-integration/: Git → LocalGit, RemoteGit → GitHub, Gitea, GitLab…
 ├── models/        <model>/class.ts: the glossary as classes (workshop, system = .BOS and its parts,
-│                  devarmory, forge, scope, project, craftbook, archive, devlog, loop, settings = .github/bos.json)
+│                  devarmory, forge, scope, project, craftbook, archive, devlog, loop, settings = .github/bos.json,
+│                  almanac = docs/almanac/ + resources/almanac/)
 ├── procedures/    <name>/DESCRIPTION.md + one file per step + _index.ts (the order):
 │                  bootstrapping, inspecting (rules.ts: one function per finding), watching, versioning,
 │                  proposing + automerging (the craft loop on GitHub: bos flow next-pr / automerge),
-│                  bumping (the project's version per station: bos flow bump)
+│                  bumping (the project's version per station: bos flow bump), sealing (.bos/.omnis.toml),
+│                  judging + recalling (the almanac: bos almanac judge / recall)
 ├── tools/         <model>.ts: what `bos <model> <tool>` runs; _index.ts collects them
 ├── views/         text for people (status tree, event line, help, STATE.md)
 ├── cli.ts         bos <model> <tool> [operands] [--flags]; --json, --workshop=
@@ -207,6 +209,8 @@ In this order:
 | a definition of an element | `docs/glossary/<element>.md` |
 | work for another repository | `~/__WORKSHOP/forge/NOTES-for-repositories.md` (never edit the other repo) |
 | a loose note of the owner | `~/__WORKSHOP/craftbook/scrapnotes/` |
+| a rule of the environment, as data | `resources/almanac/rulesets/` (every project), `docs/almanac/rulesets/` (this one) |
+| a situation solved, as a chain of events | `resources/almanac/patterning/` (every project), `docs/almanac/patterning/` (this one) |
 
 ## `docs/.agents/`: the agents' own space
 
@@ -215,6 +219,11 @@ Agents write here; people only read it. Each agent keeps its own file
 top, dated). People answer in `docs/devlog/`, not here.
 
 ## Rules
+
+These rules are also data: `resources/almanac/rulesets/bos-environment.json`.
+`bos almanac judge "<what you are about to do>"` says whether a case breaks
+one (`ALLOWED`, `ASK FIRST`, `VIOLATION`, or `UNKNOWN`: ask). When a rule
+changes here, change it there too, and the other way round.
 
 1. **Contributors committee.** Every agent and every person is a member: same
    loop, same checks, own branch, own name.

@@ -89,6 +89,18 @@ export const incompleteAnatomy: Rule = (report) =>
       message: `missing ${project.anatomy.missing.join(", ")}`,
     }));
 
+export const omnisDrift: Rule = (report) =>
+  report.omnis
+    .filter(({ drift }) => drift.added.length || drift.changed.length || drift.removed)
+    .map(({ path, sealedAt, drift }) => ({
+      level: "warning",
+      rule: "omnis-drift",
+      path,
+      message:
+        `changed since sealed at UNIXUSAT=${sealedAt}: ${drift.changed.length} changed, ` +
+        `${drift.added.length} added, ${drift.removed} removed (bos project omnis shows them)`,
+    }));
+
 export const RULES: Rule[] = [
   missingArea,
   missingDescriptor,
@@ -98,4 +110,5 @@ export const RULES: Rule[] = [
   workOnMaster,
   misspeltBranch,
   incompleteAnatomy,
+  omnisDrift,
 ];

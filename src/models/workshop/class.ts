@@ -42,6 +42,11 @@ export class Workshop extends Element {
     return this.child(Forge);
   }
 
+  // the five areas as elements (.BOS, devarmory, forge, craftbook, archive)
+  get areas(): Element[] {
+    return this.childElements();
+  }
+
   get areaNames(): string[] {
     return Workshop.children.map((Kind) => Kind.dirname ?? Kind.type);
   }

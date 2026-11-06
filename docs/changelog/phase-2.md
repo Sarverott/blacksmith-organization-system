@@ -557,3 +557,144 @@ The owner's answer to Q14 gives each element a `.craft/` folder of presets:
   The third content hash is crc32 for now *(assumed)*. A scope's VS Code
   workspace is in TODO.
 
+
+## UNIXUSAT=1793940583882 · commit 7ae41c1
+
+The owner answered Q16, drafted the almanac (`docs/almanac/README.md`), asked
+for rulesets and a proper example, and tried the library from npm in
+`examples/00-draft-snippets/`. Meanwhile the owner merged PR #11 (v1.6.0).
+
+### Orders
+
+The owner's words (chat):
+
+````text
+alright. we have Q16 there. also bos-skillset is rebuilded, but it needs some proper guidelines and rules of how BOS environment works. we need to make here combined coded mechanics and written definitions that answer us if described case is violating any of rules we define. here propably we need small help from smaller language models like chat completions, categorizers and sentiment analizes. we need also to map solved scenarios we were able to handle - this way if we met once situation we remember pattern of propabilistic variant of event chains. i drafted some examples there, forgive for language usage and else things there. best wishes my friend
+````
+
+The owner's words (`docs/devlog/ORDERS.md`):
+
+````text
+## Q16
+1. do not compare a12y with A11Y - I invent a12y algorithm when i met that whole idea of A11Y. a12y is authentic supported by logic method to replace A11Y how it should actually be implemented instead of heterogeneous, conventional, and flawed due to the absence of clear, universal, and simple operating principles. a12y simply takes any sort of char arrayed string word, grabs first letter, gets length and grabs last letter - simple yet usefull. it even can be used in compression dictionaries building with 4 byte words and variation around low level coding implementations.
+2. we should be able to change allocator algorithm used in hashcoords of entries that are 3 methods for each keyname and valuedata
+3. yes, ".omnis.toml" should be in ".bos/". each model has ".omnis.toml" that describes only that model, not submodels - they have own ".omnis.toml" and area of work
+4. when it meet some defined BOS model item (e.g. it see ".bos/" that is other than own one) it stops look further and deeper. also all dirs ignored skips consider the content if it was not explicitly excluded from ignoring. we do not want to dig into .venv or node_modules - waste of time, package lock and uv lock makes that already, we can identify them as finality checksum
+5. that's right. one way to use that information is fast compare if changes were been made while project was closed. other benefits are checks of security to monitor possible injections. there are many stuff when this file will prove to be very useful.
+````
+
+The question, as it was asked:
+
+````text
+## Q16. `.omnis.toml`: the details of the draft
+
+The draft follows the owner's answer to Q15 (`docs/glossary/omnis.md`,
+`src/core/omnis.ts`). It needs five details, each settled for now and open
+to change:
+
+1. **a12y.** The example says `a12y("authenticity") == "a12y"`.
+   "authenticity" has 12 letters, so the draft writes the whole length. The
+   usual numeronym (a11y = accessibility) counts only the letters between
+   the ends, which gives `a10y`. *Lean:* keep the example, i.e. the length.
+   Please say if the numeronym was meant.
+2. **The third content hash** ("weakhashalgorithm"; sha1 and md5 are the
+   other two). The draft uses crc32 *(assumed)*. Candidates with known
+   collisions: MD4, though Node's OpenSSL 3 has it only as a legacy
+   provider; or MD2, which is gone from OpenSSL. *Lean:* crc32 until a
+   better candidate is named.
+3. **Where.** The draft puts it in `<element>/.bos/.omnis.toml`.
+   *Lean:* there, beside the other `.bos/` files.
+4. **`.gitignore` outside a repository.** `LocalGit.files()` reads every
+   `.gitignore` through git, so it works only inside a repository. *Lean:*
+   for other elements (areas of the workshop), every `.gitignore` is read
+   by BOS itself, later.
+5. **What checks the table.** *Lean:* `bos workshop status` gets a finding
+   for files whose hallows changed since the table was written. Then
+   `.omnis.toml` is an integrity record, like the devarmory manifest's
+   checksums.
+````
+
+- **Decision (Q16):**
+  1. a12y is the owner's own algorithm, not a numeronym to compare with a11y:
+     the first letter, the length and the last letter of any string
+     (`authenticity` → `a12y`, `ab` → `a2b`). The empty string gives `0`
+     *(assumed)*.
+  2. The allocators are changeable: three for the key (`KEYNAME`: crc32,
+     a12y, adler32), three for the value (`VALUEDATA`: sha1, md5, crc32). The
+     file records them in `[allocators]` *(assumed: the section's name, from
+     the owner's "keyname" and "valuedata")* and is read back with them.
+  3. `.bos/.omnis.toml`, one per model, describing that model only.
+  4. The walk stops at a directory with a `.bos/` of its own; ignored
+     directories are not entered unless re-included, and their lock files
+     stand for them. Outside a git repository there is no halo yet
+     ([`TODO`]).
+  5. A finding: `omnis-drift` in `bos workshop status`. `bos project omnis`
+     shows the drift, `bos project seal` writes the file (procedure
+     `sealing`).
+
+### Inquiries
+
+The owner's words (`docs/devlog/INQUIRIES.md`):
+
+````text
+## current session and this repo has warmup we want to pass for other projects to adopt
+here we have wonderfull vibe of practices we use to proceede further stepping. we need to make it universally defined by rulesets and almanac. this way we can next implement it further to implement unified vibe of flow we can initialize from bare newly created project. 
+
+## bring me proper example
+````
+
+Taken as: the rulesets parked in PP1 are wanted now, as the almanac's
+coded half. Plan: VISION (principle), ROADMAP (phase 2 grows the almanac;
+phase 4 the skillset reads it), TODO.
+
+- **The almanac** (`docs/glossary/almanac.md`): rulesets judged by code and
+  chains of events recalled. `resources/almanac/` ships with the package,
+  so every project that installs BOS starts with the same rules
+  (`rulesets/bos-environment.json`: 16 rules from AGENTS.md and the owner's
+  security orders) and the same remembered situations
+  (`patterning/bos-core.json`: 10 solved in phase 2). A project adds its own
+  in `docs/almanac/`; here, the roles of the contributors committee. `bos
+  almanac rules | judge "<case>" | recall <events>`; procedures `judging`
+  and `recalling`. The categorizer in the core is plain code, by the words
+  the rulesets use; smaller language models wait for Q17. Every universal
+  rule is tested by a sentence in words. PP1's Markdown form of a rule is
+  Q18.
+- **The proper example**: `examples/01-getting-started/`, the library step
+  by step. It only reads. Its README answers what the draft met.
+
+### What the draft snippets found
+
+- `{ workshop: "/run/media/sarverott/setternet-A62/" }` took the partition
+  root for the workshop: `bootstrap()` built `.BOS`, `archive`, `craftbook`,
+  `devarmory` and `forge` there (2026-11-06 05:11), beside `__WORKSHOP`.
+  Fixed: a `--workshop` (or `$BOS_WORKSHOP`) not named `__WORKSHOP` holds
+  one, like `$WORKSHOP_ROOT`. The second tree is left where it is, for the
+  owner to remove.
+- `new BOS()` without a host now throws with what to give it;
+  `workshop.areas` gives the five areas.
+- `npm i blacksmith-organization-system` installs 0.4.2: `latest` is still
+  the legacy release (Q7). The example installs `@next`.
+
+### The hook's question
+
+The owner's words (`.husky/pre-commit`):
+
+````text
+# if command below here works then all stuff with special task script (`sh .husky/task`) is overkill - is that your way to express yourself?
+#npm start -- bos -- workshop status
+````
+
+Not overkill: `npm start -- no-such-task` and `npx task no-such-task` exit
+0, while `sh .husky/task no-such-task` exits 200. Through npm,
+`node_modules/.bin` comes first in PATH, and `@go-task/cli`'s npm wrapper
+there swallows the exit code. So in a hook, a failed check would let the
+commit through. `npm start` is fine for running things by hand.
+
+### Cataclistics of this batch
+
+- Two commit headers were over 100 characters. The pre-commit bump had
+  already run, so their staged files went into the next commit. They were
+  redone one by one, and the chain is now `commit-header-too-long` in the
+  almanac.
+- The draft snippets would fail CI's lint, as `package.json` did: biome
+  leaves `examples/00-draft-snippets/` as written.

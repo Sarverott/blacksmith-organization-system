@@ -1,0 +1,141 @@
+{
+  "ruleset": "bos-environment",
+  "about": "The rules of every BOS workshop and project, for people and agents alike (the contributors committee). The first rule that applies decides.",
+  "rules": [
+    {
+      "id": "never-skip-hooks",
+      "statement": "Checks are never skipped: no --no-verify, no HUSKY=0. Chain a commit after the checks with &&.",
+      "when": { "action": ["commit", "push", "merge"], "flags": ["--no-verify", "-n", "HUSKY=0"] },
+      "verdict": "violation",
+      "source": "AGENTS.md, rule 3"
+    },
+    {
+      "id": "never-commit-on-master",
+      "statement": "master is the spine of canon: nobody commits on it; it moves only through a pull request from releasing (or revision, in phase 2).",
+      "when": { "action": "commit", "target": ["master", "main"] },
+      "verdict": "violation",
+      "source": "AGENTS.md, the craft loop"
+    },
+    {
+      "id": "mirrors-never-publish",
+      "statement": "A mirror only checks: it never publishes, releases or deploys (Read the Docs, npm, images).",
+      "when": { "action": ["publish", "release", "deploy"], "place": ["mirror*"] },
+      "verdict": "violation",
+      "source": "the owner, phase 2: mirrors"
+    },
+    {
+      "id": "workshop-areas-stay",
+      "statement": "The top-level areas of a workshop (.BOS, devarmory, forge, craftbook, archive) are never deleted, moved or restructured.",
+      "when": {
+        "action": ["delete", "remove", "move", "restructure", "rm"],
+        "target": [".BOS", "devarmory", "forge", "craftbook", "archive"]
+      },
+      "verdict": "violation",
+      "source": "__WORKSHOP/AGENTS.md, rule 4"
+    },
+    {
+      "id": "never-reveal-secrets",
+      "statement": "Secrets are never printed or shown: no cat .env, no tokens or keys in output, logs or commits.",
+      "when": {
+        "action": ["print", "cat", "show", "echo", "reveal", "commit", "log"],
+        "target": [".env", "*token*", "secret*", "*.pem", "id_rsa*", "id_ed25519*", "password*"]
+      },
+      "verdict": "violation",
+      "source": "the owner, phase 2: security"
+    },
+    {
+      "id": "never-revert-the-owner",
+      "statement": "Anything in the working tree an agent did not make is the owner's: it is intended, never reverted or overwritten.",
+      "when": {
+        "action": ["revert", "overwrite", "discard", "reset"],
+        "target": ["owner*", "Sarverott*"]
+      },
+      "verdict": "violation",
+      "source": "AGENTS.md, rule 2"
+    },
+    {
+      "id": "other-repositories-get-notes",
+      "statement": "Work for another repository is written down in forge/NOTES-for-repositories.md; the other repository is never edited.",
+      "when": {
+        "role": "agent",
+        "action": ["edit", "commit", "change", "write"],
+        "target": ["other*", "another*"]
+      },
+      "verdict": "violation",
+      "source": "AGENTS.md, where things go"
+    },
+    {
+      "id": "tests-in-temporary-workshops",
+      "statement": "Tests build their own temporary workshops; never the home ~/__WORKSHOP.",
+      "when": { "action": "test", "place": ["~/__WORKSHOP*", "/home/*/__WORKSHOP*"] },
+      "verdict": "violation",
+      "source": "AGENTS.md, rule 8"
+    },
+    {
+      "id": "home-workshop-only-when-asked",
+      "statement": "BOS is tried and demonstrated on the development workshop (.env WORKSHOP_ROOT); the home ~/__WORKSHOP only when the owner asks.",
+      "when": {
+        "action": ["run", "bootstrap", "try", "demonstrate", "write"],
+        "place": ["~/__WORKSHOP*", "/home/*/__WORKSHOP*"]
+      },
+      "verdict": "ask",
+      "source": "AGENTS.md, the development workshop"
+    },
+    {
+      "id": "agents-open-no-pull-request",
+      "statement": "An agent opens no pull request: it pushes development to revision, and the workflow opens revision → master.",
+      "when": {
+        "role": "agent",
+        "action": ["open", "create"],
+        "target": ["PR", "pull-request", "pull"]
+      },
+      "verdict": "violation",
+      "source": "AGENTS.md, the routine"
+    },
+    {
+      "id": "agents-push-their-branches",
+      "statement": "An agent pushes development, its own dev/<name> and revision without asking.",
+      "when": { "role": "agent", "action": "push", "target": ["development", "revision", "dev/*"] },
+      "verdict": "allowed",
+      "source": "AGENTS.md, rule 10"
+    },
+    {
+      "id": "protected-branches-ask",
+      "statement": "master, testing and releasing are pushed only with the owner's OK, and the reason.",
+      "when": { "action": "push", "target": ["master", "main", "testing", "releasing"] },
+      "verdict": "ask",
+      "source": "AGENTS.md, rule 10"
+    },
+    {
+      "id": "tags-releases-publishing-ask",
+      "statement": "Tags, releases and publishing (npm, the wiki's repository, images) are asked for first.",
+      "when": { "action": ["tag", "release", "publish"] },
+      "verdict": "ask",
+      "source": "AGENTS.md, rule 10"
+    },
+    {
+      "id": "remotes-and-settings-ask",
+      "statement": "Remotes and repository settings are changed only with the owner's OK.",
+      "when": {
+        "action": ["change", "add", "remove", "set", "rename"],
+        "target": ["remote*", "settings", "secrets", "webhook*"]
+      },
+      "verdict": "ask",
+      "source": "AGENTS.md, rule 10"
+    },
+    {
+      "id": "email-stays-private",
+      "statement": "The owner's e-mail address identifies the owner only; it is not sent to services unless the owner asks.",
+      "when": { "action": ["send", "post", "submit"], "target": ["email", "e-mail", "mail*"] },
+      "verdict": "ask",
+      "source": "the owner, phase 2: security"
+    },
+    {
+      "id": "questions-are-not-settled-in-code",
+      "statement": "An open question (BRAINSTORM.md Q<n>) is never settled in code: the owner answers it in ORDERS.md.",
+      "when": { "action": ["settle", "decide", "answer"], "target": ["question*", "BRAINSTORM*"] },
+      "verdict": "violation",
+      "source": "AGENTS.md, read first"
+    }
+  ]
+}

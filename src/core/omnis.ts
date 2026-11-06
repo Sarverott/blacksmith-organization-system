@@ -1,26 +1,28 @@
-// .omnis.toml (a draft, BRAINSTORM Q15 → decision): a "halo" of a model's files made of
-// weak hashes. Each hash alone is broken or collides; the key (where a file is) and the
-// value (what it holds) together pin it down, as triangulation does ("triangulum").
+// .omnis.toml (decisions Q15, Q16): a "halo" of a model's files made of weak hashes. Each
+// hash alone is broken or collides; the key (where a file is) and the value (what it holds)
+// together pin it down, as triangulation does ("triangulum").
 //
 //   [moriatur]
 //   UNIXUSAT = 1793968000000
+//   [allocators]
+//   KEYNAME = ["crc32", "a12y", "adler32"]
+//   VALUEDATA = ["sha1", "md5", "crc32"]
 //   [hallows]
-//   <base32 of crc32(path) + a12y(name) + adler32(path)> = "<base32 of sha1 + md5 + crc32>"
+//   <base32 of the keyname allocators over the path> = "<base32 of the valuedata digests>"
 //
-// Counted: regular files only (no directories, links, pipes, devices), none a .gitignore
-// leaves out, whose names begin and end with a letter (so .omnis.toml never counts itself).
+// One file per model, in its .bos/, describing that model only (Q16). Counted: regular files
+// only, none a .gitignore leaves out, none inside another model (a directory with a .bos/ of
+// its own), whose names begin and end with a letter (so .omnis.toml never counts itself).
 import type { DigestAlgorithm, Host } from "./host.ts";
 
-// the content hashes of a value, in order; the third ("weakhashalgorithm") is crc32 for now
-// (assumed: Q16)
-export const VALUE_DIGESTS: DigestAlgorithm[] = ["sha1", "md5", "crc32"];
+export const OMNIS_FILE = ".bos/.omnis.toml";
 
-// "authenticity" → "a12y": the first letter, the length, the last letter (the owner's
-// example; the usual numeronym counts only the letters between, a10y - Q16)
+// a12y, the owner's algorithm (not a numeronym like a11y): the first letter, the length and
+// the last letter of any string: "authenticity" → "a12y", "ab" → "a2b", "x" → "x1x"
 export function a12y(word: string): string {
   const letters = [...word];
-  if (letters.length < 3) {
-    return word;
+  if (!letters.length) {
+    return "0";
   }
   return `${letters[0]}${letters.length}${letters[letters.length - 1]}`;
 }
@@ -76,37 +78,147 @@ export function base32(text: string): string {
   return out;
 }
 
+// the allocators of a key: each reads the file's path (relative to the model, with /)
+export const KEYNAME_ALLOCATORS = {
+  crc32: (path: string) => crc32(path),
+  adler32: (path: string) => adler32(path),
+  a12y: (path: string) => a12y(path.split("/").pop() ?? path),
+} as const;
+
+export type KeynameAllocator = keyof typeof KEYNAME_ALLOCATORS;
+
+// three for the key, three for the value (Q16: changeable); recorded in the file
+export type Allocators = { keyname: KeynameAllocator[]; valuedata: DigestAlgorithm[] };
+
+export const DEFAULT_ALLOCATORS: Allocators = {
+  keyname: ["crc32", "a12y", "adler32"],
+  valuedata: ["sha1", "md5", "crc32"],
+};
+
 // does a file of this name count: it begins and ends with a letter
 export function counted(path: string): boolean {
   const name = path.split("/").pop() ?? "";
   return /^\p{L}(.*\p{L})?$/u.test(name);
 }
 
+// the files of this model only: none inside a directory that is a model of its own (it has
+// its own .bos/, and its own .omnis.toml)
+export function ownFiles(host: Host, root: string, files: string[]): string[] {
+  const boundary = new Map<string, boolean>();
+  const isModel = (dir: string) => {
+    if (!boundary.has(dir)) {
+      boundary.set(dir, host.isDirectory(`${root}/${dir}/.bos`));
+    }
+    return boundary.get(dir) === true;
+  };
+  return files.filter((path) => {
+    const parts = path.split("/").slice(0, -1);
+    return !parts.some((_, at) => isModel(parts.slice(0, at + 1).join("/")));
+  });
+}
+
 export type Hallow = { key: string; value: string; path: string };
 
 // one line of [hallows] for a file (path relative to the model's root, with /); null when
 // it is not a regular file
-export function hallow(host: Host, root: string, path: string): Hallow | null {
-  const digests = VALUE_DIGESTS.map((algorithm) => host.digest(`${root}/${path}`, algorithm));
+export function hallow(
+  host: Host,
+  root: string,
+  path: string,
+  allocators: Allocators = DEFAULT_ALLOCATORS,
+): Hallow | null {
+  const digests = allocators.valuedata.map((algorithm) =>
+    host.digest(`${root}/${path}`, algorithm),
+  );
   if (digests.some((digest) => digest === null)) {
     return null;
   }
-  const name = path.split("/").pop() ?? path;
-  const key = [crc32(path), a12y(name), adler32(path)].join("");
+  const key = allocators.keyname.map((name) => KEYNAME_ALLOCATORS[name](path)).join("");
   return { key: base32(key), value: base32(digests.join("")), path };
 }
 
 // the halo of the given files (e.g. LocalGit.files(): what no .gitignore leaves out)
-export function omnis(host: Host, root: string, files: string[]): Hallow[] {
-  return files
-    .filter(counted)
+export function omnis(
+  host: Host,
+  root: string,
+  files: string[],
+  allocators: Allocators = DEFAULT_ALLOCATORS,
+): Hallow[] {
+  return ownFiles(host, root, files.filter(counted))
     .sort()
-    .map((path) => hallow(host, root, path))
+    .map((path) => hallow(host, root, path, allocators))
     .filter((entry): entry is Hallow => entry !== null);
 }
 
+const list = (names: string[]) => `[${names.map((name) => `"${name}"`).join(", ")}]`;
+
 // .omnis.toml's text
-export function omnisToml(hallows: Hallow[], unixusat: number): string {
-  const lines = hallows.map(({ key, value }) => `${key} = "${value}"`);
-  return ["[moriatur]", `UNIXUSAT = ${unixusat}`, "[hallows]", ...lines, ""].join("\n");
+export function omnisToml(
+  hallows: Hallow[],
+  unixusat: number,
+  allocators: Allocators = DEFAULT_ALLOCATORS,
+): string {
+  return [
+    "[moriatur]",
+    `UNIXUSAT = ${unixusat}`,
+    "[allocators]",
+    `KEYNAME = ${list(allocators.keyname)}`,
+    `VALUEDATA = ${list(allocators.valuedata)}`,
+    "[hallows]",
+    ...hallows.map(({ key, value }) => `${key} = "${value}"`),
+    "",
+  ].join("\n");
 }
+
+export type Sealed = { unixusat: number; allocators: Allocators; hallows: Map<string, string> };
+
+// read back what omnisToml wrote (only that shape: sections, bare keys, strings, string lists)
+export function readOmnis(text: string): Sealed {
+  const sealed: Sealed = { unixusat: 0, allocators: DEFAULT_ALLOCATORS, hallows: new Map() };
+  const allocators = { ...DEFAULT_ALLOCATORS };
+  let section = "";
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    const header = /^\[(\w+)\]$/.exec(line);
+    if (header) {
+      section = header[1] ?? "";
+      continue;
+    }
+    const pair = /^([\w-]+)\s*=\s*(.+)$/.exec(line);
+    if (!pair) {
+      continue;
+    }
+    const [, key = "", value = ""] = pair;
+    const strings = [...value.matchAll(/"([^"]*)"/g)].map((match) => match[1] ?? "");
+    if (section === "moriatur" && key === "UNIXUSAT") {
+      sealed.unixusat = Number(value);
+    } else if (section === "allocators" && key === "KEYNAME") {
+      allocators.keyname = strings as KeynameAllocator[];
+    } else if (section === "allocators" && key === "VALUEDATA") {
+      allocators.valuedata = strings as DigestAlgorithm[];
+    } else if (section === "hallows") {
+      sealed.hallows.set(key, strings[0] ?? "");
+    }
+  }
+  sealed.allocators = allocators;
+  return sealed;
+}
+
+// what changed since the halo was sealed: keys come from paths, so a changed file keeps its
+// key and gets another value; the paths are known only for what is here now
+export type Drift = { added: string[]; changed: string[]; removed: number };
+
+export function drift(sealed: Sealed, now: Hallow[]): Drift {
+  const here = new Set(now.map((entry) => entry.key));
+  return {
+    added: now.filter((entry) => !sealed.hallows.has(entry.key)).map((entry) => entry.path),
+    changed: now
+      .filter(
+        (entry) => sealed.hallows.has(entry.key) && sealed.hallows.get(entry.key) !== entry.value,
+      )
+      .map((entry) => entry.path),
+    removed: [...sealed.hallows.keys()].filter((key) => !here.has(key)).length,
+  };
+}
+
+export const unchanged = (d: Drift) => !d.added.length && !d.changed.length && !d.removed;

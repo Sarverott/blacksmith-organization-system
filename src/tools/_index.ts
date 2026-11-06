@@ -1,5 +1,6 @@
 // Every tool of the core, in the order `bos help` shows them.
 import type { Tool } from "../core/tool.ts";
+import { almanacTools } from "./almanac.ts";
 import { devlogTools } from "./devlog.ts";
 import { flowTools } from "./flow.ts";
 import { projectTools } from "./project.ts";
@@ -14,6 +15,7 @@ export const TOOLS: Tool[] = [
   ...flowTools,
   ...projectTools,
   ...versionTools,
+  ...almanacTools,
 ];
 
 export function findTool(model: string | undefined, name: string | undefined): Tool {
