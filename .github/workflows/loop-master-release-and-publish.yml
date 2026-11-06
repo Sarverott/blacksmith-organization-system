@@ -30,10 +30,11 @@ concurrency:
 
 env:
   HUSKY: "0"
-  # decision Q7: npm `next` (a GitHub pre-release) until phase 2 is done
+  # decision Q7: a GitHub pre-release (npm `next`) until phase 2 was done; phase 2 closed
+  # with TODO's Summary 1 (the owner, v1.8.x), so every release is a full one: GitHub's
+  # Latest, npm `latest`, container images. "true" makes them pre-releases again.
   PRERELEASE: "false"
-  # NOTE: huh, i forgot about this decision. we had closed phase 2 by bringing remaining steps to be done while Summary 1
-  # NOTE: yep, this is cheating but it was nessesery
+
 jobs:
   checks:
     uses: ./.github/workflows/checks-reusable-set.yml
@@ -112,7 +113,8 @@ jobs:
     uses: ./.github/workflows/npmjs-npm-package-publish.yml
     with:
       tag: ${{ needs.release.outputs.tag }}
-      prerelease: ${{ needs.release.outputs.prerelease == 'true' }} # wait... why not just passing ${{needs.release.outputs.prerelease}}
+      # a job's output is always a string; the input is a boolean, so it is compared
+      prerelease: ${{ needs.release.outputs.prerelease == 'true' }}
     secrets: inherit
     permissions:
       contents: read

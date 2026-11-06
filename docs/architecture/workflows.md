@@ -36,7 +36,7 @@ flowchart LR
 | `checks-on-push-changed-parts.yml` | push to `development`, `dev/**` | only the parts the push touched: code, docs, or both (a new branch: both) |
 | `checks-on-pull-request-then-automerge.yml` | pull request into a station, opened by a person | every check, the commits of the pull request too; then `bos flow automerge` (a pull request into `master` waits for a person) |
 | `loop-revision-bump-checks-pull-request.yml` | push to `revision` | every check (the commits since `master` too); `bos project authors` (`.github/AUTHORS`); `bos flow bump revision` (the minor, once the line `v<X.Y>.*` is released); the release `nightly` moves to `revision` with the package's file; what it committed is pushed to `revision` and merged into `development`; then the pull request `revision → master` is opened (or the open one follows) |
-| `loop-master-release-and-publish.yml` | push to `master` | checks; `bos flow bump master` (the patch, only for a released version: a hotfix); tag `v<version>` and GitHub release (a pre-release while npm is `next`, Q7); then Discord/Telegram; the package's file into the release, the release `latest` moved to it, every file of the release to VirusTotal; the publish workflows, Read the Docs, the wiki, social media; `master` back into `development`; the BOS workshop called |
+| `loop-master-release-and-publish.yml` | push to `master` | checks; `bos flow bump master` (the patch, only for a released version: a hotfix); tag `v<version>` and GitHub release (a full release since phase 2 closed; a pre-release with `PRERELEASE: "true"`, Q7); then Discord/Telegram; the package's file into the release, the release `latest` moved to it, every file of the release to VirusTotal; the publish workflows, Read the Docs, the wiki, social media; `master` back into `development`; the BOS workshop called |
 | `npmjs-npm-package-publish.yml` | called by the release; a GitHub release made by a person; by hand | `npm publish --provenance` to npmjs.org, `next` for a pre-release |
 | `github-npm-package-publish.yml` | called by the release; by hand | the package on GitHub Packages as `@sarverott/blacksmith-organization-system` (it takes scoped names only), pre-releases under `next` |
 | `docker-container-publish.yml` | called by a full release; by hand | the image of the `Dockerfile` on Docker Hub: `<version>`, `<major>.<minor>`, `latest` |
@@ -66,8 +66,8 @@ newest versioned release). Names are drafts (owner, Q12).
 Every file of a versioned release (the `.tgz`, the source archives) goes to
 VirusTotal; the release's notes link each report.
 
-Container images are made only for a full release (not a pre-release); while
-npm is `next` (Q7) there is none. "Stable LTS" is open: BRAINSTORM Q12.
+Container images are made only for a full release (not a pre-release): every
+release since phase 2 closed (Q7). "Stable LTS" is open: BRAINSTORM Q12.
 
 ## Mirrors
 
