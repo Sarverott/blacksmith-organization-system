@@ -13,7 +13,8 @@
       "!**/package-lock.json",
       "!scripts",
       "!docs/.obsidian",
-      "!resources/web/public"
+      "!resources/web/public",
+      "!examples/00-draft-snippets"
     ]
   },
   "formatter": {
@@ -54,7 +55,7 @@
   },
   "overrides": [
     {
-      "includes": ["package.json"],
+      "includes": ["**/package.json"],
       "json": {
         "formatter": {
           "expand": "always"
