@@ -25,6 +25,14 @@ export {
   reconciling,
   unreconciled,
 } from "./reconciling/_index.ts";
+export {
+  haloOf,
+  type SealContext,
+  type SealOutcome,
+  sealedOf,
+  sealing,
+  unsealed,
+} from "./sealing/_index.ts";
 export { type VersionContext, versioning } from "./versioning/_index.ts";
 export {
   classify,

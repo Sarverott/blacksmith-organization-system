@@ -6,6 +6,7 @@ import { GitHub, LocalGit } from "./bridges/index.ts";
 import { createContext } from "./core/context.ts";
 import { Element } from "./core/element.ts";
 import type { Host } from "./core/host.ts";
+import { type Allocators, DEFAULT_ALLOCATORS, OMNIS_FILE } from "./core/omnis.ts";
 import type { LoopEvent } from "./core/version.ts";
 import * as Models from "./models/index.ts";
 import * as Procedures from "./procedures/index.ts";
@@ -217,6 +218,32 @@ export class BOS {
       outcome: Procedures.uncredited(file),
     };
     return (await Procedures.crediting.run(context)).outcome;
+  }
+
+  // the project's halo (.bos/.omnis.toml) now, against the sealed one; seal: true writes it
+  async omnis({
+    dir,
+    seal = false,
+    dryRun = false,
+    allocators = DEFAULT_ALLOCATORS,
+  }: {
+    dir?: string;
+    seal?: boolean;
+    dryRun?: boolean;
+    allocators?: Allocators;
+  } = {}): Promise<Procedures.SealOutcome> {
+    const { project } = this.loop(dir);
+    const context = {
+      ...createContext(this.host, { dryRun }),
+      projectPath: project.path,
+      git: new LocalGit(this.host, project.path),
+      allocators,
+      seal,
+      sealed: null,
+      halo: [],
+      outcome: Procedures.unsealed(`${project.path}/${OMNIS_FILE}`),
+    };
+    return (await Procedures.sealing.run(context)).outcome;
   }
 
   // open the pull request of a branch's forward step on GitHub
