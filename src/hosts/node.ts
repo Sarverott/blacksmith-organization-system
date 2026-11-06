@@ -9,6 +9,7 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
+  rmSync,
   statSync,
   writeFileSync,
 } from "node:fs";
@@ -79,6 +80,10 @@ export class NodeHost implements Host {
 
   mkdir(path: string): void {
     mkdirSync(path, { recursive: true });
+  }
+
+  removeTree(path: string): void {
+    rmSync(path, { recursive: true, force: true });
   }
 
   watch(

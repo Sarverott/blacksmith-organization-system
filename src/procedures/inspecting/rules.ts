@@ -1,5 +1,6 @@
 // One function per concern; each returns the findings it sees in the report.
 import type { ElementNode } from "../../core/element.ts";
+import { mirrorName } from "../../models/index.ts";
 import type { Finding, WorkshopReport } from "./report.ts";
 
 type Rule = (report: WorkshopReport) => Finding[];
@@ -66,8 +67,22 @@ export const workOnMaster: Rule = (report) =>
       level: "warning",
       rule: "work-on-master",
       path: project.path,
-      message: `checked out on ${project.git?.branch}: work happens on development or dev/<name>`,
+      message: `checked out on ${project.git?.branch}: work happens on development or dev/<name>; a read-only clone belongs in the archive (bos archive mirror ${project.path})`,
     }));
+
+// a project of the forge whose mirror is in the archive already: the forge copy can go
+export const mirroredInForge: Rule = (report) => {
+  const mirrors = new Set(report.mirrors);
+  const forge = `${report.root}/forge/`;
+  return projects(report)
+    .filter((project) => mirrors.has(mirrorName(project.path.slice(forge.length))))
+    .map((project) => ({
+      level: "info",
+      rule: "mirrored-in-forge",
+      path: project.path,
+      message: `mirrored in archive/.repos-mirrors/ already: bos archive mirror ${project.path} --confirm removes this copy`,
+    }));
+};
 
 export const misspeltBranch: Rule = (report) =>
   projects(report)
@@ -108,6 +123,7 @@ export const RULES: Rule[] = [
   looseInForge,
   scopeWithoutVersion,
   workOnMaster,
+  mirroredInForge,
   misspeltBranch,
   incompleteAnatomy,
   omnisDrift,

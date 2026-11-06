@@ -26,6 +26,8 @@ export type WorkshopReport = {
   forge: { looseFiles: string[]; scopes: ScopeReport[] };
   // the projects with a sealed halo (.bos/.omnis.toml) and what drifted since
   omnis: { path: string; sealedAt: number; drift: Drift }[];
+  // the bare mirrors in archive/.repos-mirrors/ (decision Q6), by name: <scope>___<project>.git
+  mirrors: string[];
   findings: Finding[];
 };
 
@@ -39,6 +41,7 @@ export function emptyReport(workshop: Workshop): WorkshopReport {
     strays: [],
     forge: { looseFiles: [], scopes: [] },
     omnis: [],
+    mirrors: [],
     findings: [],
   };
 }

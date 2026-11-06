@@ -24,6 +24,8 @@ export interface Host {
   // (a directory, a link, a pipe, a device) or cannot be read
   digest(path: string, algorithm: DigestAlgorithm): string | null;
   mkdir(path: string): void;
+  // remove a directory and everything in it (only procedures that checked what is lost call it)
+  removeTree(path: string): void;
   // calls onChange for every change below root until the returned function is called;
   // onError once when the watcher can no longer listen (it never fails silently);
   // skip(relative) true: that directory and everything below it is not watched
