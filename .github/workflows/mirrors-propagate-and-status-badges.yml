@@ -1,24 +1,16 @@
-# The source (this GitHub repository) propagated to its mirrors - gitea.com, gitlab.com,
+# The source (this GitHub repository) synced to its mirrors - gitea.com, gitlab.com,
 # bitbucket.org, sr.ht (.github/bos.json: mirrors) - every branch and tag, deletions too;
 # then one status badge per place on the branch `badges`, shown in the READMEs:
 #   "github.com source: 200 OK"   "gitea.com mirror: 200 OK | 404 NOT_FOUND | 403 FORBIDDEN"
-# A mirror whose update fails shows 403 FORBIDDEN and fails this run.
-# Pushes made by the workflows' own token start no workflow, so the loop's runs and a
-# daily run catch what they pushed. Steps: scripts/workflows/mirrors.sh, status-badges.sh.
-name: "mirrors › propagate the source, status badges"
+# Runs on a push to development (and by hand), the branch where work lands. It never
+# interrupts the work: a mirror that fails shows 403 FORBIDDEN on its badge and an error
+# in the run, but the run passes. Mirrors only receive: their own CI runs checks, never
+# publishes (the owner, phase 2). Steps: scripts/workflows/mirrors.sh, status-badges.sh.
+name: "mirrors › sync the source on development, status badges"
 
 on:
   push:
-    branches: ["**", "!badges"]
-    tags: ["**"]
-  delete:
-  workflow_run:
-    workflows:
-      - "loop › revision: checks, authors, bump, pull request to master"
-      - "loop › master: release, publish, docs, back into development"
-    types: [completed]
-  schedule:
-    - cron: "17 4 * * *"
+    branches: [development]
   workflow_dispatch:
 
 permissions:
@@ -40,6 +32,8 @@ jobs:
         with: { fetch-depth: 0 }
       - uses: go-task/setup-task@v2
       - name: Every branch and tag to each mirror, a badge each
+        # a mirror's failure is on its badge and in the log; the work goes on
+        continue-on-error: true
         env:
           MIRROR_GITEA_TOKEN: ${{ secrets.MIRROR_GITEA_TOKEN }}
           MIRROR_GITLAB_TOKEN: ${{ secrets.MIRROR_GITLAB_TOKEN }}
@@ -47,5 +41,4 @@ jobs:
           MIRROR_SOURCEHUT_SSH_KEY: ${{ secrets.MIRROR_SOURCEHUT_SSH_KEY }}
         run: task workflows:mirrors -- "$RUNNER_TEMP/badges"
       - name: The badges, on the branch badges
-        if: success() || failure()
         run: task workflows:status-badges -- "$RUNNER_TEMP/badges"

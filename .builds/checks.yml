@@ -1,6 +1,7 @@
 # On the sr.ht mirror (builds.sr.ht runs every manifest in .builds/ on each push; it needs
 # a paid sourcehut account). The source is GitHub; this repository only receives it.
-# The same checks as GitHub's (task check): types, lint, tests.
+# The same checks as GitHub's (task check): types, lint, tests - only checks: a mirror
+# never publishes (docs, packages, images stay on GitHub).
 image: alpine/edge
 packages:
   - nodejs-current

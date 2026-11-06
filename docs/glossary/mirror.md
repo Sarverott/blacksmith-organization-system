@@ -35,8 +35,8 @@ failed. Each mirror also runs the checks on its own CI.
 
 ## In the loop
 
-`mirrors-propagate-and-status-badges.yml` pushes after every change of the
-source (docs/architecture/workflows.md, "Mirrors"). [`TODO`] the mirrors of a
+`mirrors-propagate-and-status-badges.yml` syncs it on every push to
+`development` of the source (docs/architecture/workflows.md, "Mirrors"). [`TODO`] the mirrors of a
 scope's private repositories on the self-hosted server (`__WORKSHOP/AGENTS.md`:
 remotes policy) and the `archive/` mirrors in the workshop are the same idea
 on other ground; how they meet is open.

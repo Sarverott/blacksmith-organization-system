@@ -41,7 +41,7 @@ flowchart LR
 | `github-npm-package-publish.yml` | called by the release; by hand | the package on GitHub Packages as `@sarverott/blacksmith-organization-system` (it takes scoped names only), pre-releases under `next` |
 | `docker-container-publish.yml` | called by a full release; by hand | the image of the `Dockerfile` on Docker Hub: `<version>`, `<major>.<minor>`, `latest` |
 | `github-container-publish.yml` | called by a full release; by hand | the same image on `ghcr.io/sarverott/blacksmith-organization-system` |
-| `mirrors-propagate-and-status-badges.yml` | push to any branch or tag, a deletion, after each loop run, daily, by hand | every branch and tag to each mirror of `.github/bos.json` (`mirrors.to`), deletions too; a status badge per place on the branch `badges` |
+| `mirrors-propagate-and-status-badges.yml` | push to `development`, by hand | every branch and tag to each mirror of `.github/bos.json` (`mirrors.to`), deletions too; a status badge per place on the branch `badges`; a failed mirror never fails the run |
 | `loop-next-pull-request-by-hand.yml` | by hand only | `bos flow next-pr <branch>`: the full loop `revision → testing → releasing → master`, not driven yet |
 
 A push made by a workflow with its own token starts no other workflow, so the
@@ -82,7 +82,15 @@ read from the branch `badges` (one commit, force-pushed, never merged):
 the page is missing, `403 FORBIDDEN` when the update failed (or its secret is
 missing), other HTTP statuses as they come.
 
-Each mirror also runs the checks on its own CI, on `master` and `development`:
+It syncs on a push to `development`, where the work lands, and by hand; what
+the loop moved meanwhile (`revision`, `master`, tags) goes with that sync. A
+mirror that fails never interrupts the work: its badge shows `403 FORBIDDEN`,
+the run logs an error, and the run passes.
+
+Mirrors only receive. Nothing publishes from them (no Read the Docs, npm,
+images): releasing and publishing stay on GitHub. Their own platforms' releases
+come later, with each platform's integration. Each mirror runs only the checks
+on its own CI, on `master` and `development`:
 `.gitea/workflows/checks.yml` (with it Gitea ignores `.github/workflows/`),
 `.gitlab-ci.yml`, `bitbucket-pipelines.yml`, `.builds/checks.yml` (builds.sr.ht
 needs a paid sourcehut account).
