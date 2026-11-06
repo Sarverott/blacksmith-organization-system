@@ -1,0 +1,30 @@
+# Updates arrive where work is done: the development branch.
+# No npm: the skillset has no package and no dependencies.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+  - package-ecosystem: pip
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+  - package-ecosystem: npm
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker-compose
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+  
