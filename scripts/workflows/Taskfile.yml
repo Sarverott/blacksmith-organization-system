@@ -71,10 +71,6 @@ tasks:
     dir: '{{.ROOT_DIR}}'
     cmds: ['{{.SCRIPTS}}/rolling-release.sh {{.CLI_ARGS}}']
 
-  virustotal:
-    desc: 'Every file of a GitHub release to VirusTotal, the reports linked in its notes: task workflows:virustotal -- <tag>'
-    dir: '{{.ROOT_DIR}}'
-    cmds: ['{{.SCRIPTS}}/virustotal.sh {{.CLI_ARGS}}']
 
   wiki:
     desc: 'The docs of a tag into the GitHub wiki, pushed: task workflows:wiki -- <tag>'

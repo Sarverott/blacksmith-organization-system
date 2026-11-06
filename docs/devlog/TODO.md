@@ -66,7 +66,7 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] Q12: every full release is stable (images); an LTS line once two majors live side by side
 - [x] A version per commit on `dev/*` (pre-commit hook, `bos flow bump-commit`); versions merge by the higher (`bos flow merge-version`, `.gitattributes`); a station bumps once its line is released (inquiry)
 - [x] Releases that move: `nightly` (revision), `latest` (every release), each with the package's `.tgz` (inquiry)
-- [x] Package reports in every README (bundlephobia, socket.dev, Snyk, npmgraph); release files to VirusTotal (inquiry)
+- [x] Package reports in every README (bundlephobia, socket.dev, Snyk, npmgraph); release files to VirusTotal (inquiry; rejected in Summary 1: no API access)
 - [x] Mirrors of the source: gitea.com, gitlab.com, bitbucket.org, sr.ht, every branch and tag, a status badge per place, the checks on each mirror's CI (inquiry)
 - [x] The four mirror secrets in `publish-env`: `MIRROR_GITEA_TOKEN`, `MIRROR_GITLAB_TOKEN`, `MIRROR_BITBUCKET_TOKEN`, `MIRROR_SOURCEHUT_SSH_KEY` (the owner)
 - [x] First run with them: gitea.com and sr.ht take every branch and tag (200 OK); a Bitbucket API token (`ATATT…`) signs in as `x-bitbucket-api-token-auth` (found)
@@ -96,7 +96,7 @@ history: [../changelog/](../changelog/phase-0.md).
     - [ ] Chains learned by BOS itself, from storylines and the commit history (cataclistics: "where in commits history it appears") (inquiry)
     - [ ] The almanac's other sections read by code: roles (agent profiles, ollama modelfiles), scenarios, simulations (inquiry)
     - [ ] A bare new project starts with the same flow: `bos project init` seeds the anatomy, the almanac, hooks, `.github/bos.json` and the workflows (inquiry)
-    - [ ] `VIRUSTOTAL_API_KEY` in `publish-env` (the owner; v1.9.0 was not scanned: "no VIRUSTOTAL_API_KEY")
+    - [x] ~~`VIRUSTOTAL_API_KEY` in `publish-env`~~ rejected by the owner: no VirusTotal API access; the scan, its script and badges removed
     - [x] ghcr.io takes the image: the package `ghcr.io/sarverott/blacksmith-organization-system` exists already (tags `dev`, `1.0.0-dev.3`, pushed before this repository published), so the workflow's token, with `packages: write`, is denied `write_package` until the package grants this repository *Write* in "Manage Actions access"; then re-run the job `ghcr` of run 42179570633 (the owner; found on v1.9.0; the package bos-skillset once claimed deleted, `1.10.0` there since)
     - [x] `bos` without a command, in a terminal: a REPL (readline), each line one `<model> <tool>`; `bos --repl` reads piped lines (review)
     - [ ] Watching by the models: each element declares what of it is watched, instead of one tree watcher (review)
