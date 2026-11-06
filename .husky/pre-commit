@@ -1,2 +1,5 @@
 # git hooks only hand their event to a task (.husky/Taskfile.yml); HUSKY=0 turns them off
 sh .husky/task hooks:pre-commit
+
+# if command below here works then all stuff with special task script (`sh .husky/task`) is overkill - is that your way to express yourself?
+#npm start -- bos -- workshop status

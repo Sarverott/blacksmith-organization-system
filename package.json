@@ -1,6 +1,6 @@
 {
   "name": "blacksmith-organization-system",
-  "version": "1.6.0",
+  "version": "1.6.11",
   "description": "Blacksmith Organization System (BOS) core: the workshop as code - build its base, listen to its changes, inspect it as one coherent environment",
   "keywords": [
     "bos",
@@ -44,6 +44,7 @@
     "node": ">=22.18"
   },
   "scripts": {
+    "start": "task",
     "bos": "node src/cli.ts",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
@@ -75,11 +76,13 @@
     "astro": "^7.4.6",
     "bulma": "^1.0.4",
     "chromadb": "^3.5.0",
+    "commander": "^15.0.0",
     "commitizen": "^4.3.2",
     "composerize": "^1.7.6",
     "cosmiconfig": "^10.0.1",
     "decomposerize": "^1.4.4",
     "dockerode": "^5.0.1",
+    "esbuild": "^0.28.2",
     "husky": "^9.1.7",
     "inquirer": "^12.11.1",
     "isomorphic-git": "^1.44.11",

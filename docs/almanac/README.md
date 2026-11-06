@@ -1,0 +1,29 @@
+# almanac - way to make solvable universal cause of problems by small steps method
+
+- roles
+    - profiles for AI agents to be useful. roles to be adopted in order to achieve specific results within a given narrative
+    - can use modelfiles with ollama
+    - can create instances of openclaw and alternative forks of it (some are very light)
+    - 
+- scenarios
+    - carries situations and conditions to be investigated or tested etc.
+    - also to be discussed by instances lounched for mirofish
+- knowledge
+    - structurized files with compressed batches of data like yaml, json and toml files
+    - focused on needs of digital entities, forced to be programically handled with simple parsing codes
+    - short, summarized, concrete, complete, can refer to other files but with care that excessive elaboration is omitted 
+    - facts, naming and statements
+- patterning
+    - identified chain of event can be described here
+    - identifying events series based on known past and recognizable predictible result when determined rule maches conditions 
+- simulations
+    - existing scenarions with presetings and predicted results
+- solutions
+    - knowledge gathered in practice when solving crisis, problems, issues and obsticles
+    - teachings been passed from teacher to student and own training conclusions and reflections
+- cataclistics
+    - error exceptions of proper way of flow
+    - known that can happend situations
+    - previously occured in past
+    - predicted as possible
+    - noted and documented when and where in commits history it appears - possible to count this way and it can be inspected more accured by same error difrent events
