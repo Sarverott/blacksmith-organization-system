@@ -17,6 +17,7 @@ export * from "./bridges/index.ts";
 export * from "./core/context.ts";
 export * from "./core/element.ts";
 export * from "./core/emitter.ts";
+export * from "./core/ignore.ts";
 export * from "./core/json-file.ts";
 export * from "./core/omnis.ts";
 export * from "./core/patterning.ts";

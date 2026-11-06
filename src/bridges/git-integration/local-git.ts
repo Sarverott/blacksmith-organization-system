@@ -22,6 +22,51 @@ export class LocalGit extends Git {
       .filter(Boolean);
   }
 
+  // what is not committed: modified, staged and new files (git status --porcelain), one each
+  uncommitted(): string[] {
+    return this.git(["status", "--porcelain", "--untracked-files=all"]).split("\n").filter(Boolean);
+  }
+
+  // the commit checked out (HEAD), null in a repository without commits
+  head(): string | null {
+    const { status, stdout } = this.host.run("git", ["rev-parse", "--verify", "-q", "HEAD"], {
+      cwd: this.cwd,
+    });
+    return status === 0 ? stdout.trim() : null;
+  }
+
+  // every ref's commit (git for-each-ref), e.g. to check another clone holds them all
+  refCommits(): string[] {
+    return this.git(["for-each-ref", "--format=%(objectname)"]).split("\n").filter(Boolean);
+  }
+
+  // does this clone hold the commit
+  hasCommit(sha: string): boolean {
+    return (
+      this.host.run("git", ["cat-file", "-e", `${sha}^{commit}`], { cwd: this.cwd }).status === 0
+    );
+  }
+
+  // the URL of a remote, null when there is none
+  remoteUrl(name = "origin"): string | null {
+    const { status, stdout } = this.host.run("git", ["remote", "get-url", name], { cwd: this.cwd });
+    return status === 0 ? stdout.trim() || null : null;
+  }
+
+  // a bare mirror of source at target (git clone --mirror): every ref, the remotes' too
+  cloneMirror(source: string, target: string): void {
+    this.git(["clone", "--quiet", "--mirror", source, target]);
+  }
+
+  // in a mirror: every ref of source fetched again, gone ones pruned
+  fetchMirror(source: string): void {
+    this.git(["fetch", "--quiet", "--prune", source, "+refs/*:refs/*"]);
+  }
+
+  setRemoteUrl(name: string, url: string): void {
+    this.git(["remote", "set-url", name, url]);
+  }
+
   // a three-way merge of files into ours (git merge-file); true when it has conflicts
   mergeFile(ours: string, base: string, theirs: string): boolean {
     const { status, stderr } = this.host.run("git", ["merge-file", ours, base, theirs], {

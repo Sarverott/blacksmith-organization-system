@@ -6,7 +6,7 @@ import { sealText } from "../views/sealing.ts";
 const dirArg = {
   name: "dir",
   type: "string" as const,
-  info: "a path inside the project (default: current directory)",
+  info: "a path inside the project, or a directory outside any repository: an area (default: current directory)",
 };
 
 export const projectTools = [

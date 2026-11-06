@@ -1,6 +1,12 @@
 // Every procedure of the core. A new behaviour is a new directory here:
 // DESCRIPTION.md (why), one file per step (how), _index.ts (the order).
 
+export {
+  type ArchiveContext,
+  type ArchiveOutcome,
+  archiving,
+  unarchived,
+} from "./archiving/_index.ts";
 export { type AutomergeContext, automerging } from "./automerging/_index.ts";
 export { type BootstrapContext, bootstrapping } from "./bootstrapping/_index.ts";
 export { type BumpContext, type BumpOutcome, bumping, unbumped } from "./bumping/_index.ts";
@@ -29,6 +35,7 @@ export {
 } from "./reconciling/_index.ts";
 export {
   haloOf,
+  modelFiles,
   type SealContext,
   type SealOutcome,
   sealedOf,
