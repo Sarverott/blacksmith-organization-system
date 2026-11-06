@@ -5,7 +5,7 @@
 # The base of the workplaces of phase 3 (a container per contributor).
 
 # the package exactly as npm gets it (npm pack runs the build)
-FROM node:24-alpine AS pack
+FROM node:25-alpine AS pack
 WORKDIR /bos
 COPY package.json package-lock.json .npmrc ./
 RUN HUSKY=0 npm ci
@@ -14,7 +14,7 @@ COPY src ./src
 COPY resources ./resources
 RUN npm pack --pack-destination /tmp && mv /tmp/blacksmith-organization-system-*.tgz /tmp/bos.tgz
 
-FROM node:24-alpine
+FROM node:25-alpine
 # git: the bridge of bos flow and bos project authors
 RUN apk add --no-cache git
 COPY --from=pack /tmp/bos.tgz /tmp/bos.tgz
