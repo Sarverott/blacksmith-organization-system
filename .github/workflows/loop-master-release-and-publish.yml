@@ -31,8 +31,9 @@ concurrency:
 env:
   HUSKY: "0"
   # decision Q7: npm `next` (a GitHub pre-release) until phase 2 is done
-  PRERELEASE: "true"
-
+  PRERELEASE: "false"
+  # NOTE: huh, i forgot about this decision. we had closed phase 2 by bringing remaining steps to be done while Summary 1
+  # NOTE: yep, this is cheating but it was nessesery
 jobs:
   checks:
     uses: ./.github/workflows/checks-reusable-set.yml
@@ -111,7 +112,7 @@ jobs:
     uses: ./.github/workflows/npmjs-npm-package-publish.yml
     with:
       tag: ${{ needs.release.outputs.tag }}
-      prerelease: ${{ needs.release.outputs.prerelease == 'true' }}
+      prerelease: ${{ needs.release.outputs.prerelease == 'true' }} # wait... why not just passing ${{needs.release.outputs.prerelease}}
     secrets: inherit
     permissions:
       contents: read
