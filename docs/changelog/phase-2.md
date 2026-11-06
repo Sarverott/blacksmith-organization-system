@@ -859,3 +859,24 @@ you had hesitate there, talk about potential consequences - if you guess that gh
   pages and the REPL are done. `VIRUSTOTAL_API_KEY` is still missing (v1.9.0
   was not scanned) and the second workshop still stands on setternet-A62:
   both the owner's.
+
+## UNIXUSAT=1793956000000 · ghcr.io lives; omnis outside git; archiving
+
+The owner's words (chat):
+
+````text
+it turns out that previously bos-skillset claims name we want to use so collision was been made. i just delete it and rerun create new package there instead. all looks like working there, we can continue
+````
+
+- ghcr.io holds `1.10.0`, `1.10` and `latest` (the release of v1.10.0); the
+  package bos-skillset once claimed is gone, so the step is done. 1.9.0 has
+  no image there.
+- `.omnis.toml` outside git: `core/ignore.ts` reads `.gitignore` as git does;
+  `bos project seal --dir=<area>` seals an area of the workshop (Q16).
+- Q6 coded: `bos archive mirror <forge path>` (procedure `archiving`) makes a
+  bare mirror in `archive/.repos-mirrors/<scope>___<project>.git` and removes
+  the forge copy only with `--confirm`, nothing uncommitted and every commit
+  in the mirror; `bos workshop status` finds `mirrored-in-forge`. Tried on the
+  development workshop: a clone of the core in `forge/test/` went to
+  `archive/.repos-mirrors/test___core-clone.git` (left there as the example).
+  The home workshop's clones wait for the owner's order.

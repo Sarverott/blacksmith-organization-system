@@ -83,7 +83,7 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] Examples: `examples/01-getting-started/`, the library step by step; the owner's `00-draft-snippets/` kept as written (inquiry)
 - [x] A `--workshop` not named `__WORKSHOP` holds one (found by the draft snippets: a second workshop in the partition root); `new BOS()` asks for a host; `workshop.areas`
 
-## Summary 1 _(between `Phase 2` and `Phase 3`, contains `28` steps from previous phases and summaries)_: extrasteps that was left not done in previous phases
+## Summary 1 _(between `Phase 2` and `Phase 3`, contains `29` steps from previous phases and summaries)_: extrasteps that was left not done in previous phases
 
 - `steps from Phase 0` - related with clearing the ground:
     - [x] bos-skillset follows the rename: remote, package name, AGENTS.md, `development` pushed, `developement` gone from GitHub with its dependabot PR (checked 2026-11-06); its Read the Docs project and two stale branches are notes for that repository (`forge/NOTES-for-repositories.md`) (Q2)
@@ -97,7 +97,7 @@ history: [../changelog/](../changelog/phase-0.md).
     - [ ] The almanac's other sections read by code: roles (agent profiles, ollama modelfiles), scenarios, simulations (inquiry)
     - [ ] A bare new project starts with the same flow: `bos project init` seeds the anatomy, the almanac, hooks, `.github/bos.json` and the workflows (inquiry)
     - [ ] `VIRUSTOTAL_API_KEY` in `publish-env` (the owner; v1.9.0 was not scanned: "no VIRUSTOTAL_API_KEY")
-    - [ ] ghcr.io takes the image: the package `ghcr.io/sarverott/blacksmith-organization-system` exists already (tags `dev`, `1.0.0-dev.3`, pushed before this repository published), so the workflow's token, with `packages: write`, is denied `write_package` until the package grants this repository *Write* in "Manage Actions access"; then re-run the job `ghcr` of run 42179570633 (the owner; found on v1.9.0)
+    - [x] ghcr.io takes the image: the package `ghcr.io/sarverott/blacksmith-organization-system` exists already (tags `dev`, `1.0.0-dev.3`, pushed before this repository published), so the workflow's token, with `packages: write`, is denied `write_package` until the package grants this repository *Write* in "Manage Actions access"; then re-run the job `ghcr` of run 42179570633 (the owner; found on v1.9.0; the package bos-skillset once claimed deleted, `1.10.0` there since)
     - [x] `bos` without a command, in a terminal: a REPL (readline), each line one `<model> <tool>`; `bos --repl` reads piped lines (review)
     - [ ] Watching by the models: each element declares what of it is watched, instead of one tree watcher (review)
     - [ ] The release `stable`: what passed the tests of deployment and of dependent projects, on `releasing` (with the full loop)
@@ -112,10 +112,11 @@ history: [../changelog/](../changelog/phase-0.md).
     - [ ] The homepage: `resources/web/public/` (webmanifest, robots.txt, sitemap.xml, llms.txt) generated from package.json, bos.json and the docs; built for GitHub Pages (owner)
     - [ ] Examples: react, vue, astro, each a submodule with its own package.json, run by `examples/Taskfile.yml` (owner)
     - [ ] The second workshop the draft made in `/run/media/sarverott/setternet-A62/` (`.BOS`, `archive`, `craftbook`, `devarmory`, `forge` beside `__WORKSHOP`): removed (the owner)
-    - [ ] Mirrors: glossary page `archive/.repos-mirrors` (each mirror a sarcophag) (Q6)
-    - [ ] Procedure `archiving`: `bos archive mirror <forge path>` → bare clone `archive/.repos-mirrors/<scope>___<project>.git`, dry run first, the forge copy removed only on confirmation (Q6)
-    - [ ] Inspecting: a finding for clones in the forge that belong among the mirrors (Q6)
-    - [ ] Mirrors tried on the development workshop; the home workshop's clones move on the owner's order (Q6)
+    - [x] Mirrors: glossary page `archive/.repos-mirrors` (each mirror a sarcophag): `docs/glossary/repos-mirrors.md` (Q6)
+    - [x] Procedure `archiving`: `bos archive mirror <forge path>` → bare clone `archive/.repos-mirrors/<scope>___<project>.git`, dry run first, the forge copy removed only on confirmation, nothing uncommitted and every commit in the mirror (Q6)
+    - [x] Inspecting: a finding for clones in the forge that belong among the mirrors: `mirrored-in-forge`, and `work-on-master` names `bos archive mirror` (Q6)
+    - [x] Mirrors tried on the development workshop: a clone in `forge/test/` mirrored, found by status, removed on confirm (Q6)
+    - [ ] The home workshop's read-only clones moved to `archive/.repos-mirrors/` (on the owner's order; `bos archive mirror <path> --dry-run` first) (Q6)
 
 ## Phase 3: workplaces 
 
