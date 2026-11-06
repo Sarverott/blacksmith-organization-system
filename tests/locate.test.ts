@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { locateWorkshop, NodeHost } from "../src/index.ts";
+import { BOS, type Host, locateWorkshop, NodeHost } from "../src/index.ts";
 
 // a host with its own environment, home and current directory; nothing is read from disk
 class Env extends NodeHost {
@@ -60,5 +60,26 @@ describe("locating the workshop", () => {
     expect(locateWorkshop(new Env({ WORKSHOP_ROOT: "", BOS_WORKSHOP: " " })).source).toBe(
       "default per user",
     );
+  });
+
+  it("takes a --workshop or $BOS_WORKSHOP not named __WORKSHOP as the directory holding it", () => {
+    // the draft snippets: { workshop: "/run/media/…/setternet-A62/" } built a second workshop
+    // in the partition root, beside its __WORKSHOP
+    expect(locateWorkshop(new Env({}), "/run/media/smith/test-A/").root).toBe(
+      "/run/media/smith/test-A/__WORKSHOP",
+    );
+    expect(locateWorkshop(new Env({ BOS_WORKSHOP: "/b" })).root).toBe("/b/__WORKSHOP");
+    expect(locateWorkshop(new Env({ WORKSHOP_RENAME: "ws" }), "/m/ws").root).toBe("/m/ws");
+    const bos = new BOS(new Env({}), { workshop: "/run/media/smith/test-A" });
+    expect(bos.workshop.path).toBe("/run/media/smith/test-A/__WORKSHOP");
+    expect(bos.workshop.areas.map((area) => area.path)).toEqual(
+      [".BOS", "devarmory", "forge", "craftbook", "archive"].map(
+        (area) => `/run/media/smith/test-A/__WORKSHOP/${area}`,
+      ),
+    );
+  });
+
+  it("needs a host", () => {
+    expect(() => new BOS(undefined as unknown as Host)).toThrow(/new NodeHost/);
   });
 });

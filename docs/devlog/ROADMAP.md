@@ -32,5 +32,9 @@ by the higher one (`bos flow merge-version`, a git merge driver).
 | M3: everyone has a workplace | 3 | agents and the owner each work in their own container and branch, in workmodes |
 | M4: one BOS | 4 | the skillset, the apps and integrations build on this core |
 
+The almanac (rulesets and chains of events) grows from phase 2 on; in
+phase 4 the skillset reads it, so its skills and MCP judge cases by the
+same rules as the core.
+
 The reforge is a flip: the core is `1.0.0` from the end of phase 1 (decision
 Q7), on npm under the tag `next` until phase 2 is done.

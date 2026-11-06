@@ -1,0 +1,14 @@
+{
+  "name": "01-getting-started",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The BOS core as a library: find the workshop, plan its base, inspect it, judge a case, recall a situation",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "blacksmith-organization-system": "file:../.."
+  }
+}

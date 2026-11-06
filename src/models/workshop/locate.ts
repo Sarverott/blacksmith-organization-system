@@ -22,22 +22,29 @@ export function findAncestorWorkshop(start: string, name = WORKSHOP_DIRNAME): st
 
 export type Located = { root: string; source: string };
 
-// the workshop itself ($BOS_WORKSHOP), or the directory that holds it ($WORKSHOP_ROOT,
-// e.g. a partition kept for tests and demonstrations, so the home workshop stays private)
+// the workshop itself (--workshop, $BOS_WORKSHOP), or the directory that holds it
+// ($WORKSHOP_ROOT, e.g. a partition kept for tests and demonstrations, so the home workshop
+// stays private). A workshop is a directory named __WORKSHOP: a --workshop or $BOS_WORKSHOP
+// not so named is taken as the directory that holds one, like $WORKSHOP_ROOT (the draft
+// snippets gave a partition root and BOS built a second workshop beside __WORKSHOP).
 export function locateWorkshop(host: Host, explicit?: string): Located {
+  const name = workshopName(host);
   const absolute = (path: string) =>
     normalize(path.startsWith("/") ? path : join(host.cwd(), path));
+  const named = (path: string) => {
+    const full = absolute(path);
+    return basename(full) === name ? full : join(full, name);
+  };
   const variable = (name: string) =>
     host
       .env(name)
       ?.trim()
       .replace(/^~(?=$|\/)/, host.home()) || undefined;
-  const name = workshopName(host);
   const workshop = variable("BOS_WORKSHOP");
   const root = variable("WORKSHOP_ROOT");
   const rules: [string, () => string | null | undefined][] = [
-    ["--workshop option", () => explicit && absolute(explicit)],
-    ["$BOS_WORKSHOP", () => workshop && absolute(workshop)],
+    ["--workshop option", () => explicit && named(explicit)],
+    ["$BOS_WORKSHOP", () => workshop && named(workshop)],
     ["$WORKSHOP_ROOT", () => root && join(absolute(root), name)],
     ["ancestor of the current directory", () => findAncestorWorkshop(host.cwd(), name)],
     ["default per user", () => join(host.home(), name)],

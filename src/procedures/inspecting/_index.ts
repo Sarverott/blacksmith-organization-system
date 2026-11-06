@@ -2,6 +2,7 @@ import { Procedure } from "../../core/procedure.ts";
 import { judge } from "./judge.ts";
 import { readAreas } from "./read-areas.ts";
 import { readForge } from "./read-forge.ts";
+import { readOmnis } from "./read-omnis.ts";
 import type { InspectContext } from "./report.ts";
 
 export {
@@ -15,5 +16,6 @@ export {
 export const inspecting = new Procedure<InspectContext>("inspecting", [
   { name: "read-areas", run: readAreas },
   { name: "read-forge", run: readForge },
+  { name: "read-omnis", run: readOmnis },
   { name: "judge", run: judge },
 ]);

@@ -1,5 +1,6 @@
 import type { Context } from "../../core/context.ts";
 import type { ElementNode } from "../../core/element.ts";
+import type { Drift } from "../../core/omnis.ts";
 import type { ProjectReport, Workshop } from "../../models/index.ts";
 
 export type Finding = {
@@ -23,6 +24,8 @@ export type WorkshopReport = {
   areas: ElementNode | null;
   strays: string[];
   forge: { looseFiles: string[]; scopes: ScopeReport[] };
+  // the projects with a sealed halo (.bos/.omnis.toml) and what drifted since
+  omnis: { path: string; sealedAt: number; drift: Drift }[];
   findings: Finding[];
 };
 
@@ -35,6 +38,7 @@ export function emptyReport(workshop: Workshop): WorkshopReport {
     areas: null,
     strays: [],
     forge: { looseFiles: [], scopes: [] },
+    omnis: [],
     findings: [],
   };
 }

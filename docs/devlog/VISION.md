@@ -32,6 +32,10 @@ skills and the Claude Code plugin on top of it.
 - **One door to the machine.** The core reaches files, clocks and the
   environment only through a `Host`, so it can later run in more places than
   Node (decision on which: later).
+- **The way of working is data.** The rules of the environment and the
+  situations met before live in the almanac, written for people and read by
+  code. They ship with the core, so a new project starts with the same flow,
+  and a case can be judged before it is done.
 - **Agents have their own space.** `docs/.agents/` is written by agents and
   read by people; `docs/devlog/` is where the owner speaks.
 
