@@ -107,9 +107,13 @@ history: [../changelog/](../changelog/phase-0.md).
 - [ ] Mirrors: glossary page `archive/.repos-mirrors` (each mirror a sarcophag) (Q6)
 - [ ] Procedure `archiving`: `bos archive mirror <forge path>` → bare clone `archive/.repos-mirrors/<scope>___<project>.git`, dry run first, the forge copy removed only on confirmation (Q6)
 - [ ] Inspecting: a finding for clones in the forge that belong among the mirrors (Q6)
-- [ ] Mirrors tried on the development workshop; the home workshop's clones move on the owner's order (Q6)
 
-## Phase 3: workplaces
+## Summary 1 _(between `Phase 2` and `Phase 3`, contains `X` steps from previous phases and summaries)_: extrasteps that was left not done in previous phases
+> NOTE: extract here not finished steps that left there to be dones. below is example how it should be listed, then remove this line with the "> Note:" you read now, thanks in advance!
+- `steps from Phase 2` - related with the loop as code:
+    - [ ] Mirrors tried on the development workshop; the home workshop's clones move on the owner's order (Q6)
+
+## Phase 3: workplaces 
 
 - [x] A Docker image of BOS (`Dockerfile`; Docker Hub and ghcr.io, done in phase 2)
 - [ ] The first image, with the first full release; then its badge in the READMEs
