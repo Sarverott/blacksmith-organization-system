@@ -5,7 +5,10 @@ decisions Q15 and Q16), and says what drifted since it was last sealed: files ad
 changed, removed. With it, BOS can tell at once whether anything changed while a
 project was closed, and notice what nobody meant to change (an injection).
 
-The files are what no `.gitignore` leaves out (git: `LocalGit.files()`), without
+The files are what no `.gitignore` leaves out: in a git working tree git says so
+(`LocalGit.files()`); elsewhere, in an area of the workshop, BOS reads the
+`.gitignore` files itself (`core/ignore.ts`, `treeFiles`), never entering `.git`
+or a directory with a `.bos/` or `.git` of its own. Then without
 what lies in another model (a directory with a `.bos/` of its own). Ignored
 directories (`node_modules`, `.venv`) are never entered: their lock files are
 counted and stand for them.

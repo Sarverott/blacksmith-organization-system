@@ -105,7 +105,7 @@ history: [../changelog/](../changelog/phase-0.md).
     - [ ] One shape of every model through `Element` (Q13 c): structure on the class (`Project.anatomy`, `Loop.defaults` beside `children`), a file's default content and its JSON Schema in `<model>/descriptors/`; `bos workshop status` checks a descriptor against its schema (Q13)
     - [ ] Bridges applied to models (Q14 c with a): a model declares its type and its bridges (class defaults), a place overrides them in its `.craft/`; procedures pick the bridges by that (Q14)
     - [ ] Presets of an element in its `.bos/` (Q15: `.bos/` stays, no `.craft/`): `bos.json` (model type, bridges), the rest reconsidered (Q15)
-    - [ ] `.omnis.toml` outside a git repository (areas of the workshop): `.gitignore` read by BOS itself (Q16)
+    - [x] `.omnis.toml` outside a git repository (areas of the workshop): `.gitignore` read by BOS itself, `core/ignore.ts`; `bos project seal --dir=<area>` (Q16)
     - [ ] What seals a model besides `bos project seal`: `bos close`, the routine (Q16)
     - [ ] A scope's VS Code workspace file in the scope, launched when the scope is opened; repositories in a scope are projects by default (Q15)
     - [ ] The other kinds of bridges, from the owner's map: devops-integration, docs-publishers, apps-extensions, dedicated-implements, project-profiles, scoping-families (owner)

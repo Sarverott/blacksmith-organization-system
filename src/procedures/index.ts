@@ -29,6 +29,7 @@ export {
 } from "./reconciling/_index.ts";
 export {
   haloOf,
+  modelFiles,
   type SealContext,
   type SealOutcome,
   sealedOf,

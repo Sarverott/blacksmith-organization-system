@@ -1,4 +1,3 @@
-import type { LocalGit } from "../../bridges/index.ts";
 import type { Context } from "../../core/context.ts";
 import type { Allocators, Drift, Hallow, Sealed } from "../../core/omnis.ts";
 
@@ -12,8 +11,8 @@ export type SealOutcome = {
 };
 
 export type SealContext = Context & {
+  // the model's root: a project (a git working tree) or any directory, e.g. an area
   projectPath: string;
-  git: LocalGit;
   allocators: Allocators;
   seal: boolean;
   sealed: Sealed | null;

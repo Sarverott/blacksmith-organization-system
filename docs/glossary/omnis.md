@@ -66,8 +66,10 @@ will come (Q16).
 - `src/core/omnis.ts`: `a12y`, `crc32`, `adler32`, `base32`, `counted`,
   `ownFiles`, `omnis(host, root, files, allocators)`, `omnisToml`,
   `readOmnis`, `drift`. A file's digests go through the Host
-  (`host.digest(path, algorithm)`), and `LocalGit.files()` gives what no
-  `.gitignore` leaves out.
+  (`host.digest(path, algorithm)`). What no `.gitignore` leaves out: in a
+  git working tree `LocalGit.files()`; outside one (an area of the
+  workshop) `src/core/ignore.ts` (`treeFiles`), which reads the
+  `.gitignore` files as git does.
 - The procedure `sealing` (`bos.omnis({ seal })`): `bos project omnis` shows
   what drifted since the halo was sealed, and `bos project seal` writes it
   (only when something changed; `--dry-run` only says so).

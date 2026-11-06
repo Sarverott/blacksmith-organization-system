@@ -221,7 +221,8 @@ export class BOS {
     return (await Procedures.crediting.run(context)).outcome;
   }
 
-  // the project's halo (.bos/.omnis.toml) now, against the sealed one; seal: true writes it
+  // a model's halo (.bos/.omnis.toml) now, against the sealed one; seal: true writes it. The
+  // model is the project around dir, or dir itself outside a repository (an area, Q16)
   async omnis({
     dir,
     seal = false,
@@ -233,16 +234,15 @@ export class BOS {
     dryRun?: boolean;
     allocators?: Allocators;
   } = {}): Promise<Procedures.SealOutcome> {
-    const { project } = this.loop(dir);
+    const root = this.#around(dir);
     const context = {
       ...createContext(this.host, { dryRun }),
-      projectPath: project.path,
-      git: new LocalGit(this.host, project.path),
+      projectPath: root,
       allocators,
       seal,
       sealed: null,
       halo: [],
-      outcome: Procedures.unsealed(`${project.path}/${OMNIS_FILE}`),
+      outcome: Procedures.unsealed(`${root}/${OMNIS_FILE}`),
     };
     return (await Procedures.sealing.run(context)).outcome;
   }
