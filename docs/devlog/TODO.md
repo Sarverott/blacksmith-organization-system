@@ -121,10 +121,18 @@ history: [../changelog/](../changelog/phase-0.md).
 ## Phase 3: workplaces 
 
 - [x] A Docker image of BOS (`Dockerfile`; Docker Hub and ghcr.io, done in phase 2)
-- [ ] The first image, with the first full release; then its badge in the READMEs
+- [x] The first image, with the first full release: v1.10.0 on Docker Hub and ghcr.io (after the package bos-skillset once claimed was deleted)
+- [ ] The image's badge in the READMEs
 - [ ] Containers: one per agent host CLI (Codex, Claude Code), one for the owner
 - [ ] Contexts that isolate: procedures run in `node:vm` contexts, WASI, child processes or a cluster (review: "this all can be used now")
 - [ ] Workmodes: sets of Taskfile tasks with file watchers and git hooks
+- [x] Daemons: `bos daemon start | run | stop | reload | rotate | status | logs`, a supervisor with a cluster of instances, shared or separate contexts, signals and monitor threads; `scripts/devtools/ollama-serve.sh` (inquiry)
+- [ ] ollama in a docker container with the GPU: the NVIDIA Container Toolkit on the machine (the owner), then a service run as a container (Q17)
+- [ ] Daemons started and stopped with the workshop (`bos open`, `bos close`)
+- [x] The forge's elements made by BOS: `bos scope create`, `bos project create` (the standard anatomy from `resources/project-template/`; on an existing project only what is missing), `bos project import` (gh:owner/repo, any git URL, a path) (inquiry)
+- [ ] Every area's elements made by BOS: craftbook (craftsets, recipes, scrapnote vaults), devarmory (a tool with its manifest entry), archive (sarcophags), `.BOS` (setup, nests) (inquiry)
+- [ ] Importing from other places: a whole account or organisation of GitHub, GitLab, Gitea, Bitbucket into a scope; archives and notes into the craftbook (inquiry)
+- [ ] Ttystories: the shells' histories (`.BOS/storylines/ttystories/`: `<ms>\t<dir>\t<command>`; `history` dumps) combined, split into trees of command stories by directory, session and time, secrets redacted; command usage counted; stories become chains of the almanac's patterning, a source of knowledge for BOS (inquiry)
 - [ ] The git bridge (`LocalGit` in `src/bridges/git-integration/`, tags only so far) grows: status, add, commit
 - [ ] Scrapnote vaults: `craftbook/<scope>___<project>/scrapnotes/` as a git repository (Obsidian vault), `<project>/docs/.scrapnotes` its link, ignored by the project (Q8)
 - [ ] Workmode `scrapnotes`: commit every saved note after a quiet moment; `.obsidian/workspace*.json` ignored (Q8)
