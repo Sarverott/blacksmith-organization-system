@@ -222,6 +222,29 @@ export class BOS {
     return (await Procedures.crediting.run(context)).outcome;
   }
 
+  // a daemon of the workshop (ollama…): start / run (in the foreground) / stop / reload /
+  // rotate its log / status, through its supervisor (glossary: daemon)
+  async daemon(
+    name: string,
+    action: Procedures.DaemonAction,
+    { dryRun = false, wait = 5000 }: { dryRun?: boolean; wait?: number } = {},
+  ): Promise<Procedures.DaemonOutcome> {
+    const daemons = new Models.Daemons(this.host, this.workshop.path);
+    const context = {
+      ...createContext(this.host, { dryRun }),
+      daemons,
+      service: null,
+      wait,
+      outcome: Procedures.quietDaemon(name, action, daemons.files(name)),
+    };
+    return (await Procedures.daemonizing.run(context)).outcome;
+  }
+
+  // the daemons the workshop knows: the package's services and its own
+  daemons(): Models.Daemons {
+    return new Models.Daemons(this.host, this.workshop.path);
+  }
+
   // a read-only clone of the forge → a bare mirror in archive/.repos-mirrors/ (decision Q6);
   // confirm: true also removes the forge copy, when nothing of it would be lost
   async archiveMirror(

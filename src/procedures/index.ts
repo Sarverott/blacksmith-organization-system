@@ -17,6 +17,13 @@ export {
   uncredited,
 } from "./crediting/_index.ts";
 export {
+  type DaemonAction,
+  type DaemonContext,
+  type DaemonOutcome,
+  daemonizing,
+  quietDaemon,
+} from "./daemonizing/_index.ts";
+export {
   emptyReport,
   type Finding,
   type InspectContext,

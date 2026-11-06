@@ -1,0 +1,29 @@
+{
+  "name": "ollama",
+  "about": "ollama serve: the language models of the workshop behind their OpenAI-compatible endpoint (BRAINSTORM Q17). Serving calls no model; which models may be called is the House's (.delegations/house/).",
+  "command": "ollama",
+  "args": ["serve"],
+  "context": "separate",
+  "inherit": [
+    "OLLAMA_MODELS",
+    "OLLAMA_KEEP_ALIVE",
+    "OLLAMA_NUM_PARALLEL",
+    "CUDA_VISIBLE_DEVICES",
+    "XDG_RUNTIME_DIR"
+  ],
+  "env": { "OLLAMA_HOST": "127.0.0.1:11434" },
+  "instances": 1,
+  "restart": "on-failure",
+  "maxRestarts": 5,
+  "alerts": [
+    "level=ERROR",
+    "panic",
+    "CUDA error",
+    "out of memory",
+    "address already in use",
+    "no compatible GPUs"
+  ],
+  "threads": 2,
+  "ready": "http://127.0.0.1:11434/",
+  "grace": 15000
+}

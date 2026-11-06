@@ -16,6 +16,7 @@ export * from "./bridges/index.ts";
 // the parts everything is made of (src/core/)
 export * from "./core/context.ts";
 export * from "./core/element.ts";
+export * from "./core/daemon.ts";
 export * from "./core/emitter.ts";
 export * from "./core/ignore.ts";
 export * from "./core/json-file.ts";
