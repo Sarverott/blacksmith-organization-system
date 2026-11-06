@@ -1,6 +1,7 @@
 # On the gitea.com mirror (Gitea Actions). With .gitea/workflows/ present, Gitea runs these
 # and ignores .github/workflows/, which release and publish from GitHub only.
-# The same checks as GitHub's (task check): types, lint, tests.
+# The same checks as GitHub's (task check): types, lint, tests - only checks: a mirror
+# never publishes (docs, packages, images stay on GitHub).
 name: checks on the gitea.com mirror
 
 on:

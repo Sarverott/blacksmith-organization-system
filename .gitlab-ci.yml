@@ -1,6 +1,7 @@
 # On the gitlab.com mirror (GitLab CI). The source is GitHub; this repository only
 # receives it (.github/workflows/mirrors-propagate-and-status-badges.yml).
-# The same checks as GitHub's (task check): types, lint, tests.
+# The same checks as GitHub's (task check): types, lint, tests - only checks: a mirror
+# never publishes (docs, packages, images stay on GitHub).
 checks:
   image: node:24
   variables:
