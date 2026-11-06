@@ -2,6 +2,7 @@
 import type { Tool } from "../core/tool.ts";
 import { almanacTools } from "./almanac.ts";
 import { archiveTools } from "./archive.ts";
+import { daemonTools } from "./daemon.ts";
 import { devlogTools } from "./devlog.ts";
 import { flowTools } from "./flow.ts";
 import { projectTools } from "./project.ts";
@@ -18,6 +19,7 @@ export const TOOLS: Tool[] = [
   ...versionTools,
   ...almanacTools,
   ...archiveTools,
+  ...daemonTools,
 ];
 
 export function findTool(model: string | undefined, name: string | undefined): Tool {

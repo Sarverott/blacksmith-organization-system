@@ -14,7 +14,8 @@
       "!scripts",
       "!docs/.obsidian",
       "!resources/web/public",
-      "!examples/00-draft-snippets"
+      "!examples/00-draft-snippets",
+      "!examples/02-structures-of-bos"
     ]
   },
   "formatter": {

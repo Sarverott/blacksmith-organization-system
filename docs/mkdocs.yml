@@ -105,6 +105,7 @@ nav:
           - glossary/data.md
           - glossary/nestrelm.md
           - glossary/storylines.md
+          - glossary/daemon.md
           - glossary/views.md
       - Loop:
           - glossary/craft-loop.md

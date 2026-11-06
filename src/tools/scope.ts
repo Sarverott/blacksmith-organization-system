@@ -1,6 +1,7 @@
 // bos scope <tool>
 import { tool } from "../core/tool.ts";
 import { EVENTS, isLoopEvent } from "../core/version.ts";
+import { createText } from "../views/creating.ts";
 
 const scopeArg = {
   name: "scope",
@@ -11,6 +12,19 @@ const scopeArg = {
 } as const;
 
 export const scopeTools = [
+  tool({
+    model: "scope",
+    name: "create",
+    info: "a scope in the forge: forge/<scope>/ with .bos/scope.json (v0.0.0.0), throwbox/, <scope>.code-workspace",
+    readOnly: false,
+    args: [
+      { ...scopeArg, info: "scope name (a/b nests)" },
+      { name: "dryRun", type: "boolean", info: "only list what would be made" },
+    ],
+    run: (bos, input) =>
+      bos.create("scope", String(input.scope), { dryRun: Boolean(input.dryRun) }),
+    render: createText,
+  }),
   tool({
     model: "scope",
     name: "version",

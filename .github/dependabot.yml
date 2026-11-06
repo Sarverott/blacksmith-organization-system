@@ -1,0 +1,31 @@
+# Updates arrive where work is done: the development branch (the owner, from bos-skillset's
+# policy). The core: the workflows' actions, the package (npm), the Dockerfile, the docs'
+# Python (uv, in docs/); compose files when there are some.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+  - package-ecosystem: uv
+    directory: /docs
+    target-branch: development
+    schedule:
+      interval: weekly
+  - package-ecosystem: npm
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker-compose
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+  

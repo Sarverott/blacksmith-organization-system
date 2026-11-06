@@ -1,12 +1,14 @@
 // Host for Node.js: the real file system, clock and environment.
 
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
   appendFileSync,
+  closeSync,
   existsSync,
   lstatSync,
   mkdirSync,
+  openSync,
   readdirSync,
   readFileSync,
   rmSync,
@@ -14,9 +16,11 @@ import {
   writeFileSync,
 } from "node:fs";
 import { homedir, hostname, userInfo } from "node:os";
-import { resolve } from "node:path";
+import { dirname, extname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { crc32 } from "node:zlib";
 
+import type { DaemonFiles } from "../core/daemon.ts";
 import type { Change, DigestAlgorithm, Entry, Host, RunResult } from "../core/host.ts";
 import { watchTree } from "./watch-tree.ts";
 
@@ -93,6 +97,35 @@ export class NodeHost implements Host {
     skip: (relative: string) => boolean = () => false,
   ): () => void {
     return watchTree(root, { onChange, onError, skip });
+  }
+
+  supervise(files: DaemonFiles, { foreground = false } = {}): number {
+    const entry = new URL(
+      `./daemon/supervisor${extname(new URL(import.meta.url).pathname)}`,
+      import.meta.url,
+    );
+    const args = [fileURLToPath(entry), files.service, files.state, files.log, files.alerts];
+    if (foreground) {
+      return (
+        spawnSync(process.execPath, [...args, "--foreground"], { stdio: "inherit" }).status ?? 1
+      );
+    }
+    mkdirSync(dirname(files.log), { recursive: true });
+    // what the supervisor itself prints before its log is open (a crash) goes to the log too
+    const out = openSync(files.log, "a");
+    const child = spawn(process.execPath, args, { detached: true, stdio: ["ignore", out, out] });
+    closeSync(out);
+    child.unref();
+    return child.pid ?? 0;
+  }
+
+  signal(pid: number, signal: string | 0): boolean {
+    try {
+      process.kill(pid, signal as NodeJS.Signals | 0);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   run(command: string, args: string[], options: { cwd?: string } = {}): RunResult {
