@@ -83,15 +83,16 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] Examples: `examples/01-getting-started/`, the library step by step; the owner's `00-draft-snippets/` kept as written (inquiry)
 - [x] A `--workshop` not named `__WORKSHOP` holds one (found by the draft snippets: a second workshop in the partition root); `new BOS()` asks for a host; `workshop.areas`
 
-## Summary 1 _(between `Phase 2` and `Phase 3`, contains `26` steps from previous phases and summaries)_: extrasteps that was left not done in previous phases
+## Summary 1 _(between `Phase 2` and `Phase 3`, contains `27` steps from previous phases and summaries)_: extrasteps that was left not done in previous phases
 
 - `steps from Phase 0` - related with clearing the ground:
     - [ ] bos-skillset follows the rename: remote, package name, AGENTS.md and `development` done there locally (2026-11-06); left: pushing `development`, deleting `developement` on GitHub with its dependabot PRs, its own Read the Docs project (the owner; `forge/NOTES-for-repositories.md`) (Q2)
 - `steps from Phase 1` - related with the proof of work: none left
 - `steps from Phase 2` - related with the loop as code:
     - [ ] The full loop driven (`revision → testing → releasing → master`), `testing`/`releasing` moved to `master` (Q9, Q10: later)
-    - [ ] A language-model categorizer behind a bridge: words → a case's fields; sentiment (Q17)
-    - [ ] The source form of a ruleset: JSON, PP1's Markdown, or both (Q18)
+    - [ ] A language-model categorizer behind a bridge: ollama in a docker container (volume in the workshop's nests, the GPU), through its OpenAI-compatible endpoint; words → a case's fields, the verdict stays code (Q17)
+    - [ ] Sentiment of the flow, not of people: project linkings, abstractions, a writer's fingerprint (human or LLM, personal tone), code below our standard (Q17)
+    - [ ] Rulesets stay JSON; a Markdown page per ruleset generated from a template (as `.gh-wiki`), for the GitHub wiki and Read the Docs (Q18)
     - [ ] Chains learned by BOS itself, from storylines and the commit history (cataclistics: "where in commits history it appears") (inquiry)
     - [ ] The almanac's other sections read by code: roles (agent profiles, ollama modelfiles), scenarios, simulations (inquiry)
     - [ ] A bare new project starts with the same flow: `bos project init` seeds the anatomy, the almanac, hooks, `.github/bos.json` and the workflows (inquiry)

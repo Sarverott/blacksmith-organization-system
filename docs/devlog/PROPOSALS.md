@@ -69,3 +69,6 @@ these can be grouped into sets of rules with shared scope like local usage, deve
 that draft remains rough and as raw idea. it can help in future but for now we do not need it as required in my opinion
 
 ### PP1 end
+
+> Rejected by the owner (Q18, `docs/changelog/phase-2.md`): rulesets stay JSON,
+> Markdown is generated from them.
