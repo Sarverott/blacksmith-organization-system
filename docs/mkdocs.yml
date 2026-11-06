@@ -51,6 +51,7 @@ plugins:
 
 hooks:
   - _mkdocs/wikilinks.py   # Obsidian [[links]] → site links
+  - _mkdocs/almanac.py     # a page per ruleset, from its JSON (Q18)
 
 markdown_extensions:
   - admonition
@@ -112,6 +113,10 @@ nav:
           - glossary/mirror.md
           - glossary/omnis.md
           - glossary/almanac.md
+          - Almanac (the owner's draft): almanac/README.md
+          - Rulesets:
+              - almanac/rulesets/bos-environment.md
+              - almanac/rulesets/blacksmith-organization-system.md
       - Elements:
           - glossary/artefact.md
           - glossary/element-anatomy.md

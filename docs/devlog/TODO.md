@@ -83,21 +83,22 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] Examples: `examples/01-getting-started/`, the library step by step; the owner's `00-draft-snippets/` kept as written (inquiry)
 - [x] A `--workshop` not named `__WORKSHOP` holds one (found by the draft snippets: a second workshop in the partition root); `new BOS()` asks for a host; `workshop.areas`
 
-## Summary 1 _(between `Phase 2` and `Phase 3`, contains `27` steps from previous phases and summaries)_: extrasteps that was left not done in previous phases
+## Summary 1 _(between `Phase 2` and `Phase 3`, contains `28` steps from previous phases and summaries)_: extrasteps that was left not done in previous phases
 
 - `steps from Phase 0` - related with clearing the ground:
-    - [ ] bos-skillset follows the rename: remote, package name, AGENTS.md and `development` done there locally (2026-11-06); left: pushing `development`, deleting `developement` on GitHub with its dependabot PRs, its own Read the Docs project (the owner; `forge/NOTES-for-repositories.md`) (Q2)
+    - [x] bos-skillset follows the rename: remote, package name, AGENTS.md, `development` pushed, `developement` gone from GitHub with its dependabot PR (checked 2026-11-06); its Read the Docs project and two stale branches are notes for that repository (`forge/NOTES-for-repositories.md`) (Q2)
 - `steps from Phase 1` - related with the proof of work: none left
 - `steps from Phase 2` - related with the loop as code:
     - [ ] The full loop driven (`revision → testing → releasing → master`), `testing`/`releasing` moved to `master` (Q9, Q10: later)
     - [ ] A language-model categorizer behind a bridge: ollama in a docker container (volume in the workshop's nests, the GPU), through its OpenAI-compatible endpoint; words → a case's fields, the verdict stays code (Q17)
     - [ ] Sentiment of the flow, not of people: project linkings, abstractions, a writer's fingerprint (human or LLM, personal tone), code below our standard (Q17)
-    - [ ] Rulesets stay JSON; a Markdown page per ruleset generated from a template (as `.gh-wiki`), for the GitHub wiki and Read the Docs (Q18)
+    - [x] Rulesets stay JSON; a Markdown page per ruleset generated from a template (as `.gh-wiki`), for the GitHub wiki and Read the Docs: `docs/_mkdocs/almanac.py`, `resources/docs-templates/ruleset.md` (Q18)
     - [ ] Chains learned by BOS itself, from storylines and the commit history (cataclistics: "where in commits history it appears") (inquiry)
     - [ ] The almanac's other sections read by code: roles (agent profiles, ollama modelfiles), scenarios, simulations (inquiry)
     - [ ] A bare new project starts with the same flow: `bos project init` seeds the anatomy, the almanac, hooks, `.github/bos.json` and the workflows (inquiry)
-    - [ ] `VIRUSTOTAL_API_KEY` in `publish-env` (the owner)
-    - [ ] `bos` without a command, in a terminal: a REPL (readline), each line one `<model> <tool>` (review)
+    - [ ] `VIRUSTOTAL_API_KEY` in `publish-env` (the owner; v1.9.0 was not scanned: "no VIRUSTOTAL_API_KEY")
+    - [ ] ghcr.io takes the image: the package `ghcr.io/sarverott/blacksmith-organization-system` exists already (tags `dev`, `1.0.0-dev.3`, pushed before this repository published), so the workflow's token, with `packages: write`, is denied `write_package` until the package grants this repository *Write* in "Manage Actions access"; then re-run the job `ghcr` of run 42179570633 (the owner; found on v1.9.0)
+    - [x] `bos` without a command, in a terminal: a REPL (readline), each line one `<model> <tool>`; `bos --repl` reads piped lines (review)
     - [ ] Watching by the models: each element declares what of it is watched, instead of one tree watcher (review)
     - [ ] The release `stable`: what passed the tests of deployment and of dependent projects, on `releasing` (with the full loop)
     - [ ] An LTS line in `versioning` once two majors live side by side (Q12 b)
