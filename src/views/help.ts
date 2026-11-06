@@ -35,6 +35,7 @@ export function helpText(tools: Tool[], version: string): string {
     `bos ${version}: the Blacksmith Organization System core`,
     "",
     "usage: bos <model> <tool> [operands] [--flags]   common flags: --workshop=<path> --json",
+    "       bos (in a terminal) or bos --repl: one <model> <tool> per line, exit to end",
     "",
     ...tools.flatMap(toolLines),
   ].join("\n");

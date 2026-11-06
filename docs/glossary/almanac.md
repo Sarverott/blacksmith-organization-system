@@ -84,6 +84,9 @@ probable chain of events, and the next time it can be seen coming.
 - `src/core/ruling.ts`: `judgeCase(rulesets, case)`, `categorize(text, rulesets)`.
 - `src/core/patterning.ts`: `learn(chains)`, `predict(model, events)`, `recall(chains, events)`.
 - `src/models/almanac/`: reads the rulesets and chains of the package and of a project.
+- `docs/_mkdocs/almanac.py`: a page per ruleset, made from its JSON by the
+  template `resources/docs-templates/ruleset.md` when the docs are built
+  (Read the Docs) and the wiki is synced (Q18). The JSON stays the source.
 - The procedures `judging` and `recalling`. The tools are `bos almanac rules`,
   `bos almanac judge "<case>"` (in words or JSON) and `bos almanac recall
   <event,event…>`.
@@ -92,5 +95,4 @@ probable chain of events, and the next time it can be seen coming.
 
 - [`TODO`] roles, scenarios, simulations: data only, nothing reads them yet.
 - [`TODO`] The language-model categorizer: ollama in a docker container in the workshop's nests, with the GPU (Q17).
-- [`TODO`] A Markdown page per ruleset, generated for the wiki and Read the Docs (Q18).
 - [`TODO`] Learning chains by itself, from storylines and the commit history.

@@ -38,6 +38,17 @@ export function tool<R>(
 }
 
 // "--dry-run --workshop=/x a b" → flags { dryRun: true, workshop: "/x" }, operands [a, b]
+// a line typed in the REPL → its arguments, as a shell would split them: by spaces, with
+// "double" or 'single' quotes holding one argument together ('almanac judge "Cleo pushes"')
+export function splitLine(line: string): string[] {
+  const args: string[] = [];
+  for (const match of line.matchAll(/"((?:\\.|[^"\\])*)"|'([^']*)'|(\S+)/g)) {
+    const [, double, single, bare] = match;
+    args.push(double !== undefined ? double.replace(/\\(.)/g, "$1") : (single ?? bare ?? ""));
+  }
+  return args;
+}
+
 export function parseArgs(argv: string[]): {
   operands: string[];
   flags: Record<string, string | boolean>;

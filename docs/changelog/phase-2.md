@@ -832,3 +832,30 @@ that JSON can produce in publishing builded markdown based on dedicated markdown
 **Decision:** a). JSON stays the source; PP1 is rejected. A Markdown page
 per ruleset is generated from a template, as `.gh-wiki` does, for the GitHub
 wiki and Read the Docs.
+
+## UNIXUSAT=1793952000000 · ghcr.io denied; Summary 1 worked along
+
+### Orders
+
+The owner's words (chat):
+
+````text
+you had hesitate there, talk about potential consequences - if you guess that ghcr release will fail then you foresaw it. we need to allow that workflow there `write_package` because without it our container does not have permission to live. sounds like quick fixing so do it first, then go with steps of summary. first is related with `bos-skillset` am i right? you can look there, but most of it just gone for that step to be marked as done XDDD try to work along the list we have now and tell me if issue will be met
+````
+
+- **Found, not foreseen:** v1.9.0, the first full release, failed only in
+  the job `ghcr`: `denied: permission_denied: write_package`. The token
+  already had `Packages: write` (the run's log lists it; the caller and the
+  called workflow both grant it), so no line of the workflow fixes it. The
+  package `ghcr.io/sarverott/blacksmith-organization-system` exists already,
+  with the tags `dev` and `1.0.0-dev.3` pushed before this repository
+  published, and a package that exists is written by a workflow only when the
+  package grants that repository access. That is a setting of the package
+  (the owner's): "Manage Actions access", this repository, role *Write*;
+  then the job `ghcr` of run 42179570633 re-runs. Docker Hub took 1.9.0.
+- **Summary 1, step by step:** the bos-skillset step is done (`development`
+  pushed, `developement` gone with its dependabot PR); its Read the Docs
+  project (404) and two stale branches went to the repository notes. Q18's
+  pages and the REPL are done. `VIRUSTOTAL_API_KEY` is still missing (v1.9.0
+  was not scanned) and the second workshop still stands on setternet-A62:
+  both the owner's.
