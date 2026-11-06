@@ -14,6 +14,14 @@ export class LocalGit extends Git {
     return this.git(["tag", "--list", pattern]).split("\n").filter(Boolean);
   }
 
+  // the files below dir (relative to it) that no .gitignore leaves out: tracked ones
+  // and new ones (git ls-files --cached --others --exclude-standard)
+  files(dir = "."): string[] {
+    return this.git(["ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", dir])
+      .split("\0")
+      .filter(Boolean);
+  }
+
   // a three-way merge of files into ours (git merge-file); true when it has conflicts
   mergeFile(ours: string, base: string, theirs: string): boolean {
     const { status, stderr } = this.host.run("git", ["merge-file", ours, base, theirs], {

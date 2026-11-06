@@ -62,6 +62,7 @@ Internal parts of `.BOS/`:
 | [GRIH](grih.md) | The version scale of a scope: Generation, Reconstruction, Integration, Hooking |
 | [authors](authors.md) | Every entity that makes a project (people, agents, bots), one line each in `.github/AUTHORS` |
 | [mirror](mirror.md) | A copy of a project's repository on another host, kept identical to the source by the loop |
+| [omnis](omnis.md) | `.omnis.toml`: a halo of weak hashes of an element's files, together pinning each down (draft) |
 
 ## Tree
 

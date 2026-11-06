@@ -1,9 +1,11 @@
 // Host for Node.js: the real file system, clock and environment.
 
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import {
   appendFileSync,
   existsSync,
+  lstatSync,
   mkdirSync,
   readdirSync,
   readFileSync,
@@ -12,8 +14,9 @@ import {
 } from "node:fs";
 import { homedir, hostname, userInfo } from "node:os";
 import { resolve } from "node:path";
+import { crc32 } from "node:zlib";
 
-import type { Change, Entry, Host, RunResult } from "../core/host.ts";
+import type { Change, DigestAlgorithm, Entry, Host, RunResult } from "../core/host.ts";
 import { watchTree } from "./watch-tree.ts";
 
 export { WATCH_LIMIT } from "./watch-tree.ts";
@@ -56,6 +59,22 @@ export class NodeHost implements Host {
 
   appendText(path: string, text: string): void {
     appendFileSync(path, text);
+  }
+
+  digest(path: string, algorithm: DigestAlgorithm): string | null {
+    try {
+      // lstat: a link is not followed, it is not a file of its own
+      if (!lstatSync(path).isFile()) {
+        return null;
+      }
+      const bytes = readFileSync(path);
+      if (algorithm === "crc32") {
+        return crc32(bytes).toString(16).padStart(8, "0");
+      }
+      return createHash(algorithm).update(bytes).digest("hex");
+    } catch {
+      return null;
+    }
   }
 
   mkdir(path: string): void {
