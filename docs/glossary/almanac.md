@@ -56,8 +56,8 @@ A ruleset is a JSON file with its rules in order:
 - **A described case** in words ("Cleo pushes to master") is first put into
   fields by a *categorizer*. The one in the core is plain code: it knows the
   words that the rulesets themselves use. Smaller language models (chat
-  completions, categorizers, sentiment analysis) are planned as another
-  categorizer behind a bridge (BRAINSTORM Q17).
+  completions, categorizers, sentiment analysis) come as another categorizer
+  behind a bridge: ollama in a docker container, the verdict still code (Q17).
 
 ## Patterning
 
@@ -91,5 +91,6 @@ probable chain of events, and the next time it can be seen coming.
 ## Open
 
 - [`TODO`] roles, scenarios, simulations: data only, nothing reads them yet.
-- [`TODO`] A language-model categorizer: which runtime and model (Q17).
+- [`TODO`] The language-model categorizer: ollama in a docker container in the workshop's nests, with the GPU (Q17).
+- [`TODO`] A Markdown page per ruleset, generated for the wiki and Read the Docs (Q18).
 - [`TODO`] Learning chains by itself, from storylines and the commit history.

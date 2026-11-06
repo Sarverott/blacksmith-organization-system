@@ -30,8 +30,10 @@ concurrency:
 
 env:
   HUSKY: "0"
-  # decision Q7: npm `next` (a GitHub pre-release) until phase 2 is done
-  PRERELEASE: "true"
+  # decision Q7: a GitHub pre-release (npm `next`) until phase 2 was done; phase 2 closed
+  # with TODO's Summary 1 (the owner, v1.8.x), so every release is a full one: GitHub's
+  # Latest, npm `latest`, container images. "true" makes them pre-releases again.
+  PRERELEASE: "false"
 
 jobs:
   checks:
@@ -111,6 +113,7 @@ jobs:
     uses: ./.github/workflows/npmjs-npm-package-publish.yml
     with:
       tag: ${{ needs.release.outputs.tag }}
+      # a job's output is always a string; the input is a boolean, so it is compared
       prerelease: ${{ needs.release.outputs.prerelease == 'true' }}
     secrets: inherit
     permissions:

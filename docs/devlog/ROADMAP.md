@@ -37,4 +37,5 @@ phase 4 the skillset reads it, so its skills and MCP judge cases by the
 same rules as the core.
 
 The reforge is a flip: the core is `1.0.0` from the end of phase 1 (decision
-Q7), on npm under the tag `next` until phase 2 is done.
+Q7), on npm under the tag `next` until phase 2 was done; full releases (npm `latest`)
+since it closed with Summary 1.
