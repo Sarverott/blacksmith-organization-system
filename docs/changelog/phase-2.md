@@ -698,3 +698,34 @@ commit through. `npm start` is fine for running things by hand.
   almanac.
 - The draft snippets would fail CI's lint, as `package.json` did: biome
   leaves `examples/00-draft-snippets/` as written.
+
+## UNIXUSAT=1793943058771 · TODO's Summary 1
+
+Before the next batch, the owner asked to gather the steps earlier phases
+left undone, so those phases can close.
+
+### Orders
+
+The owner's words (chat):
+
+````text
+before all of that i want you to check TODO.md - we need to pull stepping leftovers from previous phases to summary, this way we can close up these previous phasing and it allows us to focus on what we have to do
+````
+
+The owner's words (`docs/devlog/TODO.md`, a note in the new section):
+
+````text
+> NOTE: extract here not finished steps that left there to be dones. below is example how it should be listed, then remove this line with the "> Note:" you read now, thanks in advance!
+````
+
+- **Done:** every open step of phases 0–2 moved into `Summary 1`, under the
+  phase it came from (26 steps: 1 from phase 0, none from phase 1, 25 from
+  phase 2); the note removed, the count filled in. Before moving, each was
+  checked: the gitlab.com and bitbucket.org tokens are done (all five places
+  200 OK since run 42139753049) and stay ticked in phase 2; the bos-skillset
+  rename is reduced to what is left for the owner; `VIRUSTOTAL_API_KEY` and
+  the second workshop on setternet-A62 are still open.
+- `bos devlog state` reads a summary as its own section, so phases 0, 1 and
+  2 now count as complete; "## Later" no longer counts into phase 3.
+  Assumed: a later summary gathers from later phases and from earlier
+  summaries, as the heading says.

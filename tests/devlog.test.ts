@@ -18,12 +18,15 @@ describe("devlog as data", () => {
   it("counts the phases of TODO.md", () => {
     const devlog = devlogWith({
       "TODO.md":
-        "# TODO\n\n## Phase 0: ground\n\n- [x] a\n- [X] b\n\n## Phase 1: work\n\n- [x] c\n- [ ] d\n\n## Phase 2: empty\n",
+        "# TODO\n\n## Phase 0: ground\n\n- [x] a\n- [X] b\n\n## Phase 1: work\n\n- [x] c\n- [ ] d\n\n" +
+        "## Summary 1 _(between `Phase 1` and `Phase 2`)_: left undone\n\n- `steps from Phase 1`:\n    - [ ] e\n\n" +
+        "## Phase 2: empty\n\n## Later\n\n- [ ] f\n",
     });
     expect(devlog.phases()).toEqual([
-      { number: 0, title: "ground", done: 2, total: 2, complete: true },
-      { number: 1, title: "work", done: 1, total: 2, complete: false },
-      { number: 2, title: "empty", done: 0, total: 0, complete: false },
+      { kind: "phase", number: 0, title: "ground", done: 2, total: 2, complete: true },
+      { kind: "phase", number: 1, title: "work", done: 1, total: 2, complete: false },
+      { kind: "summary", number: 1, title: "left undone", done: 0, total: 1, complete: false },
+      { kind: "phase", number: 2, title: "empty", done: 0, total: 0, complete: false },
     ]);
   });
 
