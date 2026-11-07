@@ -111,7 +111,7 @@ history: [../changelog/](../changelog/phase-0.md).
     - [ ] The other kinds of bridges, from the owner's map: devops-integration, docs-publishers, apps-extensions, dedicated-implements, project-profiles, scoping-families (owner)
     - [ ] The homepage: `resources/web/public/` (webmanifest, robots.txt, sitemap.xml, llms.txt) generated from package.json, bos.json and the docs; built for GitHub Pages (owner)
     - [ ] Examples: react, vue, astro, each a submodule with its own package.json, run by `examples/Taskfile.yml` (owner)
-    - [ ] The second workshop the draft made in `/run/media/sarverott/setternet-A62/` (`.BOS`, `archive`, `craftbook`, `devarmory`, `forge` beside `__WORKSHOP`): removed (the owner)
+    - [x] The second workshop the draft made in `/run/media/sarverott/setternet-A62/` (`.BOS`, `archive`, `craftbook`, `devarmory`, `forge` beside `__WORKSHOP`): removed (the owner); now found (`areas-beside-workshop`), stopped at bootstrap and solved by `bos workshop repair`
     - [x] Mirrors: glossary page `archive/.repos-mirrors` (each mirror a sarcophag): `docs/glossary/repos-mirrors.md` (Q6)
     - [x] Procedure `archiving`: `bos archive mirror <forge path>` → bare clone `archive/.repos-mirrors/<scope>___<project>.git`, dry run first, the forge copy removed only on confirmation, nothing uncommitted and every commit in the mirror (Q6)
     - [x] Inspecting: a finding for clones in the forge that belong among the mirrors: `mirrored-in-forge`, and `work-on-master` names `bos archive mirror` (Q6)
@@ -130,6 +130,8 @@ history: [../changelog/](../changelog/phase-0.md).
 - [ ] ollama in a docker container with the GPU: the NVIDIA Container Toolkit on the machine (the owner), then a service run as a container (Q17)
 - [ ] Daemons started and stopped with the workshop (`bos open`, `bos close`)
 - [x] The forge's elements made by BOS: `bos scope create`, `bos project create` (the standard anatomy from `resources/project-template/`; on an existing project only what is missing), `bos project import` (gh:owner/repo, any git URL, a path) (inquiry)
+- [x] Live scenario on the development workshop: `Sarverott/mobile-croaker` into `forge/rauson/` (the scope its description names), `Sarverott/bos-skillset` into `forge/blacksmith-organization-system/`, both on `development`; findings to `forge/NOTES-for-repositories.md` (owner)
+- [ ] The loop follows a project's canon: `main` where origin keeps it there (found: `canon-not-master`)
 - [ ] Every area's elements made by BOS: craftbook (craftsets, recipes, scrapnote vaults), devarmory (a tool with its manifest entry), archive (sarcophags), `.BOS` (setup, nests) (inquiry)
 - [ ] Importing from other places: a whole account or organisation of GitHub, GitLab, Gitea, Bitbucket into a scope; archives and notes into the craftbook (inquiry)
 - [ ] Ttystories: the shells' histories (`.BOS/storylines/ttystories/`: `<ms>\t<dir>\t<command>`; `history` dumps) combined, split into trees of command stories by directory, session and time, secrets redacted; command usage counted; stories become chains of the almanac's patterning, a source of knowledge for BOS (inquiry)
