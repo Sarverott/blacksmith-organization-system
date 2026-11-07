@@ -5,12 +5,14 @@ import { createHash } from "node:crypto";
 import {
   appendFileSync,
   closeSync,
+  cpSync,
   existsSync,
   lstatSync,
   mkdirSync,
   openSync,
   readdirSync,
   readFileSync,
+  renameSync,
   rmSync,
   statSync,
   writeFileSync,
@@ -84,6 +86,19 @@ export class NodeHost implements Host {
 
   mkdir(path: string): void {
     mkdirSync(path, { recursive: true });
+  }
+
+  move(from: string, to: string): void {
+    mkdirSync(dirname(to), { recursive: true });
+    try {
+      renameSync(from, to);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "EXDEV") {
+        throw error;
+      }
+      cpSync(from, to, { recursive: true, preserveTimestamps: true, verbatimSymlinks: true });
+      rmSync(from, { recursive: true, force: true });
+    }
   }
 
   removeTree(path: string): void {

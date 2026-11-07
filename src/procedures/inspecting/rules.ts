@@ -32,6 +32,15 @@ export const missingDescriptor: Rule = (report) =>
         })),
     );
 
+export const areasBesideWorkshop: Rule = (report) =>
+  report.misplaced.map((path) => ({
+    level: "error",
+    rule: "areas-beside-workshop",
+    path,
+    message:
+      "an area of a workshop outside it (a second workshop half-made beside it): bos workshop repair moves what it holds inside",
+  }));
+
 export const strayInRoot: Rule = (report) =>
   report.strays.map((name) => ({
     level: "warning",
@@ -117,6 +126,7 @@ export const omnisDrift: Rule = (report) =>
     }));
 
 export const RULES: Rule[] = [
+  areasBesideWorkshop,
   missingArea,
   missingDescriptor,
   strayInRoot,

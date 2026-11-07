@@ -25,6 +25,8 @@ export interface Host {
   // (a directory, a link, a pipe, a device) or cannot be read
   digest(path: string, algorithm: DigestAlgorithm): string | null;
   mkdir(path: string): void;
+  // move a file or a directory (also to another file system)
+  move(from: string, to: string): void;
   // remove a directory and everything in it (only procedures that checked what is lost call it)
   removeTree(path: string): void;
   // calls onChange for every change below root until the returned function is called;
