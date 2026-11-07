@@ -23,6 +23,8 @@ export type WorkshopReport = {
   source: string | null;
   areas: ElementNode | null;
   strays: string[];
+  // areas of a workshop beside this one (Workshop.misplacedAreas)
+  misplaced: string[];
   forge: { looseFiles: string[]; scopes: ScopeReport[] };
   // the projects with a sealed halo (.bos/.omnis.toml) and what drifted since
   omnis: { path: string; sealedAt: number; drift: Drift }[];
@@ -39,6 +41,7 @@ export function emptyReport(workshop: Workshop): WorkshopReport {
     source: workshop.located?.source ?? null,
     areas: null,
     strays: [],
+    misplaced: [],
     forge: { looseFiles: [], scopes: [] },
     omnis: [],
     mirrors: [],

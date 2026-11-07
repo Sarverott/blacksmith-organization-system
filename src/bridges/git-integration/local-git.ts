@@ -63,6 +63,28 @@ export class LocalGit extends Git {
     this.git(["clone", "--quiet", url, target]);
   }
 
+  // does origin have this branch (after a clone or a fetch)
+  hasRemoteBranch(name: string, remote = "origin"): boolean {
+    return (
+      this.host.run("git", ["rev-parse", "--verify", "-q", `refs/remotes/${remote}/${name}`], {
+        cwd: this.cwd,
+      }).status === 0
+    );
+  }
+
+  // the branch checked out (a remote one becomes a local branch that tracks it)
+  checkout(name: string): void {
+    this.git(["checkout", "--quiet", name]);
+  }
+
+  // the branch checked out now, null when detached
+  branch(): string | null {
+    const { status, stdout } = this.host.run("git", ["symbolic-ref", "--short", "-q", "HEAD"], {
+      cwd: this.cwd,
+    });
+    return status === 0 ? stdout.trim() : null;
+  }
+
   // a value of git config (user.name…), null when it is not set
   config(key: string): string | null {
     const { status, stdout } = this.host.run("git", ["config", "--get", key], { cwd: this.cwd });

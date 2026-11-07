@@ -222,6 +222,19 @@ export class BOS {
     return (await Procedures.crediting.run(context)).outcome;
   }
 
+  // areas of a workshop lying beside this one, brought inside (plan only, unless confirm):
+  // what is missing inside is moved, duplicates and BOS's own scaffolding removed, what
+  // differs left where it is (glossary: workshop → Repair)
+  async repair({ confirm = false }: { confirm?: boolean } = {}): Promise<Procedures.RepairOutcome> {
+    const context = {
+      ...createContext(this.host),
+      workshop: this.workshop,
+      confirm,
+      outcome: Procedures.unrepaired(),
+    };
+    return (await Procedures.repairing.run(context)).outcome;
+  }
+
   // a scope of the forge, a project in one (seeded with the standard anatomy; on one that
   // exists only what is missing), or a clone brought into one (glossary: scope, project)
   async create(
@@ -231,8 +244,9 @@ export class BOS {
       scope = "",
       name = "",
       seed = false,
+      branch = "",
       dryRun = false,
-    }: { scope?: string; name?: string; seed?: boolean; dryRun?: boolean } = {},
+    }: { scope?: string; name?: string; seed?: boolean; branch?: string; dryRun?: boolean } = {},
   ): Promise<Procedures.CreateOutcome> {
     let scopeName = scope;
     let projectName = name;
@@ -254,6 +268,7 @@ export class BOS {
       scopeName,
       name: projectName,
       seed,
+      branch,
       author,
       year: String(new Date(this.host.now()).getFullYear()),
       outcome: Procedures.uncreated(kind, kind === "import" ? target : null),

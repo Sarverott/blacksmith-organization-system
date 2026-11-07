@@ -50,6 +50,13 @@ export {
   unreconciled,
 } from "./reconciling/_index.ts";
 export {
+  type Move,
+  type RepairContext,
+  type RepairOutcome,
+  repairing,
+  unrepaired,
+} from "./repairing/_index.ts";
+export {
   haloOf,
   modelFiles,
   type SealContext,

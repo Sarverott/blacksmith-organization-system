@@ -25,7 +25,9 @@ describe("tools", () => {
     expect(() => findTool("nope", "x")).toThrow(
       /models: workshop, scope, devlog, flow, project, version/,
     );
-    expect(() => findTool("workshop", "x")).toThrow(/tools: locate, status, bootstrap, watch/);
+    expect(() => findTool("workshop", "x")).toThrow(
+      /tools: locate, status, repair, bootstrap, watch/,
+    );
   });
 });
 

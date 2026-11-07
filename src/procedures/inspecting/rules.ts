@@ -32,6 +32,15 @@ export const missingDescriptor: Rule = (report) =>
         })),
     );
 
+export const areasBesideWorkshop: Rule = (report) =>
+  report.misplaced.map((path) => ({
+    level: "error",
+    rule: "areas-beside-workshop",
+    path,
+    message:
+      "an area of a workshop outside it (a second workshop half-made beside it): bos workshop repair moves what it holds inside",
+  }));
+
 export const strayInRoot: Rule = (report) =>
   report.strays.map((name) => ({
     level: "warning",
@@ -104,6 +113,18 @@ export const incompleteAnatomy: Rule = (report) =>
       message: `missing ${project.anatomy.missing.join(", ")}`,
     }));
 
+// the loop's canon is master (src/models/loop/data.ts); a clone whose origin keeps its canon
+// elsewhere (main) has no station master
+export const canonNotMaster: Rule = (report) =>
+  projects(report)
+    .filter((project) => project.git?.canon && project.git.canon !== "master")
+    .map((project) => ({
+      level: "info",
+      rule: "canon-not-master",
+      path: project.path,
+      message: `origin's default branch is ${project.git?.canon}, the loop's canon is master: rename it, or set the loop in .github/bos.json`,
+    }));
+
 export const omnisDrift: Rule = (report) =>
   report.omnis
     .filter(({ drift }) => drift.added.length || drift.changed.length || drift.removed)
@@ -117,6 +138,7 @@ export const omnisDrift: Rule = (report) =>
     }));
 
 export const RULES: Rule[] = [
+  areasBesideWorkshop,
   missingArea,
   missingDescriptor,
   strayInRoot,
@@ -126,5 +148,6 @@ export const RULES: Rule[] = [
   mirroredInForge,
   misspeltBranch,
   incompleteAnatomy,
+  canonNotMaster,
   omnisDrift,
 ];

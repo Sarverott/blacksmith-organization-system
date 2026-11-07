@@ -55,6 +55,33 @@ export class Workshop extends Element {
     return Workshop.children.map((Kind) => Kind.dirname ?? Kind.type);
   }
 
+  // areas of a workshop lying beside it, in the directory that holds it: a second workshop
+  // half-made there (a partition root given where __WORKSHOP was meant), their paths
+  misplacedAreas(): string[] {
+    const holder = this.path.replace(/\/[^/]+$/, "") || "/";
+    if (holder === this.path) {
+      return [];
+    }
+    const present = new Set(this.host.list(holder).map((entry) => entry.name));
+    return this.areaNames.filter((name) => present.has(name)).map((name) => `${holder}/${name}`);
+  }
+
+  // the names of the files BOS itself writes into the tree (descriptors), at their places:
+  // ".BOS/workshop.json", "devarmory/manifest.json"…
+  scaffolding(): string[] {
+    const out: string[] = [];
+    const walk = (element: Element, at: string) => {
+      for (const name of Object.keys(element.kind.descriptors)) {
+        out.push(at ? `${at}/${name}` : name);
+      }
+      for (const child of element.childElements()) {
+        walk(child, at ? `${at}/${child.kind.dirname ?? ""}` : (child.kind.dirname ?? ""));
+      }
+    };
+    walk(this, "");
+    return out;
+  }
+
   // entries in the root that are neither an area nor a known file
   strays(): string[] {
     const areas = new Set(this.areaNames);
