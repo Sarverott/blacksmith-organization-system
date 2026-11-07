@@ -113,6 +113,18 @@ export const incompleteAnatomy: Rule = (report) =>
       message: `missing ${project.anatomy.missing.join(", ")}`,
     }));
 
+// the loop's canon is master (src/models/loop/data.ts); a clone whose origin keeps its canon
+// elsewhere (main) has no station master
+export const canonNotMaster: Rule = (report) =>
+  projects(report)
+    .filter((project) => project.git?.canon && project.git.canon !== "master")
+    .map((project) => ({
+      level: "info",
+      rule: "canon-not-master",
+      path: project.path,
+      message: `origin's default branch is ${project.git?.canon}, the loop's canon is master: rename it, or set the loop in .github/bos.json`,
+    }));
+
 export const omnisDrift: Rule = (report) =>
   report.omnis
     .filter(({ drift }) => drift.added.length || drift.changed.length || drift.removed)
@@ -136,5 +148,6 @@ export const RULES: Rule[] = [
   mirroredInForge,
   misspeltBranch,
   incompleteAnatomy,
+  canonNotMaster,
   omnisDrift,
 ];
