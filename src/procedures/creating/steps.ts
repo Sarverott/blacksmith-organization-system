@@ -75,13 +75,22 @@ export function make(context: CreateContext): void {
   }
   if (outcome.kind === "import") {
     context.changes.push(outcome.path);
-    if (!context.dryRun) {
-      new LocalGit(host, scopePath(context)).clone(outcome.url ?? "", outcome.path);
+    if (context.dryRun) {
+      outcome.branch = context.branch || "development (if it has one)";
+      return;
     }
+    new LocalGit(host, scopePath(context)).clone(outcome.url ?? "", outcome.path);
+    const clone = new LocalGit(host, outcome.path);
+    const wanted = context.branch || "development";
+    if (clone.branch() !== wanted && (context.branch || clone.hasRemoteBranch(wanted))) {
+      clone.checkout(wanted);
+    }
+    outcome.branch = clone.branch();
     return;
   }
   createIfMissing(context, outcome.path, () => host.mkdir(outcome.path));
   createIfMissing(context, `${outcome.path}/.git`, () => new LocalGit(host, outcome.path).init());
+  outcome.branch = context.dryRun ? "development" : new LocalGit(host, outcome.path).branch();
 }
 
 // the standard anatomy from the template, and .bos/bos.json; nothing overwritten

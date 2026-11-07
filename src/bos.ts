@@ -244,8 +244,9 @@ export class BOS {
       scope = "",
       name = "",
       seed = false,
+      branch = "",
       dryRun = false,
-    }: { scope?: string; name?: string; seed?: boolean; dryRun?: boolean } = {},
+    }: { scope?: string; name?: string; seed?: boolean; branch?: string; dryRun?: boolean } = {},
   ): Promise<Procedures.CreateOutcome> {
     let scopeName = scope;
     let projectName = name;
@@ -267,6 +268,7 @@ export class BOS {
       scopeName,
       name: projectName,
       seed,
+      branch,
       author,
       year: String(new Date(this.host.now()).getFullYear()),
       outcome: Procedures.uncreated(kind, kind === "import" ? target : null),

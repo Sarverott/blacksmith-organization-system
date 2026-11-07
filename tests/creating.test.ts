@@ -89,13 +89,22 @@ describe("creating", () => {
     write(join(source, "README.md"), "a hammer");
     git(source, "add", ".");
     git(source, "commit", "-qm", "first");
+    git(source, "branch", "development");
 
     const brought = await bos.create("import", source, { seed: true });
     const project = join(root, "forge/someone/hammer");
-    expect(brought).toMatchObject({ path: project, scope: "someone", url: source });
+    expect(brought).toMatchObject({
+      path: project,
+      scope: "someone",
+      url: source,
+      branch: "development",
+    });
     expect(readFileSync(join(project, "README.md"), "utf8")).toBe("a hammer");
     expect(brought.anatomy?.missing).toEqual([]);
     await expect(bos.create("import", source)).rejects.toThrow("there already");
+    // asked for another branch, or none named development: as asked, or the default one
+    const other = await bos.create("import", source, { name: "hammer-master", branch: "master" });
+    expect(other.branch).toBe("master");
     await expect(bos.create("project", "bad name/x")).rejects.toThrow("not a scope name");
   });
 });

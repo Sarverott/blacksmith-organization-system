@@ -52,6 +52,11 @@ export const projectTools = [
       { name: "scope", type: "string", info: "the scope (default: the URL's owner, lowercased)" },
       { name: "name", type: "string", info: "the project's name (default: the repository's)" },
       { name: "seed", type: "boolean", info: "add the standard anatomy it lacks" },
+      {
+        name: "branch",
+        type: "string",
+        info: "the branch to work on (default: development when it has one)",
+      },
       dryRunArg,
     ],
     run: (bos, input) =>
@@ -59,6 +64,7 @@ export const projectTools = [
         scope: input.scope as string | undefined,
         name: input.name as string | undefined,
         seed: Boolean(input.seed),
+        branch: input.branch as string | undefined,
         dryRun: Boolean(input.dryRun),
       }),
     render: createText,
