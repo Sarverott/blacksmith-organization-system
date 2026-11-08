@@ -121,6 +121,7 @@ history: [../changelog/](../changelog/phase-0.md).
 ## Dependency maintenance: 2026-11-08
 
 - [x] Reconcile the Dependabot batch with clean installs, docs export consistency and major-update evidence
+- [x] Review the newly reissued Biome 2.6.5 proposal separately from its initial 2.6.4 head
 - [x] Isolate pre-commit tests from Git's hook environment so temporary repositories cannot alter contributor refs
 - [x] Group routine bot updates, add lock/audit/container checks, and record the maintenance procedure in the agent notes
 
