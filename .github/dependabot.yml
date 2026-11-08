@@ -55,6 +55,11 @@ updates:
       time: "07:00"
       timezone: Europe/Warsaw
     open-pull-requests-limit: 3
+    # Node 25 is EOL; retain 24 updates and review future supported majors.
+    # Docker ignore ranges use Bundler syntax: ~> 25.0 excludes only 25.x.
+    ignore:
+      - dependency-name: node
+        versions: ["~> 25.0"]
     groups:
       docker-routine:
         patterns: ["*"]

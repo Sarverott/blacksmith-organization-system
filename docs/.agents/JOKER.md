@@ -115,3 +115,37 @@ in place, not pushed. No contributor commits were removed.
 checks keep the commit's original index environment. A regression runs that
 wrapper with real injected hook variables and verifies a new repository is
 created in the fixture while the parent's config/index stay untouched.
+
+## Landed checkpoint and new patch proposal
+
+Implementation: `bd1deafe2ab5d7aa5fed007b11fd5fa92674dfd4` (package 1.13.2).
+Development merge: `fcea40f8350619eaf1d696c674b4f6ef10498fa0`.
+Hosted runs [42462604816](https://github.com/Sarverott/blacksmith-organization-system/actions/runs/42462604816)
+and [42462827562](https://github.com/Sarverott/blacksmith-organization-system/actions/runs/42462827562)
+passed every applicable job. Remote development requirements and npm lock were
+fetched and compared byte for byte with the checked candidate.
+
+After landing, Dependabot closed #19, #20, #22, #23, #25, #26, #27, #28 itself.
+The closure script stopped safely because #21 had changed: new head
+`70dd1240b49abe09ef8580dbd61b233edd8139d0`, now proposing Biome 2.6.5 from
+2.6.4. It was not closed as an equivalent of its previous 2.6.4 proposal.
+The follow-up candidate changes only Biome's own package/optional-binary
+versions/integrities and its schema; it receives a fresh clean install and
+checks. This is a new arrival within an existing PR number.
+
+GitHub's default branch has critical alert
+[1](https://github.com/Sarverott/blacksmith-organization-system/security/dependabot/1),
+Certifi `GHSA-6q48-6c7w-9gw2`, fixed from 2026.10.18. The landed development
+export uses 2026.10.23. The alert remains open until that fix reaches master;
+it must not be dismissed merely because development is repaired.
+
+The Node 25 proposal (#18) is rejected rather than left indefinitely open:
+the [Node.js release working group](https://github.com/nodejs/Release#release-schedule)
+marks 25.x End-of-Life, while 24.x remains Maintenance LTS. The Docker updater
+excludes only 25.x with `~> 25.0` (Docker uses Bundler range syntax per the
+[Dependabot reference](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#ignore)).
+This keeps 24.x updates and later supported-major proposals available. A future
+26 migration must align CI and the image and pass its own container tests.
+
+Follow-up Biome 2.6.5 validation: `npm ci`, `task check` (114 tests),
+`npm run build` and `npm audit --audit-level=high` passed; zero vulnerabilities.

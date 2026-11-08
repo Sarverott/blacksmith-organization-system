@@ -144,7 +144,7 @@ Read the Docs also builds every push by its own webhook, without a secret.
 ## Dependency maintenance
 
 `.github/dependabot.yml` targets `development`: one Monday minor/patch group
-per ecosystem (npm, uv docs, Actions and Docker). Majors remain separate.
+per ecosystem (npm, uv docs, Actions and Docker). Majors remain separate; Node 25.x is excluded because it is End-of-Life.
 Version PR limits are three per ecosystem, four for npm while three blocked
 updates need room beside a routine group. Security PRs have GitHub's separate
 limit and default-branch handling. There is no Compose manifest to update.
