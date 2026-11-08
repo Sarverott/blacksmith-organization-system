@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+# Git exports repository-local variables to hooks. Tests create other repos;
+# clear those variables only for the test process, keeping the commit's index
+# intact for the bump and staged-file checks that ran before it.
+for name in $(git rev-parse --local-env-vars); do
+  unset "$name"
+done
+exec npx vitest run --silent

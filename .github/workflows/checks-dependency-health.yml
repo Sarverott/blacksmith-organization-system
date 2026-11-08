@@ -1,0 +1,35 @@
+# Read-only maintenance checks. Scheduled runs use the default branch; PRs
+# changing the image get a build/smoke test without publishing it.
+name: "checks › dependency health: audit, locks, package and container"
+
+on:
+  schedule:
+    - cron: "23 6 * * 4"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - .github/workflows/checks-dependency-health.yml
+
+permissions:
+  contents: read
+
+env:
+  HUSKY: "0"
+
+jobs:
+  checks:
+    if: github.event_name != 'pull_request'
+    uses: ./.github/workflows/checks-reusable-set.yml
+    with:
+      code: true
+      docs: true
+      package: true
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker build --tag bos-dependency-check .
+      - run: docker run --rm bos-dependency-check --version

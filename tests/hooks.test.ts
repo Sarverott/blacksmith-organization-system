@@ -1,6 +1,6 @@
 // The git hooks must fail when their task fails, whatever `task` comes first in PATH.
 import { spawnSync } from "node:child_process";
-import { chmodSync, mkdtempSync } from "node:fs";
+import { chmodSync, existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -38,5 +38,36 @@ describe("package.json as the version bump writes it", () => {
     );
     expect(status).toBe(0);
     expect(stdout).toBe(written);
+  });
+});
+
+describe(".husky/test", () => {
+  it("keeps a hook's repository environment out of temporary git repositories", () => {
+    const dir = mkdtempSync(join(tmpdir(), "bos-hook-env-"));
+    const owner = join(dir, "owner");
+    const target = join(dir, "fixture");
+    expect(spawnSync("git", ["init", "-q", owner]).status).toBe(0);
+    const config = join(owner, ".git/config");
+    const before = readFileSync(config, "utf8");
+    const bin = join(dir, "bin");
+    write(join(bin, "npx"), '#!/bin/sh\nexec git init -q "$BOS_TEST_TARGET"\n');
+    chmodSync(join(bin, "npx"), 0o755);
+    const { status, stderr } = spawnSync("sh", [resolve(".husky/test")], {
+      cwd: owner,
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        PATH: `${bin}:${process.env.PATH}`,
+        GIT_DIR: join(owner, ".git"),
+        GIT_WORK_TREE: owner,
+        GIT_COMMON_DIR: join(owner, ".git"),
+        GIT_INDEX_FILE: join(owner, ".git/hook-index"),
+        BOS_TEST_TARGET: target,
+      },
+    });
+    expect(status, stderr).toBe(0);
+    expect(existsSync(join(target, ".git"))).toBe(true);
+    expect(readFileSync(config, "utf8")).toBe(before);
+    expect(existsSync(join(owner, ".git/hook-index"))).toBe(false);
   });
 });

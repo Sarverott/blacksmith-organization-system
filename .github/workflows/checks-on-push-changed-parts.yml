@@ -18,7 +18,7 @@ jobs:
       code: ${{ steps.what.outputs.code }}
       docs: ${{ steps.what.outputs.docs }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with: { fetch-depth: 0 }
       - uses: go-task/setup-task@v2
       - name: What the push changed
