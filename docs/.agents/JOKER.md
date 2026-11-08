@@ -91,7 +91,7 @@ Diagnosed red jobs: #30 and #24 fail npm peer resolution; #21 has a stale schema
   no publication, automatic approvals, or privileged execution of PR code.
 - Keep #24 and #30 open until upstream peers support the requested majors;
   keep #29 open until its new proxy chain is fixed without peer/security bypass.
-  Keep #18 open for a separately validated supported Node runtime migration.
+  The initial Node deferral was superseded by the EOL review below; #18 is rejected.
 - Activation remains pending: Dependabot and schedules read the default branch
   (`master`). The usual revision → master PR is the owner's review point.
 
@@ -149,3 +149,45 @@ This keeps 24.x updates and later supported-major proposals available. A future
 
 Follow-up Biome 2.6.5 validation: `npm ci`, `task check` (114 tests),
 `npm run build` and `npm audit --audit-level=high` passed; zero vulnerabilities.
+
+## Final maintenance disposition · 2026-11-08
+
+| PRs | Disposition | Evidence |
+| --- | --- | --- |
+| #19, #20 | Closed by Dependabot after replacement landed | Actions v7 on development, hosted checks green |
+| #22, #23, #25, #26, #27, #28 | Closed by Dependabot after replacement landed | Remote export matches the existing tested lock; preview rebuild verified |
+| #21, including its reissued 2.6.5 proposal | Closed by Dependabot after the follow-up landed | Exact fresh head reviewed; Biome 2.6.5 and schema agree |
+| #18 | Closed as rejected | Node 25 is EOL; Docker policy excludes only that line |
+| #24 | Open, blocked | Inquirer 14 conflicts with the current Commitizen adapter's peer range |
+| #29 | Open, blocked | New proxy-chain audit findings; retain Task 3.45.4, which audits clean |
+| #30 | Open, blocked | TypeScript 7 conflicts with openapi-typescript's ^5.x peer |
+
+Follow-up implementation: `9513f358889883994118e2f9a8ff089de6458293`.
+Development follow-up merge: `bb0003b11fc29dffb6a013bbcf8503188e600499`.
+Hosted run [42463259167](https://github.com/Sarverott/blacksmith-organization-system/actions/runs/42463259167)
+passed every applicable job; the remote npm lock again matched the cleanly
+installed/audited candidate byte for byte. Final code checks: 114 tests;
+docs guard: three regression fixtures; npm audit: zero findings. Builds,
+packed CLI installation, strict locked docs, Python compatibility, actual
+preview rebuild and local container smoke test passed as recorded above.
+
+No bot PR was merged directly. Both checked steps were committed on dev/Joker
+with normal version bumps/hooks and merged with --no-ff into development.
+The final record follows the same route, then development goes to revision.
+The [revision workflow](https://github.com/Sarverott/blacksmith-organization-system/actions/workflows/loop-revision-bump-checks-pull-request.yml?query=branch%3Arevision)
+runs the complete suite, adds authors, bumps the minor and opens the owner's
+revision → master PR. That promotion is required to activate grouping, the
+weekly schedule and the Node exclusion, and to close the default-branch
+Certifi alert. Publishing and the new scheduled workflow have not been run.
+
+The original checkout stays clean on dev/Cleo. Worktree:
+`/tmp/bos-core-dependabot`; final contributor branch dev/Joker. Recovery-only
+metadata under `/tmp/bos-core-hook-recovery`, the local recovery ref, the
+fixture-created dev/a branch and the smoke-test image remain available; none
+is pushed as a release or used to overwrite another contributor's work.
+
+Before revision, the already released version-only hotfix `3590d21` from
+master was synchronized into dev/Joker. The registered BOS version merge
+driver retained the higher candidate version. This preserves the release
+history and prevents the upcoming PR from conflicting over package versions;
+no direct write to master was made.

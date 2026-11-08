@@ -123,6 +123,7 @@ history: [../changelog/](../changelog/phase-0.md).
 - [x] Reconcile the Dependabot batch with clean installs, docs export consistency and major-update evidence
 - [x] Review the newly reissued Biome 2.6.5 proposal separately from its initial 2.6.4 head
 - [x] Isolate pre-commit tests from Git's hook environment so temporary repositories cannot alter contributor refs
+- [x] Record final PR dispositions and checked commit SHAs for the owner
 - [x] Group routine bot updates, add lock/audit/container checks, and record the maintenance procedure in the agent notes
 
 ## Phase 3: workplaces 

@@ -13,8 +13,9 @@ health/container workflow prepare a smaller recurring queue.
 
 TypeScript 7 and Inquirer 14 have incompatible peers. Task 3.54.0 introduced
 five high-severity audit findings through its proxy chain in a clean trial,
-versus zero on the baseline; it is held too. Node's runtime major needs its
-own validation. Evidence, exact initial heads, disposition and activation
+versus zero on the baseline; it is held too. Node 25 was rejected after confirming it is End-of-Life; only its Docker line
+is excluded. Nine equivalent bot proposals were incorporated, and three blocked
+updates remain open. Evidence, exact initial heads, disposition and activation
 state are in [JOKER.md](JOKER.md).
 
 ## 2026-11-05 · Cleo · the owner's review notes, mirrors
