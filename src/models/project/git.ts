@@ -2,7 +2,8 @@
 import type { Host } from "../../core/host.ts";
 import { join, normalize } from "../../core/paths.ts";
 
-export type GitState = { branch: string | null; detached: boolean } | null;
+// canon: the default branch of origin (refs/remotes/origin/HEAD), null when unknown
+export type GitState = { branch: string | null; detached: boolean; canon: string | null } | null;
 
 // .git is a directory, or (submodules, worktrees) a file "gitdir: <path>"
 export function gitDir(host: Host, root: string): string | null {
@@ -31,5 +32,7 @@ export function readGit(host: Host, root: string): GitState {
     return null;
   }
   const branch = head.match(/^ref: refs\/heads\/(.+)$/)?.[1] ?? null;
-  return { branch, detached: branch === null };
+  const origin = host.readText(join(dir ?? "", "refs/remotes/origin/HEAD"))?.trim();
+  const canon = origin?.match(/^ref: refs\/remotes\/origin\/(.+)$/)?.[1] ?? null;
+  return { branch, detached: branch === null, canon };
 }

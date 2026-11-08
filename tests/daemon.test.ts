@@ -84,8 +84,14 @@ describe("daemon (supervised)", () => {
     expect((await bos.daemon("fake", "start")).done).toBe("running-already");
 
     const log = () => (existsSync(files.log) ? readFileSync(files.log, "utf8") : "");
-    expect(await until(() => /fake#1 out instance 1 secret=none/.test(log()))).toBe(true);
-    expect(log()).toContain("fake#0 out instance 0 secret=none");
+    // each instance writes its first line in its own time: wait for both
+    expect(
+      await until(
+        () =>
+          log().includes("fake#0 out instance 0 secret=none") &&
+          log().includes("fake#1 out instance 1 secret=none"),
+      ),
+    ).toBe(true);
     const alerts = () => (existsSync(files.alerts) ? readFileSync(files.alerts, "utf8") : "");
     expect(await until(() => alerts().split("level=ERROR").length === 3)).toBe(true);
 

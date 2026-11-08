@@ -9,6 +9,9 @@ export function createText(outcome: CreateOutcome & { dryRun?: boolean }): strin
   if (outcome.url) {
     lines.push(`  from ${outcome.url}`);
   }
+  if (outcome.branch) {
+    lines.push(`  on ${outcome.branch}`);
+  }
   lines.push(
     ...(outcome.changes.length
       ? outcome.changes.map((path) => `  + ${path}`)

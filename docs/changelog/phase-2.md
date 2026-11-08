@@ -921,3 +921,39 @@ write script for ollama serve in scripts/devtools/ollama-serve.sh and daemon con
 - The owner's `dependabot.yml` and draft example 02 are on `dev/Sarverott`;
   biome had reformatted the draft on commit, so it is restored as written and
   left out of biome like 00.
+
+## UNIXUSAT=1794080000000 · A second workshop found and repaired; two repositories brought into the forge
+
+### Orders
+
+The owner's words (chat):
+
+````text
+yep. path "/run/media/sarverott/setternet-A62/__WORKSHOP" was properly initialized but we also had undetected error there and "/run/media/sarverott/setternet-A62" also contains initialized parts of workshop - i removed that wrong one for you but we need to make handling issues like that with errors preventing it and solving procedures for cases like that. we can also test out our testing environment with life action scenario: bring into forge repository https://github.com/Sarverott/mobile-croaker.git as it should be to give me insight of how well you understand our environment. next you can take next one we have here: https://github.com/Sarverott/bos-skillset
+````
+
+- **Done, detecting:** `areas-beside-workshop`, an error for every area of
+  a workshop lying in the directory that holds it.
+- **Done, preventing:** the bootstrap's first step (`guard`) refuses a
+  directory not named `__WORKSHOP` and a workshop with areas beside it.
+- **Done, solving:** `bos workshop repair` (procedure `repairing`), a plan
+  until `--confirm`: what the workshop lacks is moved in whole (git
+  repositories too), duplicates and BOS's own scaffolding removed, what
+  differs kept for the owner.
+- **The scenario:** `bos project import gh:Sarverott/mobile-croaker
+  --scope=rauson` and `bos project import gh:Sarverott/bos-skillset
+  --scope=blacksmith-organization-system`, after a dry run. The scope is the
+  project's family, not its owner: mobile-croaker says it is "part of RAUSON
+  scope of projects in Inceptorium Apokryf", and Inceptorium's other
+  repositories (ravensarmy, infraforest) are scopes of their own in the home
+  forge, so `rauson` stands beside them *(assumed: lowercase, as most scopes
+  there)*; bos-skillset belongs with the core. Both are checked out on
+  `development` (import now picks it when origin has it); the scopes got
+  their `.bos/scope.json`, `throwbox/` and workspace files. Nothing was
+  seeded into them: adding files would edit those repositories.
+- **What the scenario found:** mobile-croaker's canon is `main`, the loop's is
+  `master` (a new finding, `canon-not-master`); its anatomy lacks LICENSE,
+  AGENTS.md, CLAUDE.md, tests/; bos-skillset's lacks src/ and tests/. Written
+  to `forge/NOTES-for-repositories.md` for those repositories.
+- The file `-run-media-sarverott-setternet-A62-.txt` in the development
+  workshop's root (2026-11-08 00:22) is taken as the owner's and left.

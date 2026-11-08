@@ -53,6 +53,18 @@ All five are mandatory. BOS creates any missing one at boot.
   demonstrated on a workshop of its own (`WORKSHOP_ROOT` in the core's `.env`),
   so the home workshop is not exposed every time BOS is worked on.
 
+## Repair
+
+A workshop lives only in a directory named `__WORKSHOP` (or
+`$WORKSHOP_RENAME`). When areas of a workshop lie beside it - in the
+directory that holds it, e.g. a partition root given where `__WORKSHOP` was
+meant - `bos workshop status` reports `areas-beside-workshop` (an error) and
+`bos workshop bootstrap` refuses to run, so the mistake does not spread.
+`bos workshop repair` brings them inside: what the workshop lacks is moved
+(whole directories, git repositories with them), duplicates and BOS's own
+scaffolding are removed, and anything that differs stays where it is for the
+owner to settle. It only plans until `--confirm`.
+
 ## Lifecycle
 
 Its origin (which host created it, and when) is recorded in

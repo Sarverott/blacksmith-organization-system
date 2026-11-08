@@ -1,6 +1,7 @@
 // bos workshop <tool>
 import { tool } from "../core/tool.ts";
 import { eventText } from "../views/event.ts";
+import { repairText } from "../views/repairing.ts";
 import { bootstrapText, statusText } from "../views/status.ts";
 
 export const workshopTools = [
@@ -18,6 +19,21 @@ export const workshopTools = [
     args: [{ name: "all", type: "boolean", info: "show notes too, not only errors and warnings" }],
     run: (bos) => bos.inspect(),
     render: (report, input) => statusText(report, { all: Boolean(input.all) }),
+  }),
+  tool({
+    model: "workshop",
+    name: "repair",
+    info: "bring areas of a workshop lying beside it inside (finding areas-beside-workshop); a plan until --confirm",
+    readOnly: false,
+    args: [
+      {
+        name: "confirm",
+        type: "boolean",
+        info: "do it: move, remove duplicates and BOS's scaffolding",
+      },
+    ],
+    run: (bos, input) => bos.repair({ confirm: Boolean(input.confirm) }),
+    render: repairText,
   }),
   tool({
     model: "workshop",

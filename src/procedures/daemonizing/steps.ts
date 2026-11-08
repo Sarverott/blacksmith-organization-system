@@ -72,7 +72,10 @@ export async function settle(context: DaemonContext): Promise<void> {
       ? () => {
           const state = daemons.state(outcome.name);
           return Boolean(
-            state && state.status === "running" && state.instances.every((i) => i.startedAt),
+            state &&
+              state.status === "running" &&
+              state.instances.length > 0 &&
+              state.instances.every((i) => i.startedAt),
           );
         }
       : outcome.done === "signalled" && outcome.action === "stop"

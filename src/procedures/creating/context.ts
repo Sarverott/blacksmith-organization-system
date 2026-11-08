@@ -12,6 +12,8 @@ export type CreateOutcome = {
   // it was there before (a project create then only fills in what is missing)
   existed: boolean;
   workspace: string | null;
+  // the branch checked out: development when the repository has one (work happens there)
+  branch: string | null;
   anatomy: { present: string[]; missing: string[] } | null;
   // every path made (or, in a dry run, that would be)
   changes: string[];
@@ -23,6 +25,8 @@ export type CreateContext = Context & {
   scopeName: string;
   name: string;
   seed: boolean;
+  // import: the branch to work on (default: development when origin has it)
+  branch: string;
   author: string;
   year: string;
   outcome: CreateOutcome;
@@ -36,6 +40,7 @@ export function uncreated(kind: CreateKind, url: string | null = null): CreateOu
     url,
     existed: false,
     workspace: null,
+    branch: null,
     anatomy: null,
     changes: [],
   };
