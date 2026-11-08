@@ -185,3 +185,9 @@ The original checkout stays clean on dev/Cleo. Worktree:
 metadata under `/tmp/bos-core-hook-recovery`, the local recovery ref, the
 fixture-created dev/a branch and the smoke-test image remain available; none
 is pushed as a release or used to overwrite another contributor's work.
+
+Before revision, the already released version-only hotfix `3590d21` from
+master was synchronized into dev/Joker. The registered BOS version merge
+driver retained the higher candidate version. This preserves the release
+history and prevents the upcoming PR from conflicting over package versions;
+no direct write to master was made.
