@@ -14,7 +14,7 @@ tasks:
       - npx biome check --write --staged --no-errors-on-unmatched
       - git update-index --again
       - npx tsc --noEmit
-      - npx vitest run --silent
+      - sh .husky/test
 
   bump-commit:
     desc: 'On a dev/* branch every commit has its own version: the patch bumped and staged (.github/bos.json versioning.commits)'

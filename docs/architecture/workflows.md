@@ -32,7 +32,8 @@ flowchart LR
 
 | Workflow | Runs on | Does |
 | -------- | ------- | ---- |
-| `checks-reusable-set.yml` | called by the others; by hand: all | one job per check: `types`, `lint`, `tests`, `build` (code), `docs` (MkDocs `--strict`), `package` (packs, installs, runs `bos`), `commits` (commitlint over a range) |
+| `checks-reusable-set.yml` | called by the others; by hand: all | one job per check: `types`, `lint`, `tests`, `build` (code), `docs` (locked MkDocs `--strict`, lock/export consistency and its regression tests), `dependencies` (npm audit at high severity), `package` (packs, installs, runs `bos`), `commits` (commitlint over a range) |
+| `checks-dependency-health.yml` | weekly on the default branch; by hand; image/config PRs | full checks on schedule/by hand, including audit and docs consistency; builds and smoke-tests the container, without publishing |
 | `checks-on-push-changed-parts.yml` | push to `development`, `dev/**` | only the parts the push touched: code, docs, or both (a new branch: both) |
 | `checks-on-pull-request-then-automerge.yml` | pull request into a station, opened by a person | every check, the commits of the pull request too; then `bos flow automerge` (a pull request into `master` waits for a person) |
 | `loop-revision-bump-checks-pull-request.yml` | push to `revision` | every check (the commits since `master` too); `bos project authors` (`.github/AUTHORS`); `bos flow bump revision` (the minor, once the line `v<X.Y>.*` is released); the release `nightly` moves to `revision` with the package's file; what it committed is pushed to `revision` and merged into `development`; then the pull request `revision → master` is opened (or the open one follows) |
@@ -139,3 +140,25 @@ them declare it.
 | `BOS_WORKSHOP_HOOK` | repository | the listening BOS workshop, receives `{event, repository, tag, sync}` ([`TODO`]: BOS has no listener yet) |
 
 Read the Docs also builds every push by its own webhook, without a secret.
+
+## Dependency maintenance
+
+`.github/dependabot.yml` targets `development`: one Monday minor/patch group
+per ecosystem (npm, uv docs, Actions and Docker). Majors remain separate; Node 25.x is excluded because it is End-of-Life.
+Version PR limits are three per ecosystem, four for npm while three blocked
+updates need room beside a routine group. Security PRs have GitHub's separate
+limit and default-branch handling. There is no Compose manifest to update.
+Dependabot reads policy from `master`; integration into `development` and
+`revision` prepares it, and the owner's release merge activates it.
+
+For a batch, inventory all bot PRs and exact heads, inspect reviews/checks and
+actual callers, consolidate overlapping locks, and leave incompatible upgrades
+open with evidence. `npm ci`, `task check`, `npm run build`,
+`task workflows:package`, `npm audit --audit-level=high`, `task docs:check-lock`,
+`task docs:test-lock` and `task docs:build` verify a candidate. Exercise affected
+behaviour for majors. `task docs:lock` regenerates both docs artifacts; the
+check never repairs them. Close superseded PRs only after verifying the landed
+versions remotely. Follow the contributor branch and revision routine; no
+branch-protection bypass or unattended dependency approval is added.
+
+Round evidence and remaining blockers: [Joker's notes](../.agents/JOKER.md).

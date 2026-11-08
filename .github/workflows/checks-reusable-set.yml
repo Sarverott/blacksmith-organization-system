@@ -2,7 +2,7 @@
 # Called by checks-on-push-changed-parts.yml (what a push changed),
 # checks-on-pull-request-then-automerge.yml, loop-revision-bump-checks-pull-request.yml
 # and loop-master-release-and-publish.yml (everything); started by hand it runs everything.
-name: "checks › reusable set: types, lint, tests, build, package, docs, commits"
+name: "checks › reusable set: types, lint, tests, build, package, docs, dependencies, commits"
 
 on:
   workflow_call:
@@ -36,8 +36,8 @@ jobs:
     if: inputs.code || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with: { node-version: 24, cache: npm }
       - run: npm ci
       - run: npm run typecheck
@@ -46,8 +46,8 @@ jobs:
     if: inputs.code || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with: { node-version: 24, cache: npm }
       - run: npm ci
       - run: npm run lint
@@ -56,8 +56,8 @@ jobs:
     if: inputs.code || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with: { node-version: 24, cache: npm }
       - run: npm ci
       - run: npm test
@@ -66,8 +66,8 @@ jobs:
     if: inputs.code || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with: { node-version: 24, cache: npm }
       - run: npm ci
       - run: npm run build
@@ -76,20 +76,32 @@ jobs:
     if: inputs.package || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with: { node-version: 24, cache: npm }
       - run: npm ci
       - uses: go-task/setup-task@v2
       - run: task workflows:package
 
+  dependencies:
+    if: inputs.code || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - run: npm audit --audit-level=high
+
   docs:
     if: inputs.docs || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v7
-      - run: uv run --project docs mkdocs build --strict -f docs/mkdocs.yml
+      - run: bash scripts/workflows/docs-lock.sh
+      - run: python3 scripts/workflows/test_docs_lock.py
+      - run: uv run --locked --project docs mkdocs build --strict -f docs/mkdocs.yml
         env:
           NO_MKDOCS_2_WARNING: "1"
 
@@ -97,9 +109,9 @@ jobs:
     if: inputs.commits != ''
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with: { fetch-depth: 0 }
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with: { node-version: 24, cache: npm }
       - run: npm ci
       - uses: go-task/setup-task@v2

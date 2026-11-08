@@ -5,7 +5,7 @@
 version: '3'
 
 vars:
-  MKDOCS: uv run --project {{.TASKFILE_DIR}} mkdocs
+  MKDOCS: uv run --locked --project {{.TASKFILE_DIR}} mkdocs
 
 tasks:
   serve:
@@ -23,7 +23,19 @@ tasks:
     dir: '{{.TASKFILE_DIR}}'
     cmds:
       - uv lock
-      - uv export --no-hashes --no-header --no-annotate --no-emit-project -o requirements.txt
+      - uv export --locked --no-hashes --no-header --no-annotate --no-emit-project -o requirements.txt
+
+  check-lock:
+    desc: Verify pyproject, uv.lock and the Read the Docs requirements agree without changing them
+    dir: '{{.TASKFILE_DIR}}/..'
+    cmds:
+      - bash scripts/workflows/docs-lock.sh
+
+  test-lock:
+    desc: Regression checks for stale docs locks and exports in temporary projects
+    dir: '{{.TASKFILE_DIR}}/..'
+    cmds:
+      - python3 scripts/workflows/test_docs_lock.py
 
   wiki:
     desc: Write the docs into the GitHub wiki's checkout docs/.gh-wiki (cloned when missing); committing and pushing is yours
