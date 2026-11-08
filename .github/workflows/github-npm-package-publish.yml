@@ -39,9 +39,9 @@ jobs:
       NODE_AUTH_TOKEN: ${{ github.token }}
       HUSKY: "0"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with: { ref: "${{ inputs.tag }}" }
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           registry-url: https://npm.pkg.github.com

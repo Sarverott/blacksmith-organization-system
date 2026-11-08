@@ -49,9 +49,9 @@ jobs:
       tag: ${{ steps.release.outputs.tag }}
       prerelease: ${{ env.PRERELEASE }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with: { ref: master, fetch-depth: 0 }
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with: { node-version: 24 }
       - uses: go-task/setup-task@v2
       - name: Hotfix bump (a released version reaching master)
@@ -71,7 +71,7 @@ jobs:
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: go-task/setup-task@v2
       - run: task workflows:notify -- community "${{ needs.release.outputs.tag }}"
 
@@ -87,9 +87,9 @@ jobs:
       TAG: ${{ needs.release.outputs.tag }}
       PRERELEASE: ${{ needs.release.outputs.prerelease }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with: { ref: "${{ needs.release.outputs.tag }}" }
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with: { node-version: 24, cache: npm }
       - uses: go-task/setup-task@v2
       - run: npm ci
@@ -156,7 +156,7 @@ jobs:
     env:
       READTHEDOCS_API_TOKEN: ${{ secrets.READTHEDOCS_API_TOKEN }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: go-task/setup-task@v2
       - if: env.READTHEDOCS_API_TOKEN != ''
         run: task workflows:readthedocs -- "${{ needs.release.outputs.tag }}"
@@ -170,7 +170,7 @@ jobs:
     env:
       TOKEN: ${{ secrets.WIKI_TOKEN || github.token }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with: { ref: "${{ needs.release.outputs.tag }}" }
       - uses: astral-sh/setup-uv@v7
       - uses: go-task/setup-task@v2
@@ -183,7 +183,7 @@ jobs:
     env:
       SOCIAL_WEBHOOK: ${{ secrets.SOCIAL_WEBHOOK }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: go-task/setup-task@v2
       - run: task workflows:notify -- social "${{ needs.release.outputs.tag }}"
 
@@ -197,9 +197,9 @@ jobs:
     env:
       BOS_WORKSHOP_HOOK: ${{ secrets.BOS_WORKSHOP_HOOK }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with: { fetch-depth: 0 }
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with: { node-version: 24 }
       - uses: go-task/setup-task@v2
       - name: master back into development

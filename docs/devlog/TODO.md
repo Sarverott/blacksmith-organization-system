@@ -118,6 +118,12 @@ history: [../changelog/](../changelog/phase-0.md).
     - [x] Mirrors tried on the development workshop: a clone in `forge/test/` mirrored, found by status, removed on confirm (Q6)
     - [ ] The home workshop's read-only clones moved to `archive/.repos-mirrors/` (on the owner's order; `bos archive mirror <path> --dry-run` first) (Q6)
 
+## Dependency maintenance: 2026-11-08
+
+- [x] Reconcile the Dependabot batch with clean installs, docs export consistency and major-update evidence
+- [x] Isolate pre-commit tests from Git's hook environment so temporary repositories cannot alter contributor refs
+- [x] Group routine bot updates, add lock/audit/container checks, and record the maintenance procedure in the agent notes
+
 ## Phase 3: workplaces 
 
 - [x] A Docker image of BOS (`Dockerfile`; Docker Hub and ghcr.io, done in phase 2)

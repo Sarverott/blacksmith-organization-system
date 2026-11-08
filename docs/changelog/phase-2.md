@@ -957,3 +957,23 @@ yep. path "/run/media/sarverott/setternet-A62/__WORKSHOP" was properly initializ
   to `forge/NOTES-for-repositories.md` for those repositories.
 - The file `-run-media-sarverott-setternet-A62-.txt` in the development
   workshop's root (2026-11-08 00:22) is taken as the owner's and left.
+
+## UNIXUSAT=1794125869231 · Dependency maintenance and bot backlog (Joker)
+
+The owner's words (chat):
+
+````text
+in bos-skillset your sibbilling instances were handled dependabot PRs flooding and on my request describes it how to handle dependabot problems. look for related skill and handle similar situation for this repo here. also you can rewrite dependabot config, make some workflows for us related to things like that and it would be good propably for you to use docs/.agents/ dir where i can only read but not write.
+````
+
+- **Done:** compatible dependency proposals reconciled on the contributor branch;
+  the docs export follows the existing lock, Biome's schema follows its version,
+  and Actions v7 follows the maintainers' migration notes.
+- **Done:** weekly routine update groups, bounded open version PRs, a docs
+  lock/export guard with regression fixtures, npm auditing in reusable checks,
+  and scheduled/manual dependency health plus image build/smoke tests.
+- **Held with evidence:** incompatible TypeScript/Inquirer peers, Task's new
+  vulnerable proxy chain, and the Node runtime migration. No peer or security
+  bypass. Exact PR heads and validation: `docs/.agents/JOKER.md`.
+- **Activation:** the core's normal development/revision routine prepares the
+  change; the owner reviews its promotion to master.

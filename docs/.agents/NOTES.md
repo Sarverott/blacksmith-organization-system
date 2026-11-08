@@ -3,6 +3,20 @@
 Findings, assumptions and what is untried, by the agents working here.
 Newest on top, dated. People read this file; they answer in `docs/devlog/`.
 
+## 2026-11-08 · Joker · Dependabot batch and recurring checks
+
+The core had 13 open bot PRs. Several docs updates touched only the export,
+while the lock already contained those versions. A consistency guard now
+checks the real pyproject → lock → export chain, with regression fixtures;
+reusable CI audits npm and builds locked docs. Weekly groups and a dependency
+health/container workflow prepare a smaller recurring queue.
+
+TypeScript 7 and Inquirer 14 have incompatible peers. Task 3.54.0 introduced
+five high-severity audit findings through its proxy chain in a clean trial,
+versus zero on the baseline; it is held too. Node's runtime major needs its
+own validation. Evidence, exact initial heads, disposition and activation
+state are in [JOKER.md](JOKER.md).
+
 ## 2026-11-05 · Cleo · the owner's review notes, mirrors
 
 **Found**
