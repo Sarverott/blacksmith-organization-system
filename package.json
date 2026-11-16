@@ -69,7 +69,7 @@
     "@commitlint/config-conventional": "^21.2.3",
     "@commitlint/cz-commitlint": "^21.2.3",
     "@go-task/cli": "^3.45.4",
-    "@google/genai": "^2.32.0",
+    "@google/genai": "^3.3.0",
     "@modelcontextprotocol/sdk": "^1.32.2",
     "@types/node": "^26.6.6",
     "@xterm/xterm": "^6.0.0",
